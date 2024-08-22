@@ -47,7 +47,6 @@ Route::middleware('auth')->group(function () {
         })->name('petani.dashboard');
     });
 
-    Route::get('/rekap', [RekapController::class, 'index']);
 
 });
 
