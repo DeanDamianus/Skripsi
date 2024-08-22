@@ -176,7 +176,7 @@ $result = mysqli_query($con, $nama);
                   <th>ID</th>
                   <th>Nama Petani</th>
                   <th>Email</th>
-                  <th>Komisi</th>
+                  <th>Komisis</th>
                   <th>Hasil Bersih</th>
                 </tr>
                 </tfoot>
