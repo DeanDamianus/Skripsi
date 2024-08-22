@@ -1,3 +1,25 @@
+<?php
+// Establish the connection
+$con = mysqli_connect("localhost", "root", "", "simbako_app");
+
+// Check connection
+if(!$con){
+    die("Koneksi Error: " . mysqli_connect_error());
+}
+
+// Query to count the number of users with role 'petani'
+$query = "SELECT COUNT(*) AS jumlah_petani FROM users WHERE role = 'petani'";
+$result = mysqli_query($con, $query);
+$data = mysqli_fetch_assoc($result);
+$jumlah_petani = $data['jumlah_petani'] ?? 0;
+
+//Netto
+$nettoQuery = "SELECT SUM(netto) AS total_netto FROM rekap";
+$nettoResult = mysqli_query($con, $nettoQuery);
+$nettoData = mysqli_fetch_assoc($nettoResult);
+$totalNetto = $nettoData['total_netto'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -152,13 +174,13 @@
             <!-- small card -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>2.409<sup style="font-size: 20px"> Kg</sup></h3>
-                <p>Total Neto Keranjang</p>
+                <h3><?php echo number_format($totalNetto, 0, ',', '.'); ?><sup style="font-size: 20px"> Kg</sup></h3>
+                <p>Total Netto Keranjang</p>
               </div>
               <div class="icon">
                 <i class="fas fa-weight-hanging"></i> <!-- Ikon timbangan menggantung -->
               </div>
-              <a href="#" class="small-box-footer">
+              <a href="{{url('/datapetani')}}" class="small-box-footer">
                 More info <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
@@ -201,13 +223,13 @@
             <!-- small card -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>81</h3>
+                <h3><?php echo $jumlah_petani; ?></h3>
                 <p>Jumlah Petani</p>
               </div>
               <div class="icon">
                 <i class="fas fa-user"></i> <!-- Ikon orang -->
               </div>
-              <a href="#" class="small-box-footer">
+              <a href="{{url('/datapetani')}}" class="small-box-footer">
                 More info <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
@@ -341,7 +363,7 @@
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 3.2.0
     </div>
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">SIMBAKO/a>.</strong> All rights reserved.
   </footer>
 
   <!-- Control Sidebar -->

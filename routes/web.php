@@ -1,6 +1,7 @@
 <?php
 // routes/web.php
 namespace App\Http\Controllers;
+use App\Http\Controllers\RekapController;
 use Illuminate\Http\Request;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\PetaniMiddleware;
@@ -46,6 +47,7 @@ Route::middleware('auth')->group(function () {
         })->name('petani.dashboard');
     });
 
+    Route::get('/rekap', [RekapController::class, 'index']);
 
 });
 
