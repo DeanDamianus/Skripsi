@@ -151,9 +151,10 @@ $result = mysqli_query($con, $nama);
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>ID</th>
+                  {{-- <th>ID</th> --}}
                   <th>Nama Petani</th>
                   <th>Email</th>
+                  <th>Bruto Total</th>
                   <th>Komisi</th>
                   <th>Hasil Bersih</th>
                 </tr>
@@ -163,7 +164,7 @@ $result = mysqli_query($con, $nama);
                   while($row = mysqli_fetch_assoc($result)){
                   ?>
                   <tr>
-                    <td><?php echo $row['id']; ?></td>
+                    {{-- <td><?php echo $row['id']; ?></td> --}}
                     <td><?php echo $row['name']; ?></td>
                     <td><?php echo $row['email']; ?></td>
                   </tr>
@@ -173,9 +174,10 @@ $result = mysqli_query($con, $nama);
                 </tbody>
                 <tfoot>
                 <tr>
-                  <th>ID</th>
+                  {{-- <th>ID</th> --}}
                   <th>Nama Petani</th>
                   <th>Email</th>
+                  <th>Bruto Total</th>
                   <th>Komisi</th>
                   <th>Hasil Bersih</th>
                 </tr>
@@ -201,7 +203,7 @@ $result = mysqli_query($con, $nama);
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 3.2.0
     </div>
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2014-2021 <a >SIMBAKO</a>.</strong> All rights reserved.
   </footer>
 
   <!-- Control Sidebar -->
