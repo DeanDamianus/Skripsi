@@ -151,7 +151,6 @@ $result = mysqli_query($con, $nama);
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  {{-- <th>ID</th> --}}
                   <th>Nama Petani</th>
                   <th>Email</th>
                   <th>Bruto Total</th>
@@ -162,11 +161,20 @@ $result = mysqli_query($con, $nama);
                 <tbody>
                   <?php
                   while($row = mysqli_fetch_assoc($result)){
+                    // Query to get the total bruto for each petani
+                    $id_petani = $row['id'];
+                    $query_bruto = "SELECT SUM(bruto) AS total_bruto FROM rekap WHERE id_petani = '$id_petani'";
+                    $bruto_result = mysqli_query($con, $query_bruto);
+                    $bruto_data = mysqli_fetch_assoc($bruto_result);
+                    $total_bruto = $bruto_data['total_bruto'] ? $bruto_data['total_bruto'] : 0;
                   ?>
                   <tr>
-                    {{-- <td><?php echo $row['id']; ?></td> --}}
                     <td><?php echo $row['name']; ?></td>
                     <td><?php echo $row['email']; ?></td>
+                    <td><?php echo $total_bruto; ?></td>
+                    <!-- You can calculate and display Komisi and Hasil Bersih here -->
+                    <td>Komisi Calculation</td>
+                    <td>Hasil Bersih Calculation</td>
                   </tr>
                   <?php 
                   }
@@ -174,7 +182,6 @@ $result = mysqli_query($con, $nama);
                 </tbody>
                 <tfoot>
                 <tr>
-                  {{-- <th>ID</th> --}}
                   <th>Nama Petani</th>
                   <th>Email</th>
                   <th>Bruto Total</th>
