@@ -153,7 +153,7 @@ $result = mysqli_query($con, $nama);
                 <tr>
                   <th>Nama Petani</th>
                   <th>Email</th>
-                  <th>Bruto Total</th>
+                  <th>Netto Total</th>
                   <th>Komisi</th>
                   <th>Hasil Bersih</th>
                 </tr>
@@ -184,7 +184,7 @@ $result = mysqli_query($con, $nama);
                 <tr>
                   <th>Nama Petani</th>
                   <th>Email</th>
-                  <th>Bruto Total</th>
+                  <th>Netto Total</th>
                   <th>Komisi</th>
                   <th>Hasil Bersih</th>
                 </tr>
