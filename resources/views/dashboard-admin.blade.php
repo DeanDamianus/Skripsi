@@ -14,7 +14,7 @@ $data = mysqli_fetch_assoc($result);
 $jumlah_petani = $data['jumlah_petani'] ?? 0;
 
 //Netto
-$nettoQuery = "SELECT SUM(netto) AS total_netto FROM rekap";
+$nettoQuery = "SELECT SUM(netto) AS total_netto FROM rekap_2024";
 $nettoResult = mysqli_query($con, $nettoQuery);
 $nettoData = mysqli_fetch_assoc($nettoResult);
 $totalNetto = $nettoData['total_netto'];
