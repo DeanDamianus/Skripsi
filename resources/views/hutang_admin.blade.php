@@ -1,3 +1,20 @@
+<?php
+
+// Establish the connection
+$con = mysqli_connect("localhost", "root", "", "simbako_app");
+
+// Check connection
+if(!$con){
+    die("Koneksi Error: " . mysqli_connect_error());
+}
+
+// Query to get hutang_2024 along with the petani's (farmer's) name from the users table
+$query = "SELECT hutang_2024.id_hutang, hutang_2024.tanggal_hutang, hutang_2024.bon, hutang_2024.cicilan, hutang_2024.tanggal_lunas, users.name 
+          FROM hutang_2024 
+          JOIN users ON hutang_2024.id_hutang = users.id";
+$result = mysqli_query($con, $query);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -185,69 +202,209 @@
           <div class="row">
             <div class="col-12">
               <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">Responsive Hover Table</h3>
-  
-                  <div class="card-tools">
-                    <div class="input-group input-group-sm" style="width: 150px;">
-                      <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-  
-                      <div class="input-group-append">
-                        <button type="submit" class="btn btn-default">
-                          <i class="fas fa-search"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
                   <table class="table table-hover text-nowrap">
                     <thead>
                       <tr>
                         <th>ID</th>
-                        <th>User</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Reason</th>
+                        <th>Nama Petani</th>
+                        <th>Tanggal Hutang</th>
+                        <th>Bon</th>
+                        <th>Cicilan</th>
+                        <th>Tanggal Lunas</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>183</td>
-                        <td>John Doe</td>
-                        <td>11-7-2014</td>
-                        <td><span class="tag tag-success">Approved</span></td>
-                        <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                      </tr>
-                      <tr>
-                        <td>219</td>
-                        <td>Alexander Pierce</td>
-                        <td>11-7-2014</td>
-                        <td><span class="tag tag-warning">Pending</span></td>
-                        <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                      </tr>
-                      <tr>
-                        <td>657</td>
-                        <td>Bob Doe</td>
-                        <td>11-7-2014</td>
-                        <td><span class="tag tag-primary">Approved</span></td>
-                        <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                      </tr>
-                      <tr>
-                        <td>175</td>
-                        <td>Mike Doe</td>
-                        <td>11-7-2014</td>
-                        <td><span class="tag tag-danger">Denied</span></td>
-                        <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                      </tr>
+                      <?php
+                      while($row = mysqli_fetch_assoc($result)){
+                          echo "<tr>";
+                          echo "<td>" . $row['id_hutang'] . "</td>";
+                          echo "<td>".  $row['name']."</td>";
+                          echo "<td>" . $row['tanggal_hutang'] . "</td>";
+                          echo "<td>" . $row['bon'] . "</td>";
+                          echo "<td>" . $row['cicilan'] . "</td>";
+                          echo "<td>" . $row['tanggal_lunas'] . "</td>";
+                          echo "</tr>";
+                      }
+                      ?>
                     </tbody>
+                    
                   </table>
                 </div>
+                
                 <!-- /.card-body -->
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card card-danger">
+                    <div class="card-header">
+                      <h3 class="card-title">Hutang Baru</h3>
+                    </div>
+                    <div class="card-body">
+                      <!-- Date dd/mm/yyyy -->
+                      <div class="form-group">
+                        <label>Masukkan tanggal:</label>
+      
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                        </div>
+                        <!-- /.input group -->
+                      </div>
+                      <!-- /.form group -->
+      
+                      <!-- Date mm/dd/yyyy -->
+                      <div class="form-group">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask>
+                        </div>
+                        <!-- /.input group -->
+                      </div>
+                      <!-- /.form group -->
+      
+                      <!-- phone mask -->
+                      <div class="form-group">
+                        <label>US phone mask:</label>
+      
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask>
+                        </div>
+                        <!-- /.input group -->
+                      </div>
+                      <!-- /.form group -->
+      
+                      <!-- phone mask -->
+                      <div class="form-group">
+                        <label>Intl US phone mask:</label>
+      
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                          </div>
+                          <input type="text" class="form-control"
+                                 data-inputmask="'mask': ['999-999-9999 [x99999]', '+099 99 99 9999[9]-9999']" data-mask>
+                        </div>
+                        <!-- /.input group -->
+                      </div>
+                      <!-- /.form group -->
+      
+                      <!-- IP mask -->
+                      <div class="form-group">
+                        <label>IP mask:</label>
+      
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-laptop"></i></span>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
+                        </div>
+                        <!-- /.input group -->
+                      </div>
+                      <!-- /.form group -->     
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <!-- /.card -->
+                </div>
+                <!-- /.col (left) -->
+                <div class="col-md-6">
+                  <div class="card card-primary">
+                    <div class="card-header">
+                      <h3 class="card-title">Pelunasan</h3>
+                    </div>
+                    <div class="card-body">
+                      <!-- Date dd/mm/yyyy -->
+                      <div class="form-group">
+                        <label>Masukkan tanggal:</label>
+      
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                        </div>
+                        <!-- /.input group -->
+                      </div>
+                      <!-- /.form group -->
+      
+                      <!-- Date mm/dd/yyyy -->
+                      <div class="form-group">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask>
+                        </div>
+                        <!-- /.input group -->
+                      </div>
+                      <!-- /.form group -->
+      
+                      <!-- phone mask -->
+                      <div class="form-group">
+                        <label>US phone mask:</label>
+      
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask>
+                        </div>
+                        <!-- /.input group -->
+                      </div>
+                      <!-- /.form group -->
+      
+                      <!-- phone mask -->
+                      <div class="form-group">
+                        <label>Intl US phone mask:</label>
+      
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                          </div>
+                          <input type="text" class="form-control"
+                                 data-inputmask="'mask': ['999-999-9999 [x99999]', '+099 99 99 9999[9]-9999']" data-mask>
+                        </div>
+                        <!-- /.input group -->
+                      </div>
+                      <!-- /.form group -->
+      
+                      <!-- IP mask -->
+                      <div class="form-group">
+                        <label>IP mask:</label>
+      
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-laptop"></i></span>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
+                        </div>
+                        <!-- /.input group -->
+                      </div>
+                      <!-- /.form group -->
+      
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <!-- /.card -->
+      
+                </div>
+                <!-- /.col (right) -->
               </div>
               <!-- /.card -->
             </div>
+            
+          </div>
+        </div>
+            <!-- /.form-group -->
           </div>
         </div>
         <!-- /.row -->
@@ -265,7 +422,7 @@
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 3.2.0
     </div>
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">SIMBAKO</a>.</strong> All rights reserved.
   </footer>
 
   <!-- Control Sidebar -->
