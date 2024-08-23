@@ -116,22 +116,27 @@
     
     <!-- /.sidebar -->
   </aside>
-
-  <div class="content-wrapper d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+  <div class="content-wrapper">
     <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Tambah User Baru</h1>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
 
     <!-- Main content -->
-    <div class="content">
+    <section class="content">
+      <div class="container-fluid">
         <div class="row">
-            <div class="login-box" style="width: 100%; max-width: 400px;">
-                <!-- /.login-logo -->
-                <div class="card card-outline card-primary">
-                    <div class="card-header text-center">
-                        <a href="{{url('/owner')}}" class="h1"><b>SIMBAKO</b></a>
-                    </div>
-                    <div class="card-body" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                        <p class="login-box-msg">Registrasi Akun Baru</p>
-                        @if($errors->any())
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card card-primary">
+              @if($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
                                     @foreach($errors->all() as $item)
@@ -140,8 +145,8 @@
                                 </ul>
                             </div>
                         @endif
-                        <form action="{{ route('register.store') }}" method="POST" style="width: 100%; max-width: 300px;">
-                            @csrf
+              <form action="{{ route('register.store') }}" method="POST" id="quickForm">
+                @csrf
                             <div class="input-group mb-3">
                                 <input type="text" value="{{ old('name') }}" class="form-control" placeholder="Nama" name="name" required>
                                 <div class="input-group-append">
@@ -177,7 +182,7 @@
                             <div class="form-group">
                                 <select class="form-control" name="role" required>
                                     <option value="operator">Operator</option>
-                                    <option value="petani">Petani</option>
+                                    <option value="petani" selected >Petani</option>
                                 </select>
                             </div>
                             <div class="row" style="width: 100%; justify-content: center;">
@@ -185,17 +190,25 @@
                                     <button type="submit" class="btn btn-primary btn-block">Register</button>
                                 </div>
                             </div>
-                        </form>
-                        <!-- /.social-auth-links -->
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
+                </form>
             </div>
+            <!-- /.card -->
+            </div>
+          <!--/.col (left) -->
+          <!-- right column -->
+          <div class="col-md-6">
+
+          </div>
+          <!--/.col (right) -->
         </div>
-    </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
     <!-- /.content -->
-</div>
+  </div>
+  <div class="content-wrapper d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <!-- /.content -->
+  </div>
 
         </div><!-- /.container-fluid -->
     </section>
