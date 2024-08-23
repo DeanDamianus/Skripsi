@@ -1,8 +1,6 @@
 <?php
 // routes/web.php
 namespace App\Http\Controllers;
-use App\Http\Controllers\RekapController;
-use Illuminate\Http\Request;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\PetaniMiddleware;
 use App\Http\Controllers\SesiController;
@@ -15,6 +13,7 @@ Route::get('/logout', [SesiController::class, 'logout']);
 Route::get('/error', function() {
     return view('error');
 })->name('error');
+
 
 // Register routes
 Route::get('/register', [SesiController::class, 'register'])->name('register.form');
@@ -38,6 +37,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/hapuspetani', function (){
             return view ('hapus-petani');
         })->name('hapus-petani');
+        Route::get('/register', function (){
+            return view ('register');
+        })->name('register');
+        
     });
     Route::post('/hapuspetani', [PetaniController::class, 'delete'])->name('hapus-petani');
 
