@@ -218,12 +218,14 @@ $result = mysqli_query($con, $query);
                     <tbody>
                       <?php
                       while($row = mysqli_fetch_assoc($result)){
+                        $bonFormatted = number_format($row['bon'], 0, ',', '.');
+                        $cicilanFormatted = number_format($row['cicilan'], 0, ',', '.');
                           echo "<tr>";
                           echo "<td>" . $row['id_hutang'] . "</td>";
                           echo "<td>".  $row['name']."</td>";
                           echo "<td>" . $row['tanggal_hutang'] . "</td>";
-                          echo "<td>" . $row['bon'] . "</td>";
-                          echo "<td>" . $row['cicilan'] . "</td>";
+                          echo "<td>Rp. " . $bonFormatted . "</td>";
+                          echo "<td>Rp. " . $cicilanFormatted. "</td>";
                           echo "<td>" . $row['tanggal_lunas'] . "</td>";
                           echo "</tr>";
                       }
@@ -266,37 +268,6 @@ $result = mysqli_query($con, $query);
                         </div>
                         <!-- /.input group -->
                       </div>
-                      <!-- /.form group -->
-      
-                      <!-- phone mask -->
-                      <div class="form-group">
-                        <label>US phone mask:</label>
-      
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                          </div>
-                          <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask>
-                        </div>
-                        <!-- /.input group -->
-                      </div>
-                      <!-- /.form group -->
-      
-                      <!-- phone mask -->
-                      <div class="form-group">
-                        <label>Intl US phone mask:</label>
-      
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                          </div>
-                          <input type="text" class="form-control"
-                                 data-inputmask="'mask': ['999-999-9999 [x99999]', '+099 99 99 9999[9]-9999']" data-mask>
-                        </div>
-                        <!-- /.input group -->
-                      </div>
-                      <!-- /.form group -->
-      
                       <!-- IP mask -->
                       <div class="form-group">
                         <label>IP mask:</label>

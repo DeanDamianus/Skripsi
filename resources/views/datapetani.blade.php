@@ -184,6 +184,7 @@ $result = mysqli_query($con, $nama);
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
+                  <th>ID Petani</th>
                   <th>Nama Petani</th>
                   <th>Email</th>
                   <th>Netto Total</th>
@@ -202,9 +203,10 @@ $result = mysqli_query($con, $nama);
                     $total_bruto = $bruto_data['total_bruto'] ? $bruto_data['total_bruto'] : 0;
                   ?>
                   <tr>
+                    <td><?php echo $row['id']; ?></td>
                     <td><?php echo $row['name']; ?></td>
                     <td><?php echo $row['email']; ?></td>
-                    <td><?php echo $total_bruto; ?></td>
+                    <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
                     <!-- You can calculate and display Komisi and Hasil Bersih here -->
                     <td>Komisi Calculation</td>
                     <td>Hasil Bersih Calculation</td>
@@ -215,6 +217,7 @@ $result = mysqli_query($con, $nama);
                 </tbody>
                 <tfoot>
                 <tr>
+                  <th>ID Petani</th>
                   <th>Nama Petani</th>
                   <th>Email</th>
                   <th>Netto Total</th>
