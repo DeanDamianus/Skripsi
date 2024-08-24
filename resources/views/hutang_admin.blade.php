@@ -10,9 +10,21 @@ if(!$con){
 
 // Query to get hutang_2024 along with the petani's (farmer's) name from the users table
 $query = "SELECT hutang_2024.id_hutang, hutang_2024.tanggal_hutang, hutang_2024.bon, hutang_2024.cicilan, hutang_2024.tanggal_lunas, users.name 
-          FROM hutang_2024 
-          JOIN users ON hutang_2024.id_hutang = users.id";
+          FROM hutang_2024
+          JOIN users ON hutang_2024.id_hutang = users.id
+          WHERE users.role = 'petani'";
+
 $result = mysqli_query($con, $query);
+
+// Fetch users for the dropdown
+$userQuery = "SELECT id, name FROM users";
+$userResult = mysqli_query($con, $userQuery);
+
+// Store users in an array
+$users = [];
+while ($userRow = mysqli_fetch_assoc($userResult)) {
+    $users[] = $userRow;
+}
 
 ?>
 <!DOCTYPE html>
@@ -30,6 +42,7 @@ $result = mysqli_query($con, $query);
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <!--
 `body` tag options:
@@ -246,13 +259,12 @@ $result = mysqli_query($con, $query);
                     <div class="card-body">
                       <!-- Date dd/mm/yyyy -->
                       <div class="form-group">
-                        <label>Masukkan tanggal:</label>
-      
+                        <label>Tanggal Hutang:</label>
                         <div class="input-group">
                           <div class="input-group-prepend">
                             <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                           </div>
-                          <input type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                          <input type="date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                         </div>
                         <!-- /.input group -->
                       </div>
@@ -260,23 +272,32 @@ $result = mysqli_query($con, $query);
       
                       <!-- Date mm/dd/yyyy -->
                       <div class="form-group">
+                        <label>Nama Petani:</label>
                         <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                          </div>
-                          <input type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-user"></i></span>
+                            </div>
+                            <select class="form-control select2">
+                                <option value="" selected disabled>Pilih Petani</option>
+                                <?php
+                                foreach ($users as $user) {
+                                    echo "<option value='" . $user['id'] . "'>" . $user['name'] . "</option>";
+                                }
+                                ?>
+                            </select>
                         </div>
                         <!-- /.input group -->
-                      </div>
+                    </div>
+                    
                       <!-- IP mask -->
                       <div class="form-group">
-                        <label>IP mask:</label>
+                        <label>Bon</label>
       
                         <div class="input-group">
                           <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-laptop"></i></span>
+                            <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
                           </div>
-                          <input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
+                          <input type="number" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
                         </div>
                         <!-- /.input group -->
                       </div>
@@ -691,7 +712,16 @@ $result = mysqli_query($con, $query);
       + '<br>'
       + Math.round(series.percent) + '%</div>'
   }
+      $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "Pilih Petani",
+            allowClear: true
+        });
+    });
 </script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </body>
 </html>
 
