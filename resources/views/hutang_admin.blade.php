@@ -10,14 +10,18 @@ if(!$con){
 
 // Query to get hutang_2024 along with the petani's (farmer's) name from the users table
 $query = "SELECT hutang_2024.id_hutang, hutang_2024.tanggal_hutang, hutang_2024.bon, hutang_2024.cicilan, hutang_2024.tanggal_lunas, users.name 
-          FROM hutang_2024
-          JOIN users ON hutang_2024.id_hutang = users.id
-          WHERE users.role = 'petani'";
+       FROM hutang_2024
+       JOIN users ON hutang_2024.id_hutang = users.id
+       WHERE users.role = 'petani'";
+
 
 $result = mysqli_query($con, $query);
 
-// Fetch users for the dropdown
-$userQuery = "SELECT id, name FROM users";
+$nama = "SELECT * FROM users WHERE role = 'petani'";
+$resultNama = mysqli_query($con, $nama);
+
+// Fetch users for the dropdown (only petani)
+$userQuery = "SELECT id, name FROM users WHERE role = 'petani'";
 $userResult = mysqli_query($con, $userQuery);
 
 // Store users in an array
@@ -133,7 +137,7 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
               </li>
               <li class="nav-item menu-close">
                 <a href="{{url('/parameter')}}" class="nav-link">
-                  <i class="nav-icon fas fa-money-bill-wave""></i>
+                  <i class="nav-icon fas fa-edit"></i>
                   <p>
                     <strong>PARAMETER</strong>
                     <i class="right fas fa-angle-left"></i>
@@ -251,69 +255,70 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                 
                 <!-- /.card-body -->
               </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="card card-danger">
-                      <div class="card-header">
-                          <h3 class="card-title">Hutang Baru</h3>
-                      </div>
-                      <div class="card-body">
-                          <div class="form-group">
-                              <label>Nomor ID Petani:</label>
-                              <div class="input-group">
-                                  <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="far fa-user"></i></span>
-                                  </div>
-                                  <select class="form-control">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="card card-danger">
+                        <div class="card-header">
+                            <h3 class="card-title">Hutang Baru</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Nomor ID Petani:</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="far fa-user"></i></span>
+                                    </div>
+                                    <select class="form-control">
                                       <option value="" selected disabled>Pilih ID Petani</option>
                                       <?php
                                       foreach ($users as $user) {
-                                          echo "<option value='" . $user['id'] . "'>" . $user['id'] . " - " . $user['name'] . "</option>";
+                                        echo "<option value='" . $user['id'] . "'>" . $user['id'] . " - " . $user['name'] . "</option>";
+
                                       }
                                       ?>
                                   </select>
-                              </div>
-                              <!-- /.input group -->
-                          </div>
-                          <!-- Date dd/mm/yyyy -->
-                          <div class="form-group">
-                              <label>Tanggal Hutang:</label>
-                              <div class="input-group">
-                                  <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                                  </div>
-                                  <input type="date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
-                              </div>
-                              <!-- /.input group -->
-                          </div>
-                          <!-- /.form group -->
-                      
-                          <!-- IP mask -->
-                          <div class="form-group">
-                              <label>Bon</label>
-                
-                              <div class="input-group">
-                                  <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
-                                  </div>
-                                  <input type="number" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
-                              </div>
-                              <!-- /.input group -->
-                          </div>
-                          <form action="#" method="POST" id="quickForm">
-                              @csrf
-                              <div class="row" style="width: 100%; justify-content: center;">
-                                  <div class="col-12">
-                                      <button type="submit" class="btn btn-danger btn-block">Simpan</button>
-                                  </div>
-                              </div>
-                          </form>
-                          <!-- /.form group -->     
-                      </div>
-                      <!-- /.card-body -->
-                  </div>
-                  <!-- /.card -->
-              </div>
+                                </div>
+                                <!-- /.input group -->
+                            </div>
+                            <!-- Date dd/mm/yyyy -->
+                            <div class="form-group">
+                                <label>Tanggal Hutang:</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                    </div>
+                                    <input type="date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                </div>
+                                <!-- /.input group -->
+                            </div>
+                            <!-- /.form group -->
+                        
+                            <!-- IP mask -->
+                            <div class="form-group">
+                                <label>Bon</label>
+                  
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
+                                    </div>
+                                    <input type="number" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
+                                </div>
+                                <!-- /.input group -->
+                            </div>
+                            <form action="#" method="POST" id="quickForm">
+                                @csrf
+                                <div class="row" style="width: 100%; justify-content: center;">
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-danger btn-block">Simpan</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- /.form group -->     
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
                 <!-- /.col (left) -->
                 <div class="col-md-6">
                   <div class="card card-green">

@@ -91,7 +91,7 @@
               </li>
               <li class="nav-item menu-close">
                 <a href="{{url('/parameter')}}" class="nav-link">
-                  <i class="nav-icon fas fa-money-bill-wave""></i>
+                  <i class="nav-icon fas fa-edit"></i>
                   <p>
                     <strong>PARAMETER</strong>
                     <i class="right fas fa-angle-left"></i>
