@@ -171,14 +171,20 @@ $result = mysqli_query($con, $nama);
     <!-- Content Header (Page header) -->
 
     <!-- /.content-header -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Data Petani</h1>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
 
     <!-- Main content -->
           <!-- /.col-md-6 -->
-        <div class="row">
+         <div class="row">
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Data Petani</h3>
-            </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
