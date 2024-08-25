@@ -26,6 +26,7 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
     $users[] = $userRow;
 }
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -257,6 +258,23 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                       <h3 class="card-title">Hutang Baru</h3>
                     </div>
                     <div class="card-body">
+                      <div class="form-group">
+                        <label>Nama Petani:</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-user"></i></span>
+                            </div>
+                            <select class="form-control">
+                                <option value="" selected disabled>Pilih Petani</option>
+                                <?php
+                                foreach ($users as $user) {
+                                    echo "<option value='" . $user['id'] . "'>" . $user['name'] . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <!-- /.input group -->
+                      </div>
                       <!-- Date dd/mm/yyyy -->
                       <div class="form-group">
                         <label>Tanggal Hutang:</label>
@@ -269,25 +287,6 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                         <!-- /.input group -->
                       </div>
                       <!-- /.form group -->
-      
-                      <!-- Date mm/dd/yyyy -->
-                      <div class="form-group">
-                        <label>Nama Petani:</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="far fa-user"></i></span>
-                            </div>
-                            <select class="form-control select2">
-                                <option value="" selected disabled>Pilih Petani</option>
-                                <?php
-                                foreach ($users as $user) {
-                                    echo "<option value='" . $user['id'] . "'>" . $user['name'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <!-- /.input group -->
-                    </div>
                     
                       <!-- IP mask -->
                       <div class="form-group">
@@ -309,20 +308,18 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                 </div>
                 <!-- /.col (left) -->
                 <div class="col-md-6">
-                  <div class="card card-primary">
+                  <div class="card card-blue">
                     <div class="card-header">
                       <h3 class="card-title">Pelunasan</h3>
                     </div>
                     <div class="card-body">
-                      <!-- Date dd/mm/yyyy -->
                       <div class="form-group">
-                        <label>Masukkan tanggal:</label>
-      
+                        <label>Tanggal Bayar:</label>
                         <div class="input-group">
                           <div class="input-group-prepend">
                             <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                           </div>
-                          <input type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                          <input type="date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                         </div>
                         <!-- /.input group -->
                       </div>
@@ -330,64 +327,40 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
       
                       <!-- Date mm/dd/yyyy -->
                       <div class="form-group">
+                        <label>Nama Petani:</label>
                         <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                          </div>
-                          <input type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-user"></i></span>
+                            </div>
+                            <select class="form-control">
+                                <option value="" selected disabled>Pilih Petani</option>
+                                <?php
+                                foreach ($users as $user) {
+                                    echo "<option value='" . $user['id'] . "'>" . $user['name'] . "</option>";
+                                }
+                                ?>
+                            </select>
                         </div>
                         <!-- /.input group -->
-                      </div>
-                      <!-- /.form group -->
-      
-                      <!-- phone mask -->
-                      <div class="form-group">
-                        <label>US phone mask:</label>
-      
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                          </div>
-                          <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask>
-                        </div>
-                        <!-- /.input group -->
-                      </div>
-                      <!-- /.form group -->
-      
-                      <!-- phone mask -->
-                      <div class="form-group">
-                        <label>Intl US phone mask:</label>
-      
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                          </div>
-                          <input type="text" class="form-control"
-                                 data-inputmask="'mask': ['999-999-9999 [x99999]', '+099 99 99 9999[9]-9999']" data-mask>
-                        </div>
-                        <!-- /.input group -->
-                      </div>
-                      <!-- /.form group -->
-      
+                    </div>
+                    
                       <!-- IP mask -->
                       <div class="form-group">
-                        <label>IP mask:</label>
+                        <label>Jumlah Bayar</label>
       
                         <div class="input-group">
                           <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-laptop"></i></span>
+                            <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
                           </div>
-                          <input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
+                          <input type="number" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
                         </div>
                         <!-- /.input group -->
                       </div>
-                      <!-- /.form group -->
-      
+                      <!-- /.form group -->     
                     </div>
                     <!-- /.card-body -->
                   </div>
                   <!-- /.card -->
-      
                 </div>
                 <!-- /.col (right) -->
               </div>
@@ -702,10 +675,6 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
     
   })
 
-  /*
-   * Custom Label formatter
-   * ----------------------
-   */
   function labelFormatter(label, series) {
     return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">'
       + label
