@@ -182,13 +182,14 @@ $result = mysqli_query($con, $nama);
     </section>
 
     <!-- Main content -->
-          <!-- /.col-md-6 -->
-         <div class="row">
-          <div class="card">
-            <!-- /.card-header -->
-            <div class="card-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <!-- /.card-header -->
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
                 <tr>
                   <th>ID Petani</th>
                   <th>Nama Petani</th>
@@ -220,23 +221,14 @@ $result = mysqli_query($con, $nama);
                   <?php 
                   }
                   ?>
-                </tbody>
-                <tfoot>
-                <tr>
-                  <th>ID Petani</th>
-                  <th>Nama Petani</th>
-                  <th>Email</th>
-                  <th>Netto Total</th>
-                  <th>Komisi</th>
-                  <th>Hasil Bersih</th>
-                </tr>
-                </tfoot>
-              </table>
-            </div>
-            <!-- /.card-body -->
+                </tbody>  
+            </table>
           </div>
-
+          <!-- /.card-body -->
         </div>
+        <!-- /.card -->
+      </div>
+    </div>
         <!-- /.row -->
       </div>
       <!-- /.container-fluid -->
