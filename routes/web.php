@@ -46,10 +46,9 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(PetaniMiddleware::class)->group(function () {
         Route::get('/petani', function() {
-            return view('dashboard-petani');
-        })->name('petani.dashboard');
+            return view('dashboard-Petani');
+        })->name('dashboard-Petani');
     });
-
 
 });
 

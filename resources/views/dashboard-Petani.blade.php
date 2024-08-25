@@ -1,3 +1,27 @@
+<?php
+// Establish the connection
+$con = mysqli_connect("localhost", "root", "", "simbako_app");
+
+// Check connection
+if (!$con) {
+    die("Koneksi Error: " . mysqli_connect_error());
+}
+
+// Query to count the number of users with role 'petani'
+$query = "SELECT COUNT(*) AS jumlah_petani FROM users WHERE role = 'petani'";
+$result = mysqli_query($con, $query);
+$data = mysqli_fetch_assoc($result);
+$jumlah_petani = $data['jumlah_petani'] ?? 0;
+
+// Fetch the logged-in user ID
+$user_id = Auth::user()->id; // Make sure the user is logged in
+
+// Query to get total netto for the logged-in user
+$nettoQuery = "SELECT SUM(netto) AS total_netto FROM rekap_2024 WHERE id_petani = $user_id";
+$nettoResult = mysqli_query($con, $nettoQuery);
+$nettoData = mysqli_fetch_assoc($nettoResult);
+$totalNetto = $nettoData['total_netto'] ?? 0;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,19 +38,43 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
-<!--
-`body` tag options:
 
-  Apply one or more of the following classes to to the body tag
-  to get the desired effect
-
-  * sidebar-collapse
-  * sidebar-mini
--->
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
-  <!-- Navbar -->
-  <!-- /.navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="../../index3.html" class="nav-link">Home</a>
+      </li>
+
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item d-none d-sm-inline-block">
+        <div class="dropdown">
+          <button class="nav-link" type="button" data-toggle="dropdown" style=" border: black;">
+            2024
+          </button>
+          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-calendar"></i> 2025
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+          <i class="fas fa-expand-arrows-alt"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>
 
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -109,20 +157,18 @@
             </div><!-- /.container-fluid -->
           </div>
         <div class="row">
-        
           <div class="col-lg-3 col-6">
-            <!-- small card -->
             <div class="small-box bg-info">
-              <div class="inner">
-                <h3>2.409<sup style="font-size: 20px"> Kg</sup></h3>
-                <p>Total Neto Keranjang</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-weight-hanging"></i> <!-- Ikon timbangan menggantung -->
-              </div>
-              <a href="#" class="small-box-footer">
-                More info <i class="fas fa-arrow-circle-right"></i>
-              </a>
+                <div class="inner">
+                    <h3><?= number_format($totalNetto, 2) ?><sup style="font-size: 20px"> Kg</sup></h3>
+                    <p>Total Netto Keranjang Anda</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-weight-hanging"></i> <!-- Ikon timbangan menggantung -->
+                </div>
+                <a href="#" class="small-box-footer">
+                    Info lebih lanjut <i class="fas fa-arrow-circle-right"></i>
+                </a>
             </div>
             
           </div>
@@ -138,7 +184,7 @@
                 <i class="fas fa-coins"></i> <!-- Ikon koin -->
               </div>
               <a href="#" class="small-box-footer">
-                More info <i class="fas fa-arrow-circle-right"></i>
+                Info lebih lanjut <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
           </div>
@@ -154,26 +200,11 @@
                 <i class="fas fa-dollar-sign"></i> <!-- Ikon tanda dolar -->
               </div>
               <a href="#" class="small-box-footer">
-                More info <i class="fas fa-arrow-circle-right"></i>
+                Info lebih lanjut <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
           </div>      
           <!-- Jumlah Bersih -->
-          <div class="col-lg-3 col-6">
-            <!-- small card -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>81</h3>
-                <p>Jumlah Petani</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-user"></i> <!-- Ikon orang -->
-              </div>
-              <a href="#" class="small-box-footer">
-                More info <i class="fas fa-arrow-circle-right"></i>
-              </a>
-            </div>
-          </div>
           <!-- Jumlah Petani -->
           <div class="col-lg-3 col-6">
             <!-- small card -->
@@ -186,106 +217,13 @@
                 <i class="fas fa-exchange-alt"></i> <!-- Ikon pertukaran -->
               </div>
               <a href="#" class="small-box-footer">
-                More info <i class="fas fa-arrow-circle-right"></i>
+                Info lebih lanjut <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
           </div>
           <!-- Jumlah Jual Lua -->
           </div>
             <!-- /.container-fluid -->
-          </div>
-          <div class="content">
-            <div class="content-header">
-              <div class="container-fluid">
-                <div class="row mb-2">
-                  <div class="col-sm-6">
-                    <h1 class="m-0">Nota Per- Periode</h1>
-                  </div><!-- /.col -->
-                  <div class="col-sm-6">
-                  </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
-          </div>
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-lg-6">
-                <div class="card">
-                  <div class="card-header border-0">
-                    <div class="d-flex justify-content-between">
-                      <h3 class="card-title">Nota A </h3>
-                      <a href="javascript:void(0);">View Report</a>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    {{-- <div class="d-flex">
-                      <p class="d-flex flex-column">
-                        <span>Total Jumlah Nota A</span>
-                      </p>
-                      <p class="ml-auto d-flex flex-column text-right">
-                        <span class="text-success">
-                          <i class="fas fa-arrow-up"></i> 33.1%
-                        </span>
-                        <span class="text-muted">Since last month</span>
-                      </p>
-                    </div> --}}
-                    <!-- /.d-flex -->
-    
-                    <div class="position-relative mb-4">
-                      <canvas id="sales-chart2" height="200"></canvas>
-                    </div>
-    
-                    <div class="d-flex flex-row justify-content-end">
-                      <span class="mr-2">
-                        <i class="fas fa-square text-primary"></i> Periode Ini
-                      </span>
-    
-                      <span>
-                        <i class="fas fa-square text-gray"></i> Periode Lalu
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- /.col-md-6 -->
-              <div class="col-lg-6">
-                <div class="card">
-                  <div class="card-header border-0">
-                    <div class="d-flex justify-content-between">
-                      <h3 class="card-title">Nota B</h3>
-                      <a href="javascript:void(0);">View Report</a>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <div class="d-flex">
-                      {{-- <p class="ml-auto d-flex flex-column text-right">
-                        <span class="text-success">
-                          <i class="fas fa-arrow-up"></i> 33.1%
-                        </span>
-                        <span class="text-muted">Since last month</span>
-                      </p> --}}
-                  </div>
-                    <!-- /.d-flex -->
-    
-                    <div class="position-relative mb-4">
-                      <canvas id="sales-chart" height="200"></canvas>
-                    </div>
-    
-                    <div class="d-flex flex-row justify-content-end">
-                      <span class="mr-2">
-                        <i class="fas fa-square text-primary"></i> Periode Ini
-                      </span>
-    
-                      <span>
-                        <i class="fas fa-square text-gray"></i> Periode Lalu
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.card -->
-              </div> 
-              <!-- /.col-md-6 -->
-            </div>
-            <!--Last-->
           </div>
         </div>
         <!-- /.row -->

@@ -205,7 +205,7 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
               <div class="container-fluid">
                 <div class="row mb-2">
                   <div class="col-sm-6">
-                    <h1 class="m-0">Hutang</h1>
+                    <h1 class="m-0">List Hutang Petani</h1>
                   </div><!-- /.col -->
                   <div class="col-sm-6">
                   </div><!-- /.col -->
@@ -254,70 +254,69 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
               <div class="row">
                 <div class="col-md-6">
                   <div class="card card-danger">
-                    <div class="card-header">
-                      <h3 class="card-title">Hutang Baru</h3>
-                    </div>
-                    <div class="card-body">
-                      <div class="form-group">
-                        <label>Nama Petani:</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="far fa-user"></i></span>
-                            </div>
-                            <select class="form-control">
-                                <option value="" selected disabled>Pilih Petani</option>
-                                <?php
-                                foreach ($users as $user) {
-                                    echo "<option value='" . $user['id'] . "'>" . $user['name'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <!-- /.input group -->
+                      <div class="card-header">
+                          <h3 class="card-title">Hutang Baru</h3>
                       </div>
-                      <!-- Date dd/mm/yyyy -->
-                      <div class="form-group">
-                        <label>Tanggal Hutang:</label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                      <div class="card-body">
+                          <div class="form-group">
+                              <label>Nomor ID Petani:</label>
+                              <div class="input-group">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="far fa-user"></i></span>
+                                  </div>
+                                  <select class="form-control">
+                                      <option value="" selected disabled>Pilih ID Petani</option>
+                                      <?php
+                                      foreach ($users as $user) {
+                                          echo "<option value='" . $user['id'] . "'>" . $user['id'] . " - " . $user['name'] . "</option>";
+                                      }
+                                      ?>
+                                  </select>
+                              </div>
+                              <!-- /.input group -->
                           </div>
-                          <input type="date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
-                        </div>
-                        <!-- /.input group -->
-                      </div>
-                      <!-- /.form group -->
-                    
-                      <!-- IP mask -->
-                      <div class="form-group">
-                        <label>Bon</label>
-      
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
+                          <!-- Date dd/mm/yyyy -->
+                          <div class="form-group">
+                              <label>Tanggal Hutang:</label>
+                              <div class="input-group">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                  </div>
+                                  <input type="date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                              </div>
+                              <!-- /.input group -->
                           </div>
-                          <input type="number" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
-                        </div>
-                        <!-- /.input group -->
+                          <!-- /.form group -->
+                      
+                          <!-- IP mask -->
+                          <div class="form-group">
+                              <label>Bon</label>
+                
+                              <div class="input-group">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
+                                  </div>
+                                  <input type="number" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
+                              </div>
+                              <!-- /.input group -->
+                          </div>
+                          <form action="#" method="POST" id="quickForm">
+                              @csrf
+                              <div class="row" style="width: 100%; justify-content: center;">
+                                  <div class="col-12">
+                                      <button type="submit" class="btn btn-danger btn-block">Simpan</button>
+                                  </div>
+                              </div>
+                          </form>
+                          <!-- /.form group -->     
                       </div>
-                      <form action="#" method="POST" id="quickForm">
-                        @csrf
-
-                                    <div class="row" style="width: 100%; justify-content: center;">
-                                        <div class="col-12">
-                                            <button type="submit" class="btn btn-danger btn-block">Simpan</button>
-                                        </div>
-                                    </div>
-                      </form>
-                      <!-- /.form group -->     
-                    </div>
-                    <!-- /.card-body -->
+                      <!-- /.card-body -->
                   </div>
                   <!-- /.card -->
-                </div>
+              </div>
                 <!-- /.col (left) -->
                 <div class="col-md-6">
-                  <div class="card card-blue">
+                  <div class="card card-green">
                     <div class="card-header">
                       <h3 class="card-title">Pelunasan</h3>
                     </div>
@@ -336,16 +335,16 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
       
                       <!-- Date mm/dd/yyyy -->
                       <div class="form-group">
-                        <label>Nama Petani:</label>
+                        <label>Nomor ID Petani:</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="far fa-user"></i></span>
                             </div>
                             <select class="form-control">
-                                <option value="" selected disabled>Pilih Petani</option>
+                                <option value="" selected disabled>Pilih ID Petani</option>
                                 <?php
                                 foreach ($users as $user) {
-                                    echo "<option value='" . $user['id'] . "'>" . $user['name'] . "</option>";
+                                    echo "<option value='" . $user['id'] . "'>" . $user['id'] . " - " . $user['name'] . "</option>";
                                 }
                                 ?>
                             </select>
@@ -370,7 +369,7 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
 
                                     <div class="row" style="width: 100%; justify-content: center;">
                                         <div class="col-12">
-                                            <button type="submit" class="btn btn-primary btn-block">Selesai</button>
+                                            <button type="submit" class="btn btn-success btn-block">Selesai</button>
                                         </div>
                                     </div>
                       </form>
