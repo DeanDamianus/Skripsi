@@ -300,6 +300,15 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                         </div>
                         <!-- /.input group -->
                       </div>
+                      <form action="#" method="POST" id="quickForm">
+                        @csrf
+
+                                    <div class="row" style="width: 100%; justify-content: center;">
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-danger btn-block">Simpan</button>
+                                        </div>
+                                    </div>
+                      </form>
                       <!-- /.form group -->     
                     </div>
                     <!-- /.card-body -->
@@ -356,6 +365,15 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                         </div>
                         <!-- /.input group -->
                       </div>
+                      <form action="#" method="POST" id="quickForm">
+                        @csrf
+
+                                    <div class="row" style="width: 100%; justify-content: center;">
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary btn-block">Selesai</button>
+                                        </div>
+                                    </div>
+                      </form>
                       <!-- /.form group -->     
                     </div>
                     <!-- /.card-body -->

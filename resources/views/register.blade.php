@@ -223,7 +223,7 @@
                                     <button type="submit" class="btn btn-primary btn-block">Register</button>
                                 </div>
                             </div>
-                </form>
+              </form>
             </div>
             <!-- /.card -->
             </div>
