@@ -64,9 +64,18 @@
                   </p>
                 </a>
               </li>
+              <li class="nav-item menu-close">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-edit"></i>
+                  <p>
+                    <strong>INPUT NOTA</strong>
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+              </li>
               <li class="nav-item menu-open">
                 <a href="{{url('/parameter')}}" class="nav-link active">
-                  <i class="nav-icon fas fa-edit"></i>
+                  <i class="nav-icon fas fa-cog"></i>
                   <p>
                     <strong>PARAMETER</strong>
                     <i class="right fas fa-angle-left"></i>
