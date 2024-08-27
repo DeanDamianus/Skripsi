@@ -145,15 +145,6 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                 </a>
               </li>
               <li class="nav-item menu-close">
-                <a href="{{url('/parameter')}}" class="nav-link">
-                  <i class="nav-icon fas fa-cog"></i>
-                  <p>
-                    <strong>PARAMETER</strong>
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item menu-close">
                 <a href="{{url('/hutang-admin')}}" class="nav-link active">
                   <i class="nav-icon fas fa-hand-holding-usd"></i>
                   <p>
@@ -190,6 +181,15 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                     </a>
                   </li>
                 </ul>
+              </li>
+              <li class="nav-item menu-close">
+                <a href="{{url('/parameter')}}" class="nav-link">
+                  <i class="nav-icon fas fa-cog"></i>
+                  <p>
+                    <strong>PARAMETER</strong>
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
               </li>
               <li class="nav-item menu-close">
                 <a href="logout" class="nav-link">
@@ -278,7 +278,7 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                                         <span class="input-group-text"><i class="far fa-user"></i></span>
                                     </div>
                                     <select class="form-control">
-                                      <option value="" selected disabled>Pilih ID Petani</option>
+                                      <option value="" selected disabled>Pilih Petani</option>
                                       <?php
                                       foreach ($users as $user) {
                                         echo "<option value='" . $user['id'] . "'>" . $user['id'] . " - " . $user['name'] . "</option>";
@@ -355,7 +355,7 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                                 <span class="input-group-text"><i class="far fa-user"></i></span>
                             </div>
                             <select class="form-control">
-                                <option value="" selected disabled>Pilih ID Petani</option>
+                                <option value="" selected disabled>Pilih Petani</option>
                                 <?php
                                 foreach ($users as $user) {
                                     echo "<option value='" . $user['id'] . "'>" . $user['id'] . " - " . $user['name'] . "</option>";
@@ -374,7 +374,7 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                           <div class="input-group-prepend">
                             <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
                           </div>
-                          <input type="number" class="form-control" data-inputmask="'alias': 'ip'" data-mask>
+                          <input type="number" class="form-control"  data-mask>
                         </div>
                         <!-- /.input group -->
                       </div>

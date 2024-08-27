@@ -99,15 +99,6 @@
                 </a>
               </li>
               <li class="nav-item menu-close">
-                <a href="{{url('/parameter')}}" class="nav-link">
-                  <i class="nav-icon fas fa-cog"></i>
-                  <p>
-                    <strong>PARAMETER</strong>
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item menu-close">
                 <a href="{{url('/hutang-admin')}}" class="nav-link">
                   <i class="nav-icon fas fa-hand-holding-usd"></i>
                   <p>
@@ -144,6 +135,15 @@
                     </a>
                   </li>
                 </ul>
+              </li>
+              <li class="nav-item menu-active">
+                <a href="{{url('/parameter')}}" class="nav-link-open">
+                  <i class="nav-icon fas fa-cog"></i>
+                  <p>
+                    <strong>PARAMETER</strong>
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
               </li>
               <li class="nav-item menu-close">
                 <a href="logout" class="nav-link">

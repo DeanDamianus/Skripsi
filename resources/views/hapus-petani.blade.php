@@ -136,15 +136,6 @@ mysqli_close($con);
                 </a>
               </li>
               <li class="nav-item menu-close">
-                <a href="{{url('/parameter')}}" class="nav-link">
-                  <i class="nav-icon fas fa-cog"></i>
-                  <p>
-                    <strong>PARAMETER</strong>
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item menu-close">
                 <a href="{{url('/hutang-admin')}}" class="nav-link">
                   <i class="nav-icon fas fa-hand-holding-usd"></i>
                   <p>
@@ -181,6 +172,15 @@ mysqli_close($con);
                     </a>
                   </li>
                 </ul>
+              </li>
+              <li class="nav-item menu-close">
+                <a href="{{url('/parameter')}}" class="nav-link">
+                  <i class="nav-icon fas fa-cog"></i>
+                  <p>
+                    <strong>PARAMETER</strong>
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
               </li>
               <li class="nav-item menu-close">
                 <a href="logout" class="nav-link">

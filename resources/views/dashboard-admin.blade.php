@@ -120,15 +120,6 @@ $totalNetto = $nettoData['total_netto'];
                 </a>
               </li>
               <li class="nav-item menu-close">
-                <a href="{{url('/parameter')}}" class="nav-link">
-                  <i class="nav-icon fas fa-cog"></i>
-                  <p>
-                    <strong>PARAMETER</strong>
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item menu-close">
                 <a href="#" class="nav-link">
                   <i class="nav-icon fas fa-edit"></i>
                   <p>
@@ -175,7 +166,15 @@ $totalNetto = $nettoData['total_netto'];
                   </li>
                 </ul>
               </li>
-              
+              <li class="nav-item menu-close">
+                <a href="{{url('/parameter')}}" class="nav-link">
+                  <i class="nav-icon fas fa-cog"></i>
+                  <p>
+                    <strong>PARAMETER</strong>
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+              </li>
               <li class="nav-item menu-close">
                 <a href="logout" class="nav-link">
                   <i class="nav-icon fas fa-sign-out-alt"></i>

@@ -25,6 +25,40 @@
 -->
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="{{url('/owner')}}" class="nav-link">Home</a>
+      </li>
+
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item d-none d-sm-inline-block">
+        <div class="dropdown">
+          <button class="nav-link" type="button" data-toggle="dropdown" style=" border: black;">
+            2024
+          </button>
+          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-calendar"></i> 2025
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+          <i class="fas fa-expand-arrows-alt"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>
 
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -73,15 +107,6 @@
                   </p>
                 </a>
               </li>
-              <li class="nav-item menu-open">
-                <a href="{{url('/parameter')}}" class="nav-link active">
-                  <i class="nav-icon fas fa-cog"></i>
-                  <p>
-                    <strong>PARAMETER</strong>
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-              </li>
               <li class="nav-item menu-close">
                 <a href="{{url('/hutang-admin')}}" class="nav-link">
                   <i class="nav-icon fas fa-hand-holding-usd"></i>
@@ -120,6 +145,15 @@
                   </li>
                 </ul>
               </li>
+              <li class="nav-item menu-open">
+                <a href="{{url('/parameter')}}" class="nav-link active">
+                  <i class="nav-icon fas fa-cog"></i>
+                  <p>
+                    <strong>PARAMETER</strong>
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+              </li>
               <li class="nav-item menu-close">
                 <a href="logout" class="nav-link">
                   <i class="nav-icon fas fa-sign-out-alt"></i>
@@ -137,7 +171,15 @@
 
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Input Parameter</h1>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
     <!-- /.content-header -->
 
     <!-- Main content -->
@@ -145,13 +187,45 @@
           <div class="content">
             <div class="content-header">
               <div class="container-fluid">
-                <div class="row mb-2">
-                  <div class="col-sm-6">
-                    <h1 class="m-0">Parameter</h1>
-                  </div><!-- /.col -->
-                  <div class="col-sm-6">
-                  </div><!-- /.col -->
-                </div><!-- /.row -->
+                <div class="row">
+                  <!-- left column -->
+                  <div class="col-md-12">
+                    <!-- jquery validation -->
+                    <div class="card card-primary">
+                      <!-- /.card-header -->
+                      <!-- form start -->
+                      <form id="quickForm">
+                        <div class="card-body">
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Biaya Jual</label>
+                            <input type="number" name="email" class="form-control" id="exampleInputEmail1" placeholder="Masukkan Parameter">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">Naik Turun</label>
+                            <input type="number" name="password" class="form-control" id="exampleInputPassword1" placeholder="Masukkan Parameter">
+                          </div>
+                          <div class="form-group mb-0">
+                            <div class="custom-control custom-checkbox">
+                              <input type="checkbox" name="terms" class="custom-control-input" id="exampleCheck1">
+                              <label class="custom-control-label" for="exampleCheck1">Saya Setuju akan<a href="#"> pergantian Parameter Berikut</a>.</label>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                          <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                      </form>
+                    </div>
+                    <!-- /.card -->
+                    </div>
+                  <!--/.col (left) -->
+                  <!-- right column -->
+                  <div class="col-md-6">
+        
+                  </div>
+                  <!--/.col (right) -->
+                </div>
             </div><!-- /.container-fluid -->
           </div>
         <div class="row">
