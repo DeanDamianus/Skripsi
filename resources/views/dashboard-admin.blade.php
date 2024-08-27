@@ -233,7 +233,7 @@ $totalNetto = $nettoData['total_netto'];
             <div class="small-box bg-success">
               <div class="inner">
                 <h3><sup style="font-size: 20px">Rp.</sup>151.712.500</h3>
-                <p>Total Jumlah Kotor</p>
+                <p>Total Jumlah</p>
               </div>
               <div class="icon">
                 <i class="fas fa-coins"></i> <!-- Ikon koin -->

@@ -1,3 +1,32 @@
+<?php
+$con = mysqli_connect("localhost", "root", "", "simbako_app");
+
+// Check connection
+if(!$con){
+    die("Koneksi Error: " . mysqli_connect_error());
+}
+
+// Check if form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $biaya_jual = $_POST['biaya_jual'];
+    $naik_turun = $_POST['naik_turun'];
+
+    // Prepare an SQL statement
+    $stmt = $con->prepare("INSERT INTO parameters (biaya_jual, naik_turun) VALUES (?, ?)");
+    $stmt->bind_param("dd", $biaya_jual, $naik_turun);
+
+    if ($stmt->execute()) {
+        echo "New record created successfully";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    // Close the statement and connection
+    $stmt->close();
+    mysqli_close($con);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -194,28 +223,29 @@
                     <div class="card card-primary">
                       <!-- /.card-header -->
                       <!-- form start -->
-                      <form id="quickForm">
+                      <form id="quickForm" method="POST" action="">
                         <div class="card-body">
-                          <div class="form-group">
-                            <label for="exampleInputEmail1">Biaya Jual</label>
-                            <input type="number" name="email" class="form-control" id="exampleInputEmail1" placeholder="Masukkan Parameter">
-                          </div>
-                          <div class="form-group">
-                            <label for="exampleInputPassword1">Naik Turun</label>
-                            <input type="number" name="password" class="form-control" id="exampleInputPassword1" placeholder="Masukkan Parameter">
-                          </div>
-                          <div class="form-group mb-0">
-                            <div class="custom-control custom-checkbox">
-                              <input type="checkbox" name="terms" class="custom-control-input" id="exampleCheck1">
-                              <label class="custom-control-label" for="exampleCheck1">Saya Setuju akan<a href="#"> pergantian Parameter Berikut</a>.</label>
+                            <div class="form-group">
+                                <label for="biaya_jual">Biaya Jual</label>
+                                <input type="number" name="biaya_jual" class="form-control" id="biaya_jual" placeholder="Masukkan Parameter" step="0.01">
                             </div>
-                          </div>
+                            <div class="form-group">
+                                <label for="naik_turun">Naik Turun</label>
+                                <input type="number" name="naik_turun" class="form-control" id="naik_turun" placeholder="Masukkan Parameter" step="0.01">
+                            </div>
+                            <div class="form-group mb-0">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" name="terms" class="custom-control-input" id="exampleCheck1">
+                                    <label class="custom-control-label" for="exampleCheck1">Saya Setuju akan<a href="#"> pergantian Parameter Berikut</a>.</label>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                          <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
-                      </form>
+                    </form>
+                    
                     </div>
                     <!-- /.card -->
                     </div>

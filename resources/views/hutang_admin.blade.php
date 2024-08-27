@@ -1,6 +1,4 @@
 <?php
-
-// Establish the connection
 $con = mysqli_connect("localhost", "root", "", "simbako_app");
 
 // Check connection
@@ -29,8 +27,6 @@ $users = [];
 while ($userRow = mysqli_fetch_assoc($userResult)) {
     $users[] = $userRow;
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
