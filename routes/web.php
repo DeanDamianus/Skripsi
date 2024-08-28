@@ -18,6 +18,9 @@ Route::get('/error', function() {
 // Register routes
 Route::get('/register', [SesiController::class, 'register'])->name('register.form');
 Route::post('/register', [SesiController::class, 'create'])->name('register.store');
+Route::post('/parameter', [SesiController::class, 'store']);
+
+
 
 // Routes for authenticated users based on roles
 Route::middleware('auth')->group(function () {

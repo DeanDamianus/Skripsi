@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class SesiController extends Controller
 {
@@ -74,4 +75,28 @@ class SesiController extends Controller
         // Redirect to login with a success message
         return redirect('/owner')->with('success', 'Registrasi berhasil! Silakan login.');
     }
+    public function store(Request $request)
+{
+    // Validate the input
+    $request->validate([
+        'biaya_jual' => 'required|numeric',
+        'naik_turun' => 'required|numeric',
+    ]);
+
+    // Update the record
+    $id = $request->input('id');
+    $biaya_jual = $request->input('biaya_jual');
+    $naik_turun = $request->input('naik_turun');
+    
+    // Perform update
+    DB::table('parameter_2024')
+        ->where('id', $id)
+        ->update([
+            'biaya_jual' => $biaya_jual,
+            'naik_turun' => $naik_turun,
+        ]);
+
+    return redirect()->back()->with('message', 'Record updated successfully!');
+}
+
 }
