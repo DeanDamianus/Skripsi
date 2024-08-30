@@ -120,7 +120,7 @@ $totalNetto = $nettoData['total_netto'];
                 </a>
               </li>
               <li class="nav-item menu-close">
-                <a href="#" class="nav-link">
+                <a href="{{url('/input')}}" class="nav-link">
                   <i class="nav-icon fas fa-edit"></i>
                   <p>
                     <strong>INPUT NOTA</strong>
