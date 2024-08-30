@@ -169,38 +169,38 @@ $total_harga = 0;
         </aside>
 
         <div class="content-wrapper">
-          <!-- Content Header (Page header) -->
+            <!-- Content Header (Page header) -->
 
-          <!-- /.content-header -->
-          <section class="content-header">
-              <div class="container-fluid">
-                  <div class="row mb-2">
-                      <div class="col-sm-6">
-                          <h1>Input Nota</h1>
-                      </div>
-                  </div>
-              </div><!-- /.container-fluid -->
-          </section>
+            <!-- /.content-header -->
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>Input Nota</h1>
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </section>
 
-          <!-- Main content -->
-
-          <div class="row">
-              <div class="col-12">
-                  <div class="card">
-                      <!-- /.card-header -->
-                      <div class="card-body table-responsive p-0">
-                          <table class="table table-hover text-nowrap">
-                              <thead>
-                                  <tr>
-                                      <th>ID Petani</th>
-                                      <th>Nama Petani</th>
-                                      <th>Netto Total</th>
-                                      <th>Jumlah</th>
-                                      <th>Action</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <?php
+            <!-- Main content -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>ID Petani</th>
+                                            <th>Nama Petani</th>
+                                            <th>Netto Total</th>
+                                            <th>Jumlah</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
                 while($row = mysqli_fetch_assoc($result)){
                     // Query to get the total bruto for each petani
                     $id_petani = $row['id'];
@@ -220,26 +220,28 @@ $total_harga = 0;
                     $hargaFormatted = 'Rp. ' . number_format($harga, 0, ',', '.');
                     $total_harga += $harga;
                     ?>
-                                  <tr>
-                                      <td><?php echo $row['id']; ?></td>
-                                      <td><?php echo $row['name']; ?></td>
-                                      <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
-                                      <td><?php echo $hargaFormatted; ?></td>
-                                      <td><button type="button" class="btn btn-block btn-success">Edit</button></td>
-                                  </tr>
-                                  <?php 
+                                        <tr>
+                                            <td><?php echo $row['id']; ?></td>
+                                            <td><?php echo $row['name']; ?></td>
+                                            <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
+                                            <td><?php echo $hargaFormatted; ?></td>
+                                            <td><a href = "{{ url('/inputPetani') }}"  type="button" class="btn btn-block btn-success">Edit</a>
+                                            </td>
+                                        </tr>
+                                        <?php 
                 }
                 ?>
-                              </tbody>
-                          </table>
-                      </div>
-                      <!-- /.card-body -->
-                  </div>
-                  <!-- /.card -->
-              </div>
-          </div>
-          <!-- /.row -->
-      </div>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
         <!-- /.row -->
     </div>
     <!-- /.container-fluid -->

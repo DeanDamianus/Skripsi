@@ -195,25 +195,25 @@ $total_harga = 0;
             </section>
 
             <!-- Main content -->
-
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0">
-                            <table class="table table-hover text-nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>ID Petani</th>
-                                        <th>Nama Petani</th>
-                                        <th>Netto Total</th>
-                                        <th>Jumlah</th>
-                                        <th>Komisi</th>
-                                        <th>Hasil Bersih</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>ID Petani</th>
+                                            <th>Nama Petani</th>
+                                            <th>Netto Total</th>
+                                            <th>Jumlah</th>
+                                            <th>Komisi</th>
+                                            <th>Hasil Bersih</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
                   while($row = mysqli_fetch_assoc($result)){
                       // Query to get the total bruto for each petani
                       $id_petani = $row['id'];
@@ -233,37 +233,38 @@ $total_harga = 0;
                       $hargaFormatted = 'Rp. ' . number_format($harga, 0, ',', '.');
                       $total_harga += $harga;
                       ?>
-                                    <tr>
-                                        <td><?php echo $row['id']; ?></td>
-                                        <td><?php echo $row['name']; ?></td>
-                                        <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
-                                        <td><?php echo $hargaFormatted; ?></td>
-                                        <td>Komisi Calculation</td>
-                                        <td>Hasil Bersih Calculation</td>
-                                    </tr>
-                                    <?php 
+                                        <tr>
+                                            <td><?php echo $row['id']; ?></td>
+                                            <td><?php echo $row['name']; ?></td>
+                                            <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
+                                            <td><?php echo $hargaFormatted; ?></td>
+                                            <td>Komisi Calculation</td>
+                                            <td>Hasil Bersih Calculation</td>
+                                        </tr>
+                                        <?php 
                   }
                   ?>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
 
-                                        <th></th>
-                                        <th></th>
-                                        <th>Total Netto : <?php ?></th>
-                                        <th>Total Jumlah : <?php echo number_format($total_harga, 0, ',', '.'); ?></th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                                            <th></th>
+                                            <th></th>
+                                            <th>Total Netto : <?php ?></th>
+                                            <th>Total Jumlah : <?php echo number_format($total_harga, 0, ',', '.'); ?></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
-                        <!-- /.card-body -->
+                        <!-- /.card -->
                     </div>
-                    <!-- /.card -->
                 </div>
+                <!-- /.row -->
             </div>
-            <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
     </div>

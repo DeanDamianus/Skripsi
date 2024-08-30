@@ -91,7 +91,7 @@
                                 <i class="nav-icon fas fa-exchange-alt"></i>
                                 <p>
                                     <strong>REKAP</strong>
-                                    <i class="right fas fa-angle-down"></i>
+                                    <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
                         </li>
@@ -109,7 +109,7 @@
                                 <i class="nav-icon fas fa-hand-holding-usd"></i>
                                 <p>
                                     <strong>HUTANG</strong>
-                                    <i class="right fas fa-angle-down"></i>
+                                    <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
                         </li>

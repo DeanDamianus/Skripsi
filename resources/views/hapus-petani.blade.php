@@ -140,7 +140,7 @@ mysqli_close($con);
                   <i class="nav-icon fas fa-hand-holding-usd"></i>
                   <p>
                     <strong>HUTANG</strong>
-                    <i class="right fas fa-angle-down"></i>
+                    <i class="right fas fa-angle-left"></i>
                   </p>
                 </a>
               </li>
