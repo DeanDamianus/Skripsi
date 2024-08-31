@@ -88,97 +88,87 @@ $total_harga = 0;
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Input Nota John Doe</h1>
+                        <h1>List Rekap John Doe</h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
         </section>
 
         <!-- Main content -->
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Netto</label>
-                        <input type="number" class="form-control" id="exampleInputPassword1" placeholder="Masukkan Netto">
-                    </div>
-                    <!-- /.form-group -->
-                    <div class="form-group">
-                        <label>Harga</label>
-                        <input type="number" class="form-control" id="exampleInputPassword1" placeholder="Masukkan Harga">
-                    </div>
-                    <!-- /.form-group -->
-                </div>
-                <!-- /.col -->
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Berat Gudang</label>
-                        <input type="number" class="form-control" id="exampleInputPassword1" placeholder="Masukkan Berat Gudang (Kg)">
-                    </div>
-                    <!-- /.form-group -->
-                    <div class="form-group">
-                        <label>Disabled Result</label>
-                        <select class="form-control select2" style="width: 100%;">
-                            <option selected="selected">Alabama</option>
-                            <option>Alaska</option>
-                            <option disabled="disabled">California (disabled)</option>
-                            <option>Delaware</option>
-                            <option>Tennessee</option>
-                            <option>Texas</option>
-                            <option>Washington</option>
-                        </select>
-                    </div>
-                    <!-- /.form-group -->
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
 
-            <h5>Custom Color Variants</h5>
-            <div class="row">
-                <div class="col-12 col-sm-6">
-                    <div class="form-group">
-                        <label>Minimal (.select2-danger)</label>
-                        <select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger"
-                            style="width: 100%;">
-                            <option selected="selected">Alabama</option>
-                            <option>Alaska</option>
-                            <option>California</option>
-                            <option>Delaware</option>
-                            <option>Tennessee</option>
-                            <option>Texas</option>
-                            <option>Washington</option>
-                        </select>
-                    </div>
-                    <!-- /.form-group -->
-                </div>
-                <!-- /.col -->
-                <div class="col-12 col-sm-6">
-                    <div class="form-group">
-                        <label>Multiple (.select2-purple)</label>
-                        <div class="select2-purple">
-                            <select class="select2" multiple="multiple" data-placeholder="Select a State"
-                                data-dropdown-css-class="select2-purple" style="width: 100%;">
-                                <option>Alabama</option>
-                                <option>Alaska</option>
-                                <option>California</option>
-                                <option>Delaware</option>
-                                <option>Tennessee</option>
-                                <option>Texas</option>
-                                <option>Washington</option>
-                            </select>
+            <!-- Main content -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>ID Petani</th>
+                                            <th>Nama Petani</th>
+                                            <th>Netto Total</th>
+                                            <th>Jumlah</th>
+                                            <th>Komisi</th>
+                                            <th>Hasil Bersih</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                  while($row = mysqli_fetch_assoc($result)){
+                      // Query to get the total bruto for each petani
+                      $id_petani = $row['id'];
+                      $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                      $bruto_result = mysqli_query($con, $query_bruto);
+                      $bruto_data = mysqli_fetch_assoc($bruto_result);
+                      
+                      $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
+                      
+                      $query_harga = "SELECT harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                      $harga_result = mysqli_query($con, $query_harga);
+                      $harga_data = mysqli_fetch_assoc($harga_result);
+                      
+                      $harga_per_unit = isset($harga_data['harga']) ? $harga_data['harga'] : 0;
+                      
+                      $harga = $total_bruto * $harga_per_unit;
+                      $hargaFormatted = 'Rp. ' . number_format($harga, 0, ',', '.');
+                      $total_harga += $harga;
+                      ?>
+                                        <tr>
+                                            <td><?php echo $row['id']; ?></td>
+                                            <td><?php echo $row['name']; ?></td>
+                                            <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
+                                            <td><?php echo $hargaFormatted; ?></td>
+                                            <td>Komisi Calculation</td>
+                                            <td>Hasil Bersih Calculation</td>
+                                        </tr>
+                                        <?php 
+                  }
+                  ?>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+
+                                            <th></th>
+                                            <th></th>
+                                            <th>Total Netto : <?php ?></th>
+                                            <th>Total Jumlah : <?php echo number_format($total_harga, 0, ',', '.'); ?></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
+                        <!-- /.card -->
                     </div>
-                    <!-- /.form-group -->
                 </div>
-
-                <!-- /.col -->
+                <!-- /.row -->
             </div>
-
-            <!-- /.row -->
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Submit</button>
         </div>
         <!-- /.content-wrapper -->
 
