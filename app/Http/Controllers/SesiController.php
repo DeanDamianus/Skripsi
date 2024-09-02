@@ -59,16 +59,12 @@ class SesiController extends Controller
         // Validate the input
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed|min:6',
             'role' => 'required|in:operator,petani',
         ]);
 
         // Create a new user
         User::create([
             'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
             'role' => $validated['role'],
         ]);
 

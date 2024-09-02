@@ -8,9 +8,18 @@ if (!$con) {
     die('Koneksi Error: ' . mysqli_connect_error());
 }
 
-//Querry nama
-$nama = "SELECT * FROM users WHERE role = 'petani'";
+// Get the user ID from the query parameter (you may need to validate this ID in a real application)
+$id = $_GET['id'];
+
+// Fetch the user's data from the database
+$nama = "SELECT * FROM users WHERE id = $id";
 $result = mysqli_query($con, $nama);
+
+if ($user_data = mysqli_fetch_assoc($result)) {
+    $user_name = $user_data['name'];
+} else {
+    $user_name = 'Unknown'; // Default value if user not found
+}
 
 $total_harga = 0;
 ?>
@@ -88,7 +97,7 @@ $total_harga = 0;
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Input Nota John Doe</h1>
+                        <h1>Input Nota <?php echo htmlspecialchars($user_name); ?></h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->

@@ -1,5 +1,4 @@
 <?php
-
 // Establish the connection
 $con = mysqli_connect('localhost', 'root', '', 'simbako_app');
 
@@ -8,11 +7,27 @@ if (!$con) {
     die('Koneksi Error: ' . mysqli_connect_error());
 }
 
-//Querry nama
-$nama = "SELECT * FROM users WHERE role = 'petani'";
-$result = mysqli_query($con, $nama);
+// Check if 'id' exists in the URL
+if (isset($_GET['id'])) {
+    // Get the ID from the query parameter
+    $id = $_GET['id'];
 
-$total_harga = 0;
+    // Fetch the user's data from the database
+    $query_user = "SELECT * FROM users WHERE id = $id";
+    $user_result = mysqli_query($con, $query_user);
+    $user_data = mysqli_fetch_assoc($user_result);
+
+    // Fetch rekap data for the current user
+    $query_rekap = "SELECT * FROM rekap_2024 WHERE id_petani = $id";
+    $rekap_result = mysqli_query($con, $query_rekap);
+
+    // Initialize total_harga
+    $total_harga = 0;
+} else {
+    // Redirect or show an error message if 'id' is not provided
+    echo "ID parameter is missing in the URL.";
+    exit; // Stop further execution
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -88,7 +103,7 @@ $total_harga = 0;
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>List Rekap John Doe</h1>
+                        <h1>List Rekap <?php echo $user_data['name']; ?></h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -96,20 +111,21 @@ $total_harga = 0;
 
         <!-- Main content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-
-            <!-- Main content -->
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
+                            <div class="card-header">
+                                <button onclick="window.location.href='/inputPetani?id=<?php echo $id; ?>'" class="btn btn-primary">
+                                    Tambah Rekap
+                                </button>                                
+                            </div>
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0">
                                 <table class="table table-hover text-nowrap">
                                     <thead>
                                         <tr>
                                             <th>ID Petani</th>
-                                            <th>Nama Petani</th>
                                             <th>Netto Total</th>
                                             <th>Jumlah</th>
                                             <th>Komisi</th>
@@ -118,44 +134,40 @@ $total_harga = 0;
                                     </thead>
                                     <tbody>
                                         <?php
-                  while($row = mysqli_fetch_assoc($result)){
-                      // Query to get the total bruto for each petani
-                      $id_petani = $row['id'];
-                      $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                      $bruto_result = mysqli_query($con, $query_bruto);
-                      $bruto_data = mysqli_fetch_assoc($bruto_result);
-                      
-                      $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
-                      
-                      $query_harga = "SELECT harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                      $harga_result = mysqli_query($con, $query_harga);
-                      $harga_data = mysqli_fetch_assoc($harga_result);
-                      
-                      $harga_per_unit = isset($harga_data['harga']) ? $harga_data['harga'] : 0;
-                      
-                      $harga = $total_bruto * $harga_per_unit;
-                      $hargaFormatted = 'Rp. ' . number_format($harga, 0, ',', '.');
-                      $total_harga += $harga;
-                      ?>
-                                        <tr>
-                                            <td><?php echo $row['id']; ?></td>
-                                            <td><?php echo $row['name']; ?></td>
-                                            <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
-                                            <td><?php echo $hargaFormatted; ?></td>
-                                            <td>Komisi Calculation</td>
-                                            <td>Hasil Bersih Calculation</td>
-                                        </tr>
-                                        <?php 
-                  }
-                  ?>
+                                        while ($row = mysqli_fetch_assoc($rekap_result)) {
+                                            // Get data for each rekap row
+                                            $id_petani = $row['id_petani'];
+                                            $netto = $row['netto'];
+                                            $harga_per_unit = $row['harga'];
+
+                                            // Calculate total harga
+                                            $jumlah = $netto * $harga_per_unit;
+                                            $komisi = $jumlah * 0.1; // Example: 10% komisi
+                                            $hasil_bersih = $jumlah - $komisi;
+
+                                            // Format harga for display
+                                            $jumlahFormatted = 'Rp. ' . number_format($jumlah, 0, ',', '.');
+                                            $komisiFormatted = 'Rp. ' . number_format($komisi, 0, ',', '.');
+                                            $hasilBersihFormatted = 'Rp. ' . number_format($hasil_bersih, 0, ',', '.');
+
+                                            // Add to total_harga
+                                            $total_harga += $jumlah;
+                                        ?>
+                                            <tr>
+                                                <td><?php echo $id_petani; ?></td>
+                                                <td><?php echo number_format($netto, 0, ',', '.') . ' kg'; ?></td>
+                                                <td><?php echo $jumlahFormatted; ?></td>
+                                                <td><?php echo $komisiFormatted; ?></td>
+                                                <td><?php echo $hasilBersihFormatted; ?></td>
+                                            </tr>
+                                        <?php } ?>
                                     </tbody>
                                     <tfoot>
                                         <tr>
-
                                             <th></th>
                                             <th></th>
-                                            <th>Total Netto : <?php ?></th>
-                                            <th>Total Jumlah : <?php echo number_format($total_harga, 0, ',', '.'); ?></th>
+                                            <th>Total Netto :</th>
+                                            <th>Total Jumlah : <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
                                             <th></th>
                                             <th></th>
                                         </tr>
