@@ -226,8 +226,6 @@ $total_harga = 0;
                                             <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
                                             <td><?php echo $hargaFormatted; ?></t   d>
                                             <td><a href="{{ url('/dataInput?id=' . $row['id']) }}" type="button" class="btn btn-block btn-success">Edit</a></td>
-                                                
-                                            </td>
                                         </tr>
                                         <?php 
                 }

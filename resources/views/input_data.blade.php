@@ -7,28 +7,43 @@ if (!$con) {
     die('Koneksi Error: ' . mysqli_connect_error());
 }
 
+// Initialize $user_data as an empty array
+$user_data = array();
+$total_harga = 0;
+
 // Check if 'id' exists in the URL
 if (isset($_GET['id'])) {
     // Get the ID from the query parameter
-    $id = $_GET['id'];
+    $id = intval($_GET['id']); // Use intval to ensure $id is an integer
 
     // Fetch the user's data from the database
     $query_user = "SELECT * FROM users WHERE id = $id";
     $user_result = mysqli_query($con, $query_user);
-    $user_data = mysqli_fetch_assoc($user_result);
 
-    // Fetch rekap data for the current user
-    $query_rekap = "SELECT * FROM rekap_2024 WHERE id_petani = $id";
-    $rekap_result = mysqli_query($con, $query_rekap);
+    if ($user_result && mysqli_num_rows($user_result) > 0) {
+        $user_data = mysqli_fetch_assoc($user_result);
 
-    // Initialize total_harga
-    $total_harga = 0;
+        // Fetch rekap data for the current user
+        $query_rekap = "SELECT * FROM rekap_2024 WHERE id_petani = $id";
+        $rekap_result = mysqli_query($con, $query_rekap);
+
+        // Check if rekap data query is successful
+        if (!$rekap_result) {
+            die('Error fetching rekap data: ' . mysqli_error($con));
+        }
+    } else {
+        // User not found, redirect or show an error message
+        echo "User not found.";
+        exit; // Stop further execution
+    }
 } else {
     // Redirect or show an error message if 'id' is not provided
     echo "ID parameter is missing in the URL.";
     exit; // Stop further execution
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -116,9 +131,10 @@ if (isset($_GET['id'])) {
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button onclick="window.location.href='/inputPetani?id=<?php echo $id; ?>'" class="btn btn-primary">
+                                <button onclick="window.location.href='/inputPetani?id=<?php echo $id; ?>'"
+                                    class="btn btn-primary">
                                     Tambah Rekap
-                                </button>                                
+                                </button>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0">
@@ -130,10 +146,15 @@ if (isset($_GET['id'])) {
                                             <th>Jumlah</th>
                                             <th>Komisi</th>
                                             <th>Hasil Bersih</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
+                                            <th>
+                                                <div class="text-center">
+                                            <th>Action</th>
+                            </div>
+                            </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <?php
                                         while ($row = mysqli_fetch_assoc($rekap_result)) {
                                             // Get data for each rekap row
                                             $id_petani = $row['id_petani'];
@@ -153,42 +174,53 @@ if (isset($_GET['id'])) {
                                             // Add to total_harga
                                             $total_harga += $jumlah;
                                         ?>
-                                            <tr>
-                                                <td><?php echo $id_petani; ?></td>
-                                                <td><?php echo number_format($netto, 0, ',', '.') . ' kg'; ?></td>
-                                                <td><?php echo $jumlahFormatted; ?></td>
-                                                <td><?php echo $komisiFormatted; ?></td>
-                                                <td><?php echo $hasilBersihFormatted; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th></th>
-                                            <th></th>
-                                            <th>Total Netto :</th>
-                                            <th>Total Jumlah : <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                    </div>
-                </div>
-                <!-- /.row -->
-            </div>
-        </div>
-        <!-- /.content-wrapper -->
+                                <tr>
+                                    <td><?php echo $id_petani; ?></td>
+                                    <td><?php echo number_format($netto, 0, ',', '.') . ' kg'; ?></td>
+                                    <td><?php echo $jumlahFormatted; ?></td>
+                                    <td><?php echo $komisiFormatted; ?></td>
+                                    <td><?php echo $hasilBersihFormatted; ?></td>
+                                    <td><button onclick="window.location.href='/inputPetani?id=<?php echo $id; ?>'"
+                                            class="btn btn-block btn-success">
+                                            Edit
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput.php?id_rekap=<?php echo $row['id_rekap']; ?>'" class="btn btn-block btn-danger">
+                                            Hapus
+                                        </button> 
+                                    </td>
 
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-        </aside>
-        <!-- /.control-sidebar -->
+                                </tr>
+                                <?php } ?>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Total Netto :</th>
+                                    <th>Total Jumlah : <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
     </div>
     <!-- ./wrapper -->
 

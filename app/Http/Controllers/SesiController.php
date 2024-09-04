@@ -94,5 +94,33 @@ class SesiController extends Controller
 
     return redirect()->back()->with('message', 'Record updated successfully!');
 }
+public function input(Request $request)
+{
+    // Validate the form data
+    $validated = $request->validate([
+        'netto' => 'required|numeric',
+        'harga' => 'required|numeric',
+        'berat_gudang' => 'required|numeric',
+        'grade' => 'required|string|max:255',
+        'id_petani' => 'required|integer',
+    ]);
+
+    // Insert the data into the rekap_2024 table
+    DB::table('rekap_2024')->insert([
+        'id_petani' => $validated['id_petani'],
+        'netto' => $validated['netto'],
+        'harga' => $validated['harga'],
+        'berat_gudang' => $validated['berat_gudang'],
+        'grade' => $validated['grade'],
+    ]);
+
+    // Redirect or return a response
+    return redirect()->back()->with('success', 'Data berhasil ditambahkan!');
+}
+
+
+
+
+
 
 }

@@ -8,10 +8,28 @@ if (!$con) {
     die('Koneksi Error: ' . mysqli_connect_error());
 }
 
-// Get the user ID from the query parameter (you may need to validate this ID in a real application)
-$id = $_GET['id'];
+// Check if the form has been submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Collect data from the form
+    $netto = $_POST['netto'];
+    $harga = $_POST['harga'];
+    $berat_gudang = $_POST['berat_gudang'];
+    $grade = $_POST['grade'];
+    $id_petani = $_GET['id']; // Assuming the ID is passed via the URL
+
+    // Insert the data into the rekap_2024 table
+    $insert_query = "INSERT INTO rekap_2024 (id_petani, netto, harga, berat_gudang, grade) 
+                     VALUES ('$id_petani', '$netto', '$harga', '$berat_gudang', '$grade')";
+
+    if (mysqli_query($con, $insert_query)) {
+        echo "Data berhasil ditambahkan!";
+    } else {
+        echo "Error: " . $insert_query . "<br>" . mysqli_error($con);
+    }
+}
 
 // Fetch the user's data from the database
+$id = $_GET['id'];
 $nama = "SELECT * FROM users WHERE id = $id";
 $result = mysqli_query($con, $nama);
 
@@ -104,91 +122,46 @@ $total_harga = 0;
         </section>
 
         <!-- Main content -->
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Netto</label>
-                        <input type="number" class="form-control" id="exampleInputPassword1" placeholder="Masukkan Netto">
-                    </div>
-                    <!-- /.form-group -->
-                    <div class="form-group">
-                        <label>Harga</label>
-                        <input type="number" class="form-control" id="exampleInputPassword1" placeholder="Masukkan Harga">
-                    </div>
-                    <!-- /.form-group -->
-                </div>
-                <!-- /.col -->
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Berat Gudang</label>
-                        <input type="number" class="form-control" id="exampleInputPassword1" placeholder="Masukkan Berat Gudang (Kg)">
-                    </div>
-                    <!-- /.form-group -->
-                    <div class="form-group">
-                        <label>Disabled Result</label>
-                        <select class="form-control select2" style="width: 100%;">
-                            <option selected="selected">Alabama</option>
-                            <option>Alaska</option>
-                            <option disabled="disabled">California (disabled)</option>
-                            <option>Delaware</option>
-                            <option>Tennessee</option>
-                            <option>Texas</option>
-                            <option>Washington</option>
-                        </select>
-                    </div>
-                    <!-- /.form-group -->
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
-
-            <h5>Custom Color Variants</h5>
-            <div class="row">
-                <div class="col-12 col-sm-6">
-                    <div class="form-group">
-                        <label>Minimal (.select2-danger)</label>
-                        <select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger"
-                            style="width: 100%;">
-                            <option selected="selected">Alabama</option>
-                            <option>Alaska</option>
-                            <option>California</option>
-                            <option>Delaware</option>
-                            <option>Tennessee</option>
-                            <option>Texas</option>
-                            <option>Washington</option>
-                        </select>
-                    </div>
-                    <!-- /.form-group -->
-                </div>
-                <!-- /.col -->
-                <div class="col-12 col-sm-6">
-                    <div class="form-group">
-                        <label>Multiple (.select2-purple)</label>
-                        <div class="select2-purple">
-                            <select class="select2" multiple="multiple" data-placeholder="Select a State"
-                                data-dropdown-css-class="select2-purple" style="width: 100%;">
-                                <option>Alabama</option>
-                                <option>Alaska</option>
-                                <option>California</option>
-                                <option>Delaware</option>
-                                <option>Tennessee</option>
-                                <option>Texas</option>
-                                <option>Washington</option>
-                            </select>
+        <form method="POST" action="{{ route('inputPetani.store', ['id' => $id]) }}">
+            @csrf
+            <input type="hidden" name="id_petani" value="{{ $id }}">
+        
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Netto</label>
+                            <input type="number" name="netto" class="form-control" placeholder="Masukkan Netto" required>
                         </div>
+                        <!-- /.form-group -->
+                        <div class="form-group">
+                            <label>Harga Berat Keranjang</label>
+                            <input type="number" name="harga" class="form-control" placeholder="Masukkan Harga" required>
+                        </div>
+                        <!-- /.form-group -->
                     </div>
-                    <!-- /.form-group -->
+                    <!-- /.col -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Berat Gudang</label>
+                            <input type="number" name="berat_gudang" class="form-control" placeholder="Masukkan Berat Gudang (Kg)" required>
+                        </div>
+                        <!-- /.form-group -->
+                        <div class="form-group">
+                            <label>Grade</label>
+                            <input type="text" name="grade" class="form-control" placeholder="Masukkan Grade" required>
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
                 </div>
-
-                <!-- /.col -->
+                <!-- /.row -->
             </div>
-
-            <!-- /.row -->
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
+            <div class="card-footer text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+        
         <!-- /.content-wrapper -->
 
         <!-- Control Sidebar -->

@@ -8,11 +8,13 @@ if (!$con) {
     die('Koneksi Error: ' . mysqli_connect_error());
 }
 
-//Querry nama
+// Query nama
 $nama = "SELECT * FROM users WHERE role = 'petani'";
 $result = mysqli_query($con, $nama);
 
 $total_harga = 0;
+$total_netto = 0; // Initialize total netto
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -214,25 +216,28 @@ $total_harga = 0;
                                     </thead>
                                     <tbody>
                                         <?php
-                  while($row = mysqli_fetch_assoc($result)){
-                      // Query to get the total bruto for each petani
-                      $id_petani = $row['id'];
-                      $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                      $bruto_result = mysqli_query($con, $query_bruto);
-                      $bruto_data = mysqli_fetch_assoc($bruto_result);
-                      
-                      $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
-                      
-                      $query_harga = "SELECT harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                      $harga_result = mysqli_query($con, $query_harga);
-                      $harga_data = mysqli_fetch_assoc($harga_result);
-                      
-                      $harga_per_unit = isset($harga_data['harga']) ? $harga_data['harga'] : 0;
-                      
-                      $harga = $total_bruto * $harga_per_unit;
-                      $hargaFormatted = 'Rp. ' . number_format($harga, 0, ',', '.');
-                      $total_harga += $harga;
-                      ?>
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            // Query to get the total bruto for each petani
+                                            $id_petani = $row['id'];
+                                            $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                                            $bruto_result = mysqli_query($con, $query_bruto);
+                                            $bruto_data = mysqli_fetch_assoc($bruto_result);
+                                            
+                                            $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
+                                            
+                                            // Update total netto
+                                            $total_netto += $total_bruto;
+                                            
+                                            $query_harga = "SELECT harga FROM rekap_2024 WHERE id_petani = '$id_petani' LIMIT 1";
+                                            $harga_result = mysqli_query($con, $query_harga);
+                                            $harga_data = mysqli_fetch_assoc($harga_result);
+                                            
+                                            $harga_per_unit = isset($harga_data['harga']) ? $harga_data['harga'] : 0;
+                                            
+                                            $harga = $total_bruto * $harga_per_unit;
+                                            $hargaFormatted = 'Rp. ' . number_format($harga, 0, ',', '.');
+                                            $total_harga += $harga;
+                                        ?>
                                         <tr>
                                             <td><?php echo $row['id']; ?></td>
                                             <td><?php echo $row['name']; ?></td>
@@ -250,8 +255,8 @@ $total_harga = 0;
 
                                             <th></th>
                                             <th></th>
-                                            <th>Total Netto : <?php ?></th>
-                                            <th>Total Jumlah : <?php echo number_format($total_harga, 0, ',', '.'); ?></th>
+                                            <th>Total: <?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
+                                            <th>Total: <?php echo number_format($total_harga, 0, ',', '.'); ?></th>
                                             <th></th>
                                             <th></th>
                                         </tr>
