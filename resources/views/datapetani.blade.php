@@ -255,8 +255,8 @@ $total_netto = 0; // Initialize total netto
 
                                             <th></th>
                                             <th></th>
-                                            <th>Total: <?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
-                                            <th>Total: <?php echo number_format($total_harga, 0, ',', '.'); ?></th>
+                                            <th>Total Netto: <?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
+                                            <th>Total Jumlah: <?php echo number_format($total_harga, 0, ',', '.'); ?></th>
                                             <th></th>
                                             <th></th>
                                         </tr>

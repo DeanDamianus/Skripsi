@@ -7,14 +7,14 @@ if (!$con) {
     die('Koneksi Error: ' . mysqli_connect_error());
 }
 
-// Initialize $user_data as an empty array
+// Initialize variables
 $user_data = array();
 $total_harga = 0;
+$total_netto = 0; // Initialize $total_netto
 
 // Check if 'id' exists in the URL
-if (isset($_GET['id'])) {
-    // Get the ID from the query parameter
-    $id = intval($_GET['id']); // Use intval to ensure $id is an integer
+if (isset($_GET['id']) && !empty($_GET['id'])) {
+    $id = intval($_GET['id']); 
 
     // Fetch the user's data from the database
     $query_user = "SELECT * FROM users WHERE id = $id";
@@ -32,15 +32,31 @@ if (isset($_GET['id'])) {
             die('Error fetching rekap data: ' . mysqli_error($con));
         }
     } else {
-        // User not found, redirect or show an error message
         echo "User not found.";
-        exit; // Stop further execution
+        exit;
     }
 } else {
-    // Redirect or show an error message if 'id' is not provided
     echo "ID parameter is missing in the URL.";
-    exit; // Stop further execution
+    exit;
 }
+
+// Check if 'id_rekap' exists in the URL and perform deletion
+if (isset($_GET['id_rekap']) && !empty($_GET['id_rekap'])) {
+    $id_rekap = intval($_GET['id_rekap']); 
+
+    // Delete the record
+    $query_delete = "DELETE FROM rekap_2024 WHERE id_rekap = $id_rekap";
+    if (mysqli_query($con, $query_delete)) {
+        // Redirect to the same page to refresh the data
+        header("Location: /dataInput?id=$id");
+        exit();
+    } else {
+        die('Error deleting record: ' . mysqli_error($con));
+    }
+}
+
+// Close the connection
+mysqli_close($con);
 ?>
 
 
@@ -52,8 +68,7 @@ if (isset($_GET['id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SIMBAKO</title>
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <!-- IonIcons -->
@@ -69,13 +84,10 @@ if (isset($_GET['id'])) {
         <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
             <div class="container">
                 <a href="{{ url('/input') }}" class="navbar-brand">
-                    <img src="dist/img/simbakologo.png" alt="SIMBAKO Logo" class="brand-image img-circle elevation-3"
-                        style="opacity: .8">
+                    <img src="dist/img/simbakologo.png" alt="SIMBAKO Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                     <span class="brand-text font-weight-light">SIMBAKO</span>
                 </a>
-                <button class="navbar-toggler order-1" type="button" data-toggle="collapse"
-                    data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
-                    aria-label="Toggle navigation">
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -118,7 +130,7 @@ if (isset($_GET['id'])) {
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>List Rekap <?php echo $user_data['name']; ?></h1>
+                        <h1>List Rekap <?php echo htmlspecialchars($user_data['name']); ?></h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -131,8 +143,7 @@ if (isset($_GET['id'])) {
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button onclick="window.location.href='/inputPetani?id=<?php echo $id; ?>'"
-                                    class="btn btn-primary">
+                                <button onclick="window.location.href='/inputPetani?id=<?php echo $id; ?>'" class="btn btn-primary">
                                     Tambah Rekap
                                 </button>
                             </div>
@@ -141,25 +152,28 @@ if (isset($_GET['id'])) {
                                 <table class="table table-hover text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th>ID Petani</th>
+                                            {{-- <th>ID Petani</th> --}}
                                             <th>Netto Total</th>
                                             <th>Jumlah</th>
                                             <th>Komisi</th>
                                             <th>Hasil Bersih</th>
+                                            <th>Berat Gudang</th>
+                                            <th>Grade</th>
                                             <th>
                                                 <div class="text-center">
-                                            <th>Action</th>
-                            </div>
-                            </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                        while ($row = mysqli_fetch_assoc($rekap_result)) {
+                                                    <th>Action</th>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php while ($row = mysqli_fetch_assoc($rekap_result)) {
                                             // Get data for each rekap row
                                             $id_petani = $row['id_petani'];
                                             $netto = $row['netto'];
                                             $harga_per_unit = $row['harga'];
+                                            $grade = $row['grade'];
+                                            $beratgg = $row['berat_gudang'];
 
                                             // Calculate total harga
                                             $jumlah = $netto * $harga_per_unit;
@@ -171,56 +185,60 @@ if (isset($_GET['id'])) {
                                             $komisiFormatted = 'Rp. ' . number_format($komisi, 0, ',', '.');
                                             $hasilBersihFormatted = 'Rp. ' . number_format($hasil_bersih, 0, ',', '.');
 
-                                            // Add to total_harga
+                                            // Add to total_harga and total_netto
                                             $total_harga += $jumlah;
+                                            $total_netto += $netto;
                                         ?>
-                                <tr>
-                                    <td><?php echo $id_petani; ?></td>
-                                    <td><?php echo number_format($netto, 0, ',', '.') . ' kg'; ?></td>
-                                    <td><?php echo $jumlahFormatted; ?></td>
-                                    <td><?php echo $komisiFormatted; ?></td>
-                                    <td><?php echo $hasilBersihFormatted; ?></td>
-                                    <td><button onclick="window.location.href='/inputPetani?id=<?php echo $id; ?>'"
-                                            class="btn btn-block btn-success">
-                                            Edit
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput.php?id_rekap=<?php echo $row['id_rekap']; ?>'" class="btn btn-block btn-danger">
-                                            Hapus
-                                        </button> 
-                                    </td>
-
-                                </tr>
-                                <?php } ?>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th>Total Netto :</th>
-                                    <th>Total Jumlah : <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                            </tfoot>
-                            </table>
+                                        <tr>
+                                            {{-- <td><?php echo htmlspecialchars($id_petani); ?></td> --}}
+                                            <td><?php echo htmlspecialchars(number_format($netto, 0, ',', '.') . ' kg'); ?></td>
+                                            <td><?php echo htmlspecialchars($jumlahFormatted); ?></td>
+                                            <td><?php echo htmlspecialchars($komisiFormatted); ?></td>
+                                            <td><?php echo htmlspecialchars($hasilBersihFormatted); ?></td>
+                                            <td><?php echo htmlspecialchars($beratgg); ?></td>
+                                            <td><?php echo htmlspecialchars($grade); ?></td>
+                                            <td>
+                                                <button onclick="window.location.href='#'" class="btn btn-block btn-success">
+                                                    Edit
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'" class="btn btn-block btn-danger">
+                                                    Hapus
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            {{-- <th></th> --}}
+                                            <th>Total Netto: <?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
+                                            <th>Total Jumlah : <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
-                        <!-- /.card-body -->
+                        <!-- /.card -->
                     </div>
-                    <!-- /.card -->
                 </div>
+                <!-- /.row -->
             </div>
-            <!-- /.row -->
         </div>
-    </div>
-    <!-- /.content-wrapper -->
+        <!-- /.content-wrapper -->
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
     </div>
     <!-- ./wrapper -->
 
@@ -235,3 +253,4 @@ if (isset($_GET['id'])) {
 </body>
 
 </html>
+

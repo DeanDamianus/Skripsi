@@ -122,9 +122,9 @@ $total_harga = 0;
         </section>
 
         <!-- Main content -->
-        <form method="POST" action="{{ route('inputPetani.store', ['id' => $id]) }}">
+        <form method="POST" action="">
             @csrf
-            <input type="hidden" name="id_petani" value="{{ $id }}">
+            <input type="hidden" name="id_petani" value="<?php echo htmlspecialchars($id); ?>">
         
             <div class="card-body">
                 <div class="row">
@@ -162,6 +162,7 @@ $total_harga = 0;
             </div>
         </form>
         
+        
         <!-- /.content-wrapper -->
 
         <!-- Control Sidebar -->
@@ -181,5 +182,19 @@ $total_harga = 0;
     <!-- AdminLTE App -->
     <script src="../../dist/js/adminlte.min.js"></script>
 </body>
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('form');
+    
+        form.addEventListener('submit', function(event) {
+            // Display confirmation dialog
+            var confirmed = confirm('Apakah anda yakin ingin menambahkan data berikut?');
+            if (!confirmed) {
+                // Prevent form submission if not confirmed
+                event.preventDefault();
+            }
+        });
+    });
+    </script>
+    
 </html>
