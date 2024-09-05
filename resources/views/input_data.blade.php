@@ -155,6 +155,8 @@ mysqli_close($con);
                                             {{-- <th>ID Petani</th> --}}
                                             <th>Netto Total</th>
                                             <th>Jumlah</th>
+                                            <th>Harga Keranjang</th>
+                                            <th>KJ</th>
                                             <th>Komisi</th>
                                             <th>Hasil Bersih</th>
                                             <th>Berat Gudang</th>
@@ -184,6 +186,7 @@ mysqli_close($con);
                                             $jumlahFormatted = 'Rp. ' . number_format($jumlah, 0, ',', '.');
                                             $komisiFormatted = 'Rp. ' . number_format($komisi, 0, ',', '.');
                                             $hasilBersihFormatted = 'Rp. ' . number_format($hasil_bersih, 0, ',', '.');
+                                            $hargaFormatted = 'Rp. ' . number_format($harga_per_unit, 0, ',', '.');
 
                                             // Add to total_harga and total_netto
                                             $total_harga += $jumlah;
@@ -193,15 +196,17 @@ mysqli_close($con);
                                             {{-- <td><?php echo htmlspecialchars($id_petani); ?></td> --}}
                                             <td><?php echo htmlspecialchars(number_format($netto, 0, ',', '.') . ' kg'); ?></td>
                                             <td><?php echo htmlspecialchars($jumlahFormatted); ?></td>
+                                            <td><?php echo htmlspecialchars($hargaFormatted); ?></td></td>
+                                            <td></td>
                                             <td><?php echo htmlspecialchars($komisiFormatted); ?></td>
                                             <td><?php echo htmlspecialchars($hasilBersihFormatted); ?></td>
                                             <td><?php echo htmlspecialchars($beratgg); ?></td>
                                             <td><?php echo htmlspecialchars($grade); ?></td>
                                             <td>
-                                                <button onclick="window.location.href='#'" class="btn btn-block btn-success">
+                                                <button onclick="window.location.href='/editInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'" class="btn btn-block btn-success">
                                                     Edit
                                                 </button>
-                                            </td>
+                                            </td>                                            
                                             <td>
                                                 <button onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'" class="btn btn-block btn-danger">
                                                     Hapus
@@ -215,6 +220,8 @@ mysqli_close($con);
                                             {{-- <th></th> --}}
                                             <th>Total Netto: <?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
                                             <th>Total Jumlah : <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
+                                            <th></th>
+                                            <th></th>
                                             <th></th>
                                             <th></th>
                                             <th></th>

@@ -53,6 +53,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/dataInput', function (){
             return view ('input_data');
         })->name('input_data');
+        Route::get('/editInput', function (){
+            return view ('edit_petani');
+        })->name('edit_petani');
     });
     Route::post('/hapuspetani', [PetaniController::class, 'delete'])->name('hapus-petani');
 

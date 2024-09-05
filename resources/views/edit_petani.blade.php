@@ -118,7 +118,7 @@ $total_harga = 0;
                         <i class="fas fa-arrow-left"></i>
                     </button>
                     <div class="col-sm-6">
-                        <h1>Input Nota <?php echo htmlspecialchars($user_name); ?></h1>
+                        <h1>Edit Nota <?php echo htmlspecialchars($user_name); ?></h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -161,7 +161,7 @@ $total_harga = 0;
                 <!-- /.row -->
             </div>
             <div class="card-footer text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Ubah</button>
             </div>
         </form>
         
