@@ -6,6 +6,7 @@ use App\Http\Middleware\PetaniMiddleware;
 use App\Http\Controllers\SesiController;
 use Illuminate\Support\Facades\Route;
 
+
 // Routes for login, logout, and error handling
 Route::get('/', [SesiController::class, 'index']);
 Route::post('/', [SesiController::class, 'login']);
@@ -20,6 +21,9 @@ Route::get('/register', [SesiController::class, 'register'])->name('register.for
 Route::post('/register', [SesiController::class, 'create'])->name('register.store');
 Route::post('/parameter', [SesiController::class, 'store']);
 Route::post('/inputPetani', [SesiController::class, 'input'])->name('inputPetani.store');
+Route::post('/hapuspetani', [PetaniController::class, 'delete'])->name('hapus-petani');
+Route::get('/editInput', [SesiController::class, 'edit'])->name('editInput');
+Route::post('/editInput', [SesiController::class, 'update'])->name('updateInput');
 
 
 
@@ -57,7 +61,7 @@ Route::middleware('auth')->group(function () {
             return view ('edit_petani');
         })->name('edit_petani');
     });
-    Route::post('/hapuspetani', [PetaniController::class, 'delete'])->name('hapus-petani');
+
 
     Route::middleware(PetaniMiddleware::class)->group(function () {
         Route::get('/petani', function() {

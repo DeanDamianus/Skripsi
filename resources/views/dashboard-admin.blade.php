@@ -3,7 +3,7 @@
 $con = mysqli_connect("localhost", "root", "", "simbako_app");
 
 // Check connection
-if(!$con){
+if (!$con) {
     die("Koneksi Error: " . mysqli_connect_error());
 }
 
@@ -13,12 +13,16 @@ $result = mysqli_query($con, $query);
 $data = mysqli_fetch_assoc($result);
 $jumlah_petani = $data['jumlah_petani'] ?? 0;
 
-//Netto
+// Netto
 $nettoQuery = "SELECT SUM(netto) AS total_netto FROM rekap_2024";
 $nettoResult = mysqli_query($con, $nettoQuery);
 $nettoData = mysqli_fetch_assoc($nettoResult);
-$totalNetto = $nettoData['total_netto'];
+$totalNetto = $nettoData['total_netto'] ?? 0;
+
+// Close the connection
+mysqli_close($con);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

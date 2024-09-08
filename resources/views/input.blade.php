@@ -8,7 +8,7 @@ if (!$con) {
     die('Koneksi Error: ' . mysqli_connect_error());
 }
 
-//Querry nama
+// Query to get all petani
 $nama = "SELECT * FROM users WHERE role = 'petani'";
 $result = mysqli_query($con, $nama);
 
@@ -201,7 +201,7 @@ $total_harga = 0;
                                     </thead>
                                     <tbody>
                                         <?php
-                while($row = mysqli_fetch_assoc($result)){
+                while ($row = mysqli_fetch_assoc($result)) {
                     // Query to get the total bruto for each petani
                     $id_petani = $row['id'];
                     $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
@@ -210,22 +210,23 @@ $total_harga = 0;
                     
                     $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
                     
-                    $query_harga = "SELECT harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                    $query_harga = "SELECT AVG(harga) AS harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
                     $harga_result = mysqli_query($con, $query_harga);
                     $harga_data = mysqli_fetch_assoc($harga_result);
                     
                     $harga_per_unit = isset($harga_data['harga']) ? $harga_data['harga'] : 0;
                     
-                    $harga = $total_bruto * $harga_per_unit;
-                    $hargaFormatted = 'Rp. ' . number_format($harga, 0, ',', '.');
-                    $total_harga += $harga;
+                    // Calculate total amount
+                    $harga_total = $total_bruto * $harga_per_unit;
+                    $hargaFormatted = 'Rp. ' . number_format($harga_total, 0, ',', '.');
+                    $total_harga += $harga_total;
                     ?>
                                         <tr>
                                             <td><?php echo $row['id']; ?></td>
                                             <td><?php echo $row['name']; ?></td>
                                             <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
-                                            <td><?php echo $hargaFormatted; ?></t   d>
-                                            <td><a href="{{ url('/dataInput?id=' . $row['id']) }}" type="button" class="btn btn-block btn-success">Edit</a></td>
+                                            <td><?php echo $hargaFormatted; ?></td>
+                                            <td><a href="{{ url('/dataInput?id=' . $row['id']) }}" type="button" class="btn btn-block btn-success"><i class="nav-icon fas fa-edit"></i></a></td>
                                         </tr>
                                         <?php 
                 }

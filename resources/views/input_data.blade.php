@@ -8,13 +8,13 @@ if (!$con) {
 }
 
 // Initialize variables
-$user_data = array();
+$user_data = [];
 $total_harga = 0;
 $total_netto = 0; // Initialize $total_netto
 
 // Check if 'id' exists in the URL
 if (isset($_GET['id']) && !empty($_GET['id'])) {
-    $id = intval($_GET['id']); 
+    $id = intval($_GET['id']);
 
     // Fetch the user's data from the database
     $query_user = "SELECT * FROM users WHERE id = $id";
@@ -32,17 +32,17 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
             die('Error fetching rekap data: ' . mysqli_error($con));
         }
     } else {
-        echo "User not found.";
-        exit;
+        echo 'User not found.';
+        exit();
     }
 } else {
-    echo "ID parameter is missing in the URL.";
-    exit;
+    echo 'ID parameter is missing in the URL.';
+    exit();
 }
 
 // Check if 'id_rekap' exists in the URL and perform deletion
 if (isset($_GET['id_rekap']) && !empty($_GET['id_rekap'])) {
-    $id_rekap = intval($_GET['id_rekap']); 
+    $id_rekap = intval($_GET['id_rekap']);
 
     // Delete the record
     $query_delete = "DELETE FROM rekap_2024 WHERE id_rekap = $id_rekap";
@@ -68,7 +68,8 @@ mysqli_close($con);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SIMBAKO</title>
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <!-- IonIcons -->
@@ -84,10 +85,13 @@ mysqli_close($con);
         <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
             <div class="container">
                 <a href="{{ url('/input') }}" class="navbar-brand">
-                    <img src="dist/img/simbakologo.png" alt="SIMBAKO Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <img src="dist/img/simbakologo.png" alt="SIMBAKO Logo" class="brand-image img-circle elevation-3"
+                        style="opacity: .8">
                     <span class="brand-text font-weight-light">SIMBAKO</span>
                 </a>
-                <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse"
+                    data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+                    aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -146,8 +150,9 @@ mysqli_close($con);
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button onclick="window.location.href='/inputPetani?id=<?php echo $id; ?>'" class="btn btn-primary">
-                                    Tambah Rekap
+                                <button onclick="window.location.href='/inputPetani?id=<?php echo $id; ?>'"
+                                    class="btn btn-primary">
+                                    <i class="nav-icon fas fa-plus"></i>
                                 </button>
                             </div>
                             <!-- /.card-header -->
@@ -161,18 +166,17 @@ mysqli_close($con);
                                             <th>Harga Keranjang</th>
                                             <th>KJ</th>
                                             <th>Komisi</th>
-                                            <th>Hasil Bersih</th>
+                                            <th>Jumlah Kotor</th>
+                                            <th>Jumlah Bersih</th>
                                             <th>Berat Gudang</th>
                                             <th>Grade</th>
-                                            <th>
-                                                <div class="text-center">
-                                                    <th>Action</th>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php while ($row = mysqli_fetch_assoc($rekap_result)) {
+                                            <th>Action</th>
+                            </div>
+                            </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <?php while ($row = mysqli_fetch_assoc($rekap_result)) {
                                             // Get data for each rekap row
                                             $id_petani = $row['id_petani'];
                                             $netto = $row['netto'];
@@ -182,8 +186,8 @@ mysqli_close($con);
 
                                             // Calculate total harga
                                             $jumlah = $netto * $harga_per_unit;
-                                            $komisi = $jumlah * 0.1; // Example: 10% komisi
-                                            $hasil_bersih = $jumlah - $komisi;
+                                            $komisi = $jumlah * 0.1; 
+                                            $hasil_bersih = $jumlah - $komisi; // belom selesai = jumlah kotor - komisi
 
                                             // Format harga for display
                                             $jumlahFormatted = 'Rp. ' . number_format($jumlah, 0, ',', '.');
@@ -195,60 +199,66 @@ mysqli_close($con);
                                             $total_harga += $jumlah;
                                             $total_netto += $netto;
                                         ?>
-                                        <tr>
-                                            {{-- <td><?php echo htmlspecialchars($id_petani); ?></td> --}}
-                                            <td><?php echo htmlspecialchars(number_format($netto, 0, ',', '.') . ' kg'); ?></td>
-                                            <td><?php echo htmlspecialchars($jumlahFormatted); ?></td>
-                                            <td><?php echo htmlspecialchars($hargaFormatted); ?></td></td>
-                                            <td></td>
-                                            <td><?php echo htmlspecialchars($komisiFormatted); ?></td>
-                                            <td><?php echo htmlspecialchars($hasilBersihFormatted); ?></td>
-                                            <td><?php echo htmlspecialchars($beratgg); ?></td>
-                                            <td><?php echo htmlspecialchars($grade); ?></td>
-                                            <td>
-                                                <button onclick="window.location.href='/editInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'" class="btn btn-block btn-success">
-                                                    Edit
-                                                </button>
-                                            </td>                                            
-                                            <td>
-                                                <button onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'" class="btn btn-block btn-danger">
-                                                    Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            {{-- <th></th> --}}
-                                            <th>Total Netto: <?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
-                                            <th>Total Jumlah : <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
+                                <tr>
+                                    {{-- <td><?php echo htmlspecialchars($id_petani); ?></td> --}}
+                                    <td><?php echo htmlspecialchars(number_format($netto, 0, ',', '.') . ' kg'); ?></td>
+                                    <td><?php echo htmlspecialchars($jumlahFormatted); ?></td>
+                                    <td><?php echo htmlspecialchars($hargaFormatted); ?></td>
+                                    </td>
+                                    <td></td>
+                                    <td><?php echo htmlspecialchars($komisiFormatted); ?></td>
+                                    <td></td>
+                                    <td><?php echo htmlspecialchars($hasilBersihFormatted); ?></td>
+                                    <td><?php echo htmlspecialchars($beratgg); ?></td>
+                                    <td><?php echo htmlspecialchars($grade); ?></td>
+                                    <td>
+                                        <button
+                                            onclick="window.location.href='/editInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
+                                            class="btn btn-block btn-success">
+                                            <a><i class="fas fa-edit"></i></a>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button
+                                            onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
+                                            class="btn btn-block btn-danger">
+                                            <a><i class="fas fa-trash"></i></a>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php } ?>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    {{-- <th></th> --}}
+                                    <th>Total Netto: <?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
+                                    <th>Total Jumlah : <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                            </table>
                         </div>
-                        <!-- /.card -->
+                        <!-- /.card-body -->
                     </div>
+                    <!-- /.card -->
                 </div>
-                <!-- /.row -->
             </div>
+            <!-- /.row -->
         </div>
-        <!-- /.content-wrapper -->
+    </div>
+    <!-- /.content-wrapper -->
 
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-        </aside>
-        <!-- /.control-sidebar -->
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
     </div>
     <!-- ./wrapper -->
 
@@ -263,4 +273,3 @@ mysqli_close($con);
 </body>
 
 </html>
-
