@@ -195,7 +195,7 @@ $total_harga = 0;
                                             <th>ID Petani</th>
                                             <th>Nama Petani</th>
                                             <th>Netto Total</th>
-                                            <th>Jumlah</th>
+                                            <th>Jumlah Total</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>

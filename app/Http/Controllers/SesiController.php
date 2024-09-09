@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Rekap2024;
 use Illuminate\Support\Facades\DB;
 
 class SesiController extends Controller
@@ -121,5 +122,39 @@ class SesiController extends Controller
         // Redirect or return a response
         return redirect()->back()->with('success', 'Data berhasil ditambahkan!');
     }
-    
+    public function update(Request $request)
+    {
+        // Validate the data
+        $request->validate([
+            'netto' => 'required|numeric',
+            'harga' => 'required|numeric',
+            'berat_gudang' => 'required|numeric',
+            'grade' => 'required|string',
+        ]);
+
+        // Fetch the current id_rekap from the request
+        $id_rekap = $request->input('id_rekap');
+
+        // Find the existing rekap_2024 entry by id_rekap
+        $rekap = DB::table('rekap_2024')->where('id_rekap', $id_rekap)->first();
+
+        if (!$rekap) {
+            return redirect()->back()->with('error', 'Data not found.');
+        }
+
+        // Update the rekap_2024 entry
+        DB::table('rekap_2024')
+            ->where('id_rekap', $id_rekap)
+            ->update([
+                'netto' => $request->input('netto'),
+                'harga' => $request->input('harga'),
+                'berat_gudang' => $request->input('berat_gudang'),
+                'grade' => $request->input('grade'),
+            ]);
+
+        // Redirect to the previous page with the same ID
+        return redirect()
+            ->to(url()->previous() . '?id=' . urlencode($id_rekap))
+            ->with('success', 'Data successfully updated!');
+    }
 }

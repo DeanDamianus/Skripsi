@@ -7,6 +7,9 @@ if ($con->connect_error) {
     die('Connection Error: ' . $con->connect_error);
 }
 
+// Enable error reporting
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 // Get the current `id_rekap` from the URL (assuming it's passed in the URL)
 $id_rekap = isset($_GET['id_rekap']) ? intval($_GET['id_rekap']) : 0;
 
@@ -39,10 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $update_query = $con->prepare("UPDATE rekap_2024 
                                     SET netto = ?, harga = ?, berat_gudang = ?, grade = ? 
                                     WHERE id_rekap = ?");
-    $update_query->bind_param('ssssi', $netto, $harga, $berat_gudang, $grade, $id_rekap);
+    $update_query->bind_param('ddsdi', $netto, $harga, $berat_gudang, $grade, $id_rekap);
 
     if ($update_query->execute()) {
-        echo "Data successfully updated!";
+        echo "<script>alert('Data successfully updated!'); window.location.href = 'your_redirect_page.php';</script>";
     } else {
         echo "Error: " . $update_query->error;
     }
@@ -62,6 +65,7 @@ if ($user_data = $result->fetch_assoc()) {
 
 $con->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -107,9 +111,9 @@ $con->close();
         </section>
 
         <!-- Main content -->
-        <form method="POST" action="">
-            <input type="hidden" name="id_rekap" value="<?php echo htmlspecialchars($id_rekap); ?>">
-        
+        <form method="POST" action="{{ route('editInput.update') }}">
+            @csrf
+            <input type="hidden" name="id_rekap" value="<?php echo $id_rekap; ?>">
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
@@ -163,6 +167,20 @@ $con->close();
     <!-- AdminLTE App -->
     <script src="../../dist/js/adminlte.min.js"></script>
 </body>
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var form = document.querySelector('form');

@@ -22,8 +22,8 @@ Route::post('/register', [SesiController::class, 'create'])->name('register.stor
 Route::post('/parameter', [SesiController::class, 'store']);
 Route::post('/inputPetani', [SesiController::class, 'input'])->name('inputPetani.store');
 Route::post('/hapuspetani', [PetaniController::class, 'delete'])->name('hapus-petani');
-Route::get('/editInput', [SesiController::class, 'edit'])->name('editInput');
-Route::post('/editInput', [SesiController::class, 'update'])->name('updateInput');
+Route::post('/editInput', [SesiController::class, 'update'])->name('editInput.update');
+
 
 
 
