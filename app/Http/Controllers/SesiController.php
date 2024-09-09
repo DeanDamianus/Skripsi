@@ -155,6 +155,6 @@ class SesiController extends Controller
         // Redirect to the previous page with the same ID
         return redirect()
             ->to(url()->previous() . '?id=' . urlencode($id_rekap))
-            ->with('success', 'Data successfully updated!');
+            ->with('success', 'Data berhasil di update!');
     }
 }

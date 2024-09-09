@@ -6,27 +6,50 @@ if (!$con) {
     die('Koneksi Error: ' . mysqli_connect_error());
 }
 
-// Query to get hutang_2024 along with the petani's (farmer's) name from the users table
+// Query to get all users with role 'petani'
+$allPetaniQuery = "SELECT id, name FROM users WHERE role = 'petani'";
+$allPetaniResult = mysqli_query($con, $allPetaniQuery);
+
+if (!$allPetaniResult) {
+    die('Query Error: ' . mysqli_error($con));
+}
+
+$allPetani = [];
+while ($userRow = mysqli_fetch_assoc($allPetaniResult)) {
+    $allPetani[] = $userRow;
+}
+
+// Query to get users with entries in hutang_2024
+$petaniInHutangQuery = "SELECT DISTINCT users.id, users.name 
+                        FROM hutang_2024 
+                        JOIN users ON hutang_2024.id_hutang = users.id 
+                        WHERE users.role = 'petani'";
+$petaniInHutangResult = mysqli_query($con, $petaniInHutangQuery);
+
+if (!$petaniInHutangResult) {
+    die('Query Error: ' . mysqli_error($con));
+}
+
+$petaniInHutang = [];
+while ($userRow = mysqli_fetch_assoc($petaniInHutangResult)) {
+    $petaniInHutang[] = $userRow;
+}
+
+// Query to get hutang_2024 data
 $query = "SELECT hutang_2024.id_hutang, hutang_2024.tanggal_hutang, hutang_2024.bon, hutang_2024.cicilan, hutang_2024.tanggal_lunas, users.name 
-       FROM hutang_2024
-       JOIN users ON hutang_2024.id_hutang = users.id
-       WHERE users.role = 'petani'";
+          FROM hutang_2024
+          JOIN users ON hutang_2024.id_hutang = users.id
+          WHERE users.role = 'petani'";
 
 $result = mysqli_query($con, $query);
 
-$nama = "SELECT * FROM users WHERE role = 'petani'";
-$resultNama = mysqli_query($con, $nama);
-
-// Fetch users for the dropdown (only petani)
-$userQuery = "SELECT id, name FROM users WHERE role = 'petani'";
-$userResult = mysqli_query($con, $userQuery);
-
-// Store users in an array
-$users = [];
-while ($userRow = mysqli_fetch_assoc($userResult)) {
-    $users[] = $userRow;
+if (!$result) {
+    die('Query Error: ' . mysqli_error($con));
 }
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -279,11 +302,12 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                                                     <select class="form-control">
                                                         <option value="" selected disabled>Pilih Petani</option>
                                                         <?php
-                                                        foreach ($users as $user) {
+                                                        foreach ($allPetani as $user) {
                                                             echo "<option value='" . $user['id'] . "'>" . $user['id'] . ' - ' . $user['name'] . '</option>';
                                                         }
                                                         ?>
                                                     </select>
+                                                    
                                                 </div>
                                                 <!-- /.input group -->
                                             </div>
@@ -365,7 +389,7 @@ while ($userRow = mysqli_fetch_assoc($userResult)) {
                                                     <select class="form-control">
                                                         <option value="" selected disabled>Pilih Petani</option>
                                                         <?php
-                                                        foreach ($users as $user) {
+                                                        foreach ($petaniInHutang as $user) {
                                                             echo "<option value='" . $user['id'] . "'>" . $user['id'] . ' - ' . $user['name'] . '</option>';
                                                         }
                                                         ?>

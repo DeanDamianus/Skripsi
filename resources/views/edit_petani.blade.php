@@ -14,7 +14,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $id_rekap = isset($_GET['id_rekap']) ? intval($_GET['id_rekap']) : 0;
 
 // Fetch the existing data for the selected `id_rekap`
-$fetch_query = $con->prepare("SELECT * FROM rekap_2024 WHERE id_rekap = ?");
+$fetch_query = $con->prepare('SELECT * FROM rekap_2024 WHERE id_rekap = ?');
 $fetch_query->bind_param('i', $id_rekap);
 $fetch_query->execute();
 $result = $fetch_query->get_result();
@@ -45,14 +45,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $update_query->bind_param('ddsdi', $netto, $harga, $berat_gudang, $grade, $id_rekap);
 
     if ($update_query->execute()) {
-        echo "<script>alert('Data successfully updated!'); window.location.href = 'your_redirect_page.php';</script>";
-    } else {
-        echo "Error: " . $update_query->error;
-    }
+    // Redirect using PHP header function
+    header("Location: http://127.0.0.1:8000/input");
+    exit; // Ensure no further code is executed after the redirect
+} else {
+    echo "Error: " . $update_query->error;
+}
+
 }
 
 // Fetch the user's data from the `users` table
-$nama_query = $con->prepare("SELECT * FROM users WHERE id = ?");
+$nama_query = $con->prepare('SELECT * FROM users WHERE id = ?');
 $nama_query->bind_param('i', $id_petani);
 $nama_query->execute();
 $result = $nama_query->get_result();
@@ -69,12 +72,14 @@ $con->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SIMBAKO</title>
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <!-- IonIcons -->
@@ -82,13 +87,15 @@ $con->close();
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
+
 <body class="hold-transition layout-top-nav">
     <div class="wrapper">
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
             <div class="container">
                 <a href="{{ url('/input') }}" class="navbar-brand">
-                    <img src="dist/img/simbakologo.png" alt="SIMBAKO Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                    <img src="dist/img/simbakologo.png" alt="SIMBAKO Logo" class="brand-image img-circle elevation-3"
+                        style="opacity: .8">
                     <span class="brand-text font-weight-light">SIMBAKO</span>
                 </a>
                 <!-- More Navbar Code Here -->
@@ -119,12 +126,14 @@ $con->close();
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Netto</label>
-                            <input type="number" name="netto" class="form-control" value="<?php echo htmlspecialchars($netto); ?>" placeholder="Masukkan Netto" required>
+                            <input type="number" name="netto" class="form-control" value="<?php echo htmlspecialchars($netto); ?>"
+                                placeholder="Masukkan Netto" required>
                         </div>
                         <!-- /.form-group -->
                         <div class="form-group">
                             <label>Harga Berat Keranjang</label>
-                            <input type="number" name="harga" class="form-control" value="<?php echo htmlspecialchars($harga); ?>" placeholder="Masukkan Harga" required>
+                            <input type="number" name="harga" class="form-control" value="<?php echo htmlspecialchars($harga); ?>"
+                                placeholder="Masukkan Harga" required>
                         </div>
                         <!-- /.form-group -->
                     </div>
@@ -132,12 +141,14 @@ $con->close();
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Berat Gudang</label>
-                            <input type="number" name="berat_gudang" class="form-control" value="<?php echo htmlspecialchars($berat_gudang); ?>" placeholder="Masukkan Berat Gudang (Kg)" required>
+                            <input type="number" name="berat_gudang" class="form-control" value="<?php echo htmlspecialchars($berat_gudang); ?>"
+                                placeholder="Masukkan Berat Gudang (Kg)" required>
                         </div>
                         <!-- /.form-group -->
                         <div class="form-group">
                             <label>Grade</label>
-                            <input type="text" name="grade" class="form-control" value="<?php echo htmlspecialchars($grade); ?>" placeholder="Masukkan Grade" required>
+                            <input type="text" name="grade" class="form-control" value="<?php echo htmlspecialchars($grade); ?>"
+                                placeholder="Masukkan Grade" required>
                         </div>
                         <!-- /.form-group -->
                     </div>
@@ -184,7 +195,7 @@ $con->close();
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var form = document.querySelector('form');
-    
+
         form.addEventListener('submit', function(event) {
             // Display confirmation dialog
             var confirmed = confirm('Apakah anda yakin ingin mengubah data berikut?');
@@ -195,4 +206,5 @@ $con->close();
         });
     });
 </script>
+
 </html>
