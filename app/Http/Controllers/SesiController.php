@@ -157,4 +157,34 @@ class SesiController extends Controller
             ->to(url()->previous() . '?id=' . urlencode($id_rekap))
             ->with('success', 'Data berhasil di update!');
     }
+
+    public function hutangLunas(Request $request)
+    {
+        $request->validate([
+            'id_hutang' => 'required|exists:users,id',
+            'cicilan' => 'required|numeric',
+        ]);
+
+        $petaniId = $request->input('petani_id');
+        $jumlahBayar = $request->input('cicilan');
+
+        // Fetch the outstanding debt for this petani
+        $debt = DB::table('hutang_2024')
+                    ->where('id_hutang', $petaniId)
+                    ->select(DB::raw('bon - cicilan AS outstanding_debt'))
+                    ->first();
+
+        if ($debt && $jumlahBayar == $debt->outstanding_debt) {
+            $tanggalLunas = now()->format('Y-m-d'); // Set today's date
+
+            // Update the database to set the `tanggal_lunas`
+            DB::table('hutang_2024')
+                ->where('id_hutang', $petaniId)
+                ->update(['tanggal_lunas' => $tanggalLunas]);
+
+            return redirect()->back()->with('success', 'Payment successful and date updated.');
+        }
+
+        return redirect()->back()->with('error', 'Payment failed or amount does not match outstanding debt.');
+    }
 }

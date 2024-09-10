@@ -23,6 +23,7 @@ Route::post('/parameter', [SesiController::class, 'store']);
 Route::post('/inputPetani', [SesiController::class, 'input'])->name('inputPetani.store');
 Route::post('/hapuspetani', [PetaniController::class, 'delete'])->name('hapus-petani');
 Route::post('/editInput', [SesiController::class, 'update'])->name('editInput.update');
+Route::post('/process-payment', [SesiController::class, 'hutangLunas'])->name('hutang.lunas');
 
 
 

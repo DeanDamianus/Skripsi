@@ -201,29 +201,31 @@ $total_netto = 0; // Initialize total netto
                                     </thead>
                                     <tbody>
                                         <?php
-                while ($row = mysqli_fetch_assoc($result)) {
-                    // Query to get the total netto for each petani
-                    $id_petani = $row['id'];
-                    $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                    $bruto_result = mysqli_query($con, $query_bruto);
-                    $bruto_data = mysqli_fetch_assoc($bruto_result);
-                    
-                    $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
-                    
-                    // Query to get the average harga for each petani
-                    $query_harga = "SELECT (harga) AS harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                    $harga_result = mysqli_query($con, $query_harga);
-                    $harga_data = mysqli_fetch_assoc($harga_result);
-                    
-                    $harga_per_unit = isset($harga_data['harga']) ? $harga_data['harga'] : 0;
-                    
-                    // Calculate individual total harga
-                    $harga_total = $total_bruto * $harga_per_unit;
-                    $hargaFormatted = 'Rp. ' . number_format($harga_total, 0, ',', '.');
-                    
-                    // Accumulate total harga for all users
-                    $total_harga += $harga_total;
-                    ?>
+                                        $total_harga = 0; // Initialize the total harga accumulator
+
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                            $id_petani = $row['id'];
+
+                                            // Query to get the total netto for each petani
+                                            $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                                            $bruto_result = mysqli_query($con, $query_bruto);
+                                            $bruto_data = mysqli_fetch_assoc($bruto_result);
+                                            
+                                            $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
+                                            
+                                            // Query to get the total harga for each petani
+                                            // This will calculate netto * harga for each record and sum them up
+                                            $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                                            $harga_result = mysqli_query($con, $query_harga);
+                                            $harga_data = mysqli_fetch_assoc($harga_result);
+                                            
+                                            $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
+                                            
+                                            // Format harga
+                                            $hargaFormatted = 'Rp. ' . number_format($total_harga_per_petani, 0, ',', '.');
+                                            
+                                            $total_harga += $total_harga_per_petani;
+                                            ?>
                                         <tr>
                                             <td><?php echo $row['id']; ?></td>
                                             <td><?php echo $row['name']; ?></td>
