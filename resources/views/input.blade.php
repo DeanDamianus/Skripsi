@@ -202,6 +202,10 @@ $total_netto = 0; // Initialize total netto
                                                 if harga <= 125000 netto will be * 5000,if harga <= 150000 netto will be * 6000,
                                              -->
                                             <th>Jumlah Total</th>
+                                            <th>Jumlah Kotor</th> <!-- 
+                                                i want the jumlah kotor to make the calculations of the value of Jumlah  total - pajak KJ - 
+                                                table value from parameter_2024 name borong_jual - table value from parameter_2024 name naik_turun, 
+                                             -->
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -237,6 +241,7 @@ $total_netto = 0; // Initialize total netto
                                             <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
                                             <td></td>
                                             <td><?php echo $hargaFormatted; ?></td>
+                                            <td></td>
                                             <td><a href="{{ url('/dataInput?id=' . $row['id']) }}" type="button"
                                                     class="btn btn-block btn-success"><i
                                                         class="nav-icon fas fa-edit"></i></a></td>
@@ -252,6 +257,7 @@ $total_netto = 0; // Initialize total netto
                                                 <th></th>
                                                 <th><?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
                                                 <th></th>
+                                                <td></td>
                                                 
                                             </tr>
                                         </tfoot>
