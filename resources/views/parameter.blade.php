@@ -118,9 +118,9 @@ mysqli_close($con);
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
                             <a href="{{ url('/owner') }}" class="nav-link">
-                                <i class="nav-icon fas fa-exchange-alt"></i>
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
-                                    <strong>REKAP</strong>
+                                    <strong>DASHBOARD</strong>
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>

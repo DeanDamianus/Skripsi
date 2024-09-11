@@ -94,9 +94,9 @@ $total_netto = 0; // Initialize total netto
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
                             <a href="{{ url('/owner') }}" class="nav-link">
-                                <i class="nav-icon fas fa-exchange-alt"></i>
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
-                                    <strong>REKAP</strong>
+                                    <strong>DASHBOARD</strong>
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
@@ -201,8 +201,6 @@ $total_netto = 0; // Initialize total netto
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $total_harga = 0; // Initialize the total harga accumulator
-
                                         while ($row = mysqli_fetch_assoc($result)) {
                                             $id_petani = $row['id'];
 
@@ -214,7 +212,6 @@ $total_netto = 0; // Initialize total netto
                                             $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
                                             
                                             // Query to get the total harga for each petani
-                                            // This will calculate netto * harga for each record and sum them up
                                             $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
                                             $harga_result = mysqli_query($con, $query_harga);
                                             $harga_data = mysqli_fetch_assoc($harga_result);
@@ -224,6 +221,8 @@ $total_netto = 0; // Initialize total netto
                                             // Format harga
                                             $hargaFormatted = 'Rp. ' . number_format($total_harga_per_petani, 0, ',', '.');
                                             
+                                            // Accumulate totals
+                                            $total_netto += $total_bruto;
                                             $total_harga += $total_harga_per_petani;
                                             ?>
                                         <tr>
@@ -238,6 +237,15 @@ $total_netto = 0; // Initialize total netto
                                         <?php 
                 }
                 ?>
+                                        <tfoot>
+                                            <tr>
+                                                <th></th>
+                                            <th></th>
+                                            <th><?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
+                                            <th><?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
+                                            <th></th>
+                                            </tr>
+                                        </tfoot>
                                     </tbody>
                                 </table>
                             </div>

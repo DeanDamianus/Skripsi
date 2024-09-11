@@ -80,9 +80,9 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item menu-close">
                             <a href="{{ url('/owner') }}" class="nav-link">
-                                <i class="nav-icon fas fa-exchange-alt"></i>
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
-                                    <strong>REKAP</strong>
+                                    <strong>DASHBOARD</strong>
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>

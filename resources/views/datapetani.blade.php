@@ -106,9 +106,9 @@ $total_netto = 0; // Initialize total netto
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
                             <a href="{{ url('/owner') }}" class="nav-link">
-                                <i class="nav-icon fas fa-exchange-alt"></i>
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
-                                    <strong>REKAP</strong>
+                                    <strong>DASHBOARD</strong>
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
@@ -208,43 +208,40 @@ $total_netto = 0; // Initialize total netto
                                         <tr>
                                             <th>ID Petani</th>
                                             <th>Nama Petani</th>
-                                            <th>Netto Total</th>
-                                            <th>Jumlah</th>
-                                            <th>Komisi</th>
-                                            <th>Hasil Bersih</th>
+                                            <th>Dibuat tanggal</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
+                                                     
                                         while ($row = mysqli_fetch_assoc($result)) {
-                                            // Query to get the total bruto for each petani
                                             $id_petani = $row['id'];
+
+                                            // Query to get the total netto for each petani
                                             $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
                                             $bruto_result = mysqli_query($con, $query_bruto);
                                             $bruto_data = mysqli_fetch_assoc($bruto_result);
                                             
                                             $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
                                             
-                                            // Update total netto
-                                            $total_netto += $total_bruto;
-                                            
-                                            $query_harga = "SELECT harga FROM rekap_2024 WHERE id_petani = '$id_petani' LIMIT 1";
+                                            // Query to get the total harga for each petani
+                                            $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
                                             $harga_result = mysqli_query($con, $query_harga);
                                             $harga_data = mysqli_fetch_assoc($harga_result);
                                             
-                                            $harga_per_unit = isset($harga_data['harga']) ? $harga_data['harga'] : 0;
+                                            $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
                                             
-                                            $harga = $total_bruto * $harga_per_unit;
-                                            $hargaFormatted = 'Rp. ' . number_format($harga, 0, ',', '.');
-                                            $total_harga += $harga;
-                                        ?>
+                                            // Format harga
+                                            $hargaFormatted = 'Rp. ' . number_format($total_harga_per_petani, 0, ',', '.');
+                                            
+                                            // Accumulate totals
+                                            $total_netto += $total_bruto;
+                                            $total_harga += $total_harga_per_petani;
+                                            ?>
                                         <tr>
                                             <td><?php echo $row['id']; ?></td>
                                             <td><?php echo $row['name']; ?></td>
-                                            <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
-                                            <td><?php echo $hargaFormatted; ?></td>
-                                            <td>Komisi Calculation</td>
-                                            <td>Hasil Bersih Calculation</td>
+                                            <td><?php echo $row['created_at']; ?></td>
                                         </tr>
                                         <?php 
                   }
@@ -254,9 +251,6 @@ $total_netto = 0; // Initialize total netto
                                         <tr>
 
                                             <th></th>
-                                            <th></th>
-                                            <th>Total Netto: <?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
-                                            <th>Total Jumlah: <?php echo number_format($total_harga, 0, ',', '.'); ?></th>
                                             <th></th>
                                             <th></th>
                                         </tr>
