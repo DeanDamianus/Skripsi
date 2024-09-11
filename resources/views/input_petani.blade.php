@@ -68,6 +68,11 @@ $total_harga = 0;
                         style="opacity: .8">
                     <span class="brand-text font-weight-light">SIMBAKO</span>
                 </a>
+                <ul class="navbar-nav">
+                    <li class="nav-item d-none d-sm-inline-block">
+                      <a href="{{url('/owner')}}" class="nav-link">Home</a>
+                    </li>
+                </ul>
                 <button class="navbar-toggler order-1" type="button" data-toggle="collapse"
                     data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
                     aria-label="Toggle navigation">

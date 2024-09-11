@@ -98,7 +98,47 @@ $con->close();
                         style="opacity: .8">
                     <span class="brand-text font-weight-light">SIMBAKO</span>
                 </a>
-                <!-- More Navbar Code Here -->
+                <ul class="navbar-nav">
+                    <li class="nav-item d-none d-sm-inline-block">
+                      <a href="{{url('/input')}}" class="nav-link">Home</a>
+                    </li>
+                </ul>
+                <button class="navbar-toggler order-1" type="button" data-toggle="collapse"
+                    data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <!-- Left navbar links -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="{{ url('/owner') }}" class="nav-link"></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Right navbar links -->
+                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <div class="dropdown">
+                            <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
+                                2024
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item">
+                                    <i class="fas fa-calendar"></i> 2025
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </nav>
         <!-- /.navbar -->
