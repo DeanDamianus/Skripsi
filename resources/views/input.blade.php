@@ -190,11 +190,17 @@ $total_netto = 0; // Initialize total netto
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0">
                                 <table class="table table-hover text-nowrap">
-                                    <thead>
+                                    <thead> 
                                         <tr>
                                             <th>ID Petani</th>
                                             <th>Nama Petani</th>
                                             <th>Netto Total</th>
+                                            <th>Pajak KJ</th> 
+                                            <!-- i want to make th Pajak KJ to make a calculation of if harga is <= 0
+                                                then the netto will be * 1000, if harga <= 50000 netto will be * 2000,
+                                                if harga <= 75000 netto will be * 3000,if harga <= 100000 netto will be * 4000,
+                                                if harga <= 125000 netto will be * 5000,if harga <= 150000 netto will be * 6000,
+                                             -->
                                             <th>Jumlah Total</th>
                                             <th>Action</th>
                                         </tr>
@@ -229,6 +235,7 @@ $total_netto = 0; // Initialize total netto
                                             <td><?php echo $row['id']; ?></td>
                                             <td><?php echo $row['name']; ?></td>
                                             <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
+                                            <td></td>
                                             <td><?php echo $hargaFormatted; ?></td>
                                             <td><a href="{{ url('/dataInput?id=' . $row['id']) }}" type="button"
                                                     class="btn btn-block btn-success"><i
@@ -240,10 +247,12 @@ $total_netto = 0; // Initialize total netto
                                         <tfoot>
                                             <tr>
                                                 <th></th>
-                                            <th></th>
-                                            <th><?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
-                                            <th><?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
-                                            <th></th>
+                                                <th></th>
+                                                <th><?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
+                                                <th></th>
+                                                <th><?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
+                                                <th></th>
+                                                
                                             </tr>
                                         </tfoot>
                                     </tbody>
