@@ -107,7 +107,7 @@ $con->close();
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <button onclick="history.back()">
+                    <button onclick="window.location.href='{{ url('/dataInput') }}?id={{ $id_rekap }}'">
                         <i class="fas fa-arrow-left"></i>
                     </button>
                     <div class="col-sm-6">
@@ -118,9 +118,10 @@ $con->close();
         </section>
 
         <!-- Main content -->
-        <form method="POST" action="{{ route('editInput.update') }}">
+        <form method="POST" action="{{ route('inputPetani.store') }}">
             @csrf
-            <input type="hidden" name="id_rekap" value="<?php echo $id_rekap; ?>">
+            <input type="hidden" name="id_rekap" value="<?php echo htmlspecialchars($id_rekap); ?>">
+            <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($_SERVER['HTTP_REFERER']); ?>">
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
@@ -179,32 +180,21 @@ $con->close();
     <script src="../../dist/js/adminlte.min.js"></script>
 </body>
 @if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                alert('{{ session('success') }}');
+            });
+        </script>
+    @endif
 
-@if (session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var form = document.querySelector('form');
-
-        form.addEventListener('submit', function(event) {
-            // Display confirmation dialog
-            var confirmed = confirm('Apakah anda yakin ingin mengubah data berikut?');
-            if (!confirmed) {
-                // Prevent form submission if not confirmed
-                event.preventDefault();
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if the URL contains 'success=true'
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('success') === 'true') {
+                alert('Data berhasil diubah!');
             }
         });
-    });
-</script>
+    </script>
 
 </html>

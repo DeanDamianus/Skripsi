@@ -6,7 +6,6 @@ use App\Http\Middleware\PetaniMiddleware;
 use App\Http\Controllers\SesiController;
 use Illuminate\Support\Facades\Route;
 
-
 // Routes for login, logout, and error handling
 Route::get('/', [SesiController::class, 'index']);
 Route::post('/', [SesiController::class, 'login']);
@@ -23,7 +22,8 @@ Route::post('/parameter', [SesiController::class, 'store']);
 Route::post('/inputPetani', [SesiController::class, 'input'])->name('inputPetani.store');
 Route::post('/hapuspetani', [PetaniController::class, 'delete'])->name('hapus-petani');
 Route::post('/editInput', [SesiController::class, 'update'])->name('editInput.update');
-Route::post('/process-payment', [SesiController::class, 'hutangLunas'])->name('hutang.lunas');
+Route::post('/hutang', [SesiController::class, 'hutang'])->name('hutang.store');
+Route::post('/pelunasan', [SesiController::class, 'pelunasan'])->name('pelunasan');
 
 
 

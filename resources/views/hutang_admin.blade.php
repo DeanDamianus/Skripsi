@@ -285,158 +285,112 @@ if (!$result) {
 
                                 <!-- /.card-body -->
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="card card-danger">
-                                        <div class="card-header">
-                                            <h3 class="card-title">Hutang Baru</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <label>Nomor ID Petani:</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"><i
-                                                                class="far fa-user"></i></span>
-                                                    </div>
-                                                    <select class="form-control">
-                                                        <option value="" selected disabled>Pilih Petani</option>
-                                                        <?php
-                                                        foreach ($allPetani as $user) {
-                                                            echo "<option value='" . $user['id'] . "'>" . $user['id'] . ' - ' . $user['name'] . '</option>';
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                    
-                                                </div>
-                                                <!-- /.input group -->
+                            <div class="container">
+                                <div class="row">
+                                    <!-- Form for new debt -->
+                                    <div class="col-md-6">
+                                        <div class="card card-danger">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Hutang Baru</h3>
                                             </div>
-                                            <!-- Date dd/mm/yyyy -->
-                                            <div class="form-group">
-                                                <label>Tanggal Hutang:</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"><i
-                                                                class="far fa-calendar-alt"></i></span>
-                                                    </div>
-                                                    <input type="date" class="form-control"
-                                                        data-inputmask-alias="datetime"
-                                                        data-inputmask-inputformat="dd/mm/yyyy" data-mask>
-                                                </div>
-                                                <!-- /.input group -->
-                                            </div>
-                                            <!-- /.form group -->
-
-                                            <!-- IP mask -->
-                                            <div class="form-group">
-                                                <label>Bon</label>
-
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"><i
-                                                                class="nav-icon fas fa-hand-holding-usd"></i></span>
-                                                    </div>
-                                                    <input type="number" class="form-control"
-                                                        data-inputmask="'alias': 'ip'" data-mask>
-                                                </div>
-                                                <!-- /.input group -->
-                                            </div>
-                                            <form action="#" method="POST" id="quickForm">
+                                            <form action="{{ route('hutang.store') }}" method="POST">
                                                 @csrf
-                                                <div class="row" style="width: 100%; justify-content: center;">
-                                                    <div class="col-12">
-                                                        <button type="submit"
-                                                            class="btn btn-danger btn-block">Simpan</button>
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label>Nomor ID Petani:</label>
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i class="far fa-user"></i></span>
+                                                            </div>
+                                                            <select name="id_petani" class="form-control" required>
+                                                                <option value="" selected disabled>Pilih Petani</option>
+                                                                <?php foreach ($allPetani as $user) : ?>
+                                                                    <option value="<?= $user['id'] ?>"><?= $user['id'] . ' - ' . $user['name'] ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Tanggal Hutang:</label>
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                                            </div>
+                                                            <input type="date" name="tanggal_hutang" class="form-control" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Bon</label>
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
+                                                            </div>
+                                                            <input type="number" name="bon" class="form-control" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="width: 100%; justify-content: center;">
+                                                        <div class="col-12">
+                                                            <button type="submit" class="btn btn-danger btn-block">Simpan</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </form>
-                                            <!-- /.form group -->
                                         </div>
-                                        <!-- /.card-body -->
                                     </div>
-                                    <!-- /.card -->
-                                </div>
-                                <!-- /.col (left) -->
-                                <div class="col-md-6">
-                                    <div class="card card-green">
-                                        <div class="card-header">
-                                            <h3 class="card-title">Pelunasan / Cicilan</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <label>Tanggal Bayar:</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"><i
-                                                                class="far fa-calendar-alt"></i></span>
-                                                    </div>
-                                                    <input type="date" class="form-control"
-                                                        data-inputmask-alias="datetime"
-                                                        data-inputmask-inputformat="dd/mm/yyyy" data-mask>
-                                                </div>
-                                                <!-- /.input group -->
+                            
+                                    <!-- Form for payment -->
+                                    <div class="col-md-6">
+                                        <div class="card card-green">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Pelunasan / Cicilan</h3>
                                             </div>
-                                            <!-- /.form group -->
-
-                                            <!-- Date mm/dd/yyyy -->
-                                            <div class="form-group">
-                                                <label>Nomor ID Petani:</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"><i
-                                                                class="far fa-user"></i></span>
-                                                    </div>
-                                                    <select class="form-control">
-                                                        <option value="" selected disabled>Pilih Petani</option>
-                                                        <?php
-                                                        foreach ($petaniInHutang as $user) {
-                                                            echo "<option value='" . $user['id'] . "'>" . $user['id'] . ' - ' . $user['name'] . '</option>';
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                                <!-- /.input group -->
-                                            </div>
-
-                                            <!-- IP mask -->
-                                            <div class="form-group">
-                                                <label>Jumlah Bayar</label>
-
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"><i
-                                                                class="nav-icon fas fa-hand-holding-usd"></i></span>
-                                                    </div>
-                                                    <input type="number" class="form-control" data-mask>
-                                                </div>
-                                                <!-- /.input group -->
-                                            </div>
-                                            <form action="#" method="POST" id="quickForm">
+                                            <form action="{{ route('pelunasan') }}" method="POST" id="quickForm">
                                                 @csrf
-
-                                                <div class="row" style="width: 100%; justify-content: center;">
-                                                    <div class="col-12">
-                                                        <button type="submit"
-                                                            class="btn btn-success btn-block">Selesai</button>
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label>Nomor ID Petani:</label>
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i class="far fa-user"></i></span>
+                                                            </div>
+                                                            <select name="id_petani" class="form-control" required>
+                                                                <option value="" selected disabled>Pilih Petani</option>
+                                                                <?php foreach ($petaniInHutang as $user) : ?>
+                                                                    <option value="<?= $user['id'] ?>"><?= $user['id'] . ' - ' . $user['name'] ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Jumlah Bayar</label>
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
+                                                            </div>
+                                                            <input type="number" name="jumlah_bayar" class="form-control" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="width: 100%; justify-content: center;">
+                                                        <div class="col-12">
+                                                            <button type="submit" class="btn btn-success btn-block">Selesai</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </form>
-                                            <!-- /.form group -->
                                         </div>
-                                        <!-- /.card-body -->
                                     </div>
-                                    <!-- /.card -->
                                 </div>
-                                <!-- /.col (right) -->
                             </div>
-                            <!-- /.card -->
+                            <!-- /.col (right) -->
                         </div>
+                        <!-- /.card -->
                     </div>
                 </div>
-                <!-- /.form-group -->
             </div>
+            <!-- /.form-group -->
         </div>
-        <!-- /.row -->
+    </div>
+    <!-- /.row -->
     </div>
     <!-- /.container-fluid -->
     </div>
@@ -484,6 +438,17 @@ if (!$result) {
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
 </body>
 
 </html>
