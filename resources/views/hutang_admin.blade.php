@@ -261,6 +261,7 @@ if (!$result) {
                                                 <th>Bon</th>
                                                 <th>Cicilan</th>
                                                 <th>Tanggal Lunas</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -275,6 +276,15 @@ if (!$result) {
                                                 echo '<td>Rp. ' . $bonFormatted . '</td>';
                                                 echo '<td>Rp. ' . $cicilanFormatted . '</td>';
                                                 echo '<td>' . $row['tanggal_lunas'] . '</td>';
+                                                echo '<td>
+                                                        <form action="' . route('hutang.delete', ['id' => $row['id_hutang']]) . '" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus data ini?\');">
+                                                            ' . csrf_field() . '
+                                                            ' . method_field('DELETE') . '
+                                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                      </td>';
                                                 echo '</tr>';
                                             }
                                             ?>

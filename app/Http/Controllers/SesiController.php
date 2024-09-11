@@ -250,45 +250,50 @@ class SesiController extends Controller
     }
 
     public function pelunasan(Request $request)
-{
-    // Validate the incoming request data
-    $request->validate([
-        'id_petani' => 'required|exists:hutang_2024,id_hutang', // Ensure id_petani exists in hutang_2024
-        'jumlah_bayar' => 'required|numeric',
-    ]);
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'id_petani' => 'required|exists:hutang_2024,id_hutang', // Ensure id_petani exists in hutang_2024
+            'jumlah_bayar' => 'required|numeric',
+        ]);
 
-    $id_petani = $request->id_petani;
-    $jumlah_bayar = $request->jumlah_bayar;
+        $id_petani = $request->id_petani;
+        $jumlah_bayar = $request->jumlah_bayar;
 
-    // Fetch the current hutang entry
-    $hutang = DB::table('hutang_2024')
-        ->where('id_hutang', $id_petani)
-        ->first();
+        // Fetch the current hutang entry
+        $hutang = DB::table('hutang_2024')->where('id_hutang', $id_petani)->first();
 
-    if ($hutang) {
-        // Check if tanggal_lunas is already filled
-        if ($hutang->tanggal_lunas !== null) {
-            return redirect()->back()->with('error', 'Hutang ini sudah lunas dan tidak dapat diproses.');
+        if ($hutang) {
+            // Check if tanggal_lunas is already filled
+            if ($hutang->tanggal_lunas !== null) {
+                return redirect()->back()->with('error', 'Hutang ini sudah lunas dan tidak dapat diproses.');
+            }
+
+            // Calculate the new cicilan amount
+            $newCicilan = $hutang->cicilan + $jumlah_bayar;
+
+            // Determine tanggal_lunas based on new cicilan amount
+            $tanggalLunas = $newCicilan >= $hutang->bon ? now()->format('Y-m-d') : null;
+
+            // Update the hutang entry
+            DB::table('hutang_2024')
+                ->where('id_hutang', $id_petani)
+                ->update([
+                    'cicilan' => $newCicilan,
+                    'tanggal_lunas' => $tanggalLunas,
+                ]);
+
+            return redirect()->back()->with('success', 'Pelunasan berhasil!');
         }
 
-        // Calculate the new cicilan amount
-        $newCicilan = $hutang->cicilan + $jumlah_bayar;
-
-        // Determine tanggal_lunas based on new cicilan amount
-        $tanggalLunas = ($newCicilan >= $hutang->bon) ? now()->format('Y-m-d') : null;
-
-        // Update the hutang entry
-        DB::table('hutang_2024')
-            ->where('id_hutang', $id_petani)
-            ->update([
-                'cicilan' => $newCicilan,
-                'tanggal_lunas' => $tanggalLunas,
-            ]);
-
-        return redirect()->back()->with('success', 'Pelunasan berhasil!');
+        return redirect()->back()->with('error', 'Data tidak ditemukan.');
     }
+    public function destroy($id)
+    {
+        // Delete the record from the hutang_2024 table
+        DB::table('hutang_2024')->where('id_hutang', $id)->delete();
 
-    return redirect()->back()->with('error', 'Data tidak ditemukan.');
-}
-
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Data berhasil dihapus!');
+    }
 }
