@@ -133,9 +133,6 @@ mysqli_close($con);
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <button onclick="history.back()">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
                     <div class="col-sm-6">
                         <h1>List Rekap </span><?php echo htmlspecialchars($user_data['name']); ?></h1>
                     </div>

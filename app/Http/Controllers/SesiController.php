@@ -100,72 +100,64 @@ class SesiController extends Controller
         return redirect()->back()->with('message', 'Record updated successfully!');
     }
     public function input(Request $request)
-    {
-        // Validate the incoming request data
-        $validated = $request->validate([
-            'netto' => 'required|numeric',
-            'harga' => 'required|numeric',
-            'berat_gudang' => 'required|numeric',
-            'grade' => 'required|string',
-            'id_rekap' => 'required|integer',
-            'redirect_url' => 'required|url',
-        ]);
+{
+    // Validate the form data
+    $validated = $request->validate([
+        'netto' => 'required|numeric',
+        'harga' => 'required|numeric',
+        'berat_gudang' => 'required|numeric',
+        'grade' => 'required|string|max:255',
+        'id_petani' => 'required|integer',
+    ]);
 
-        // Extract validated data
-        $id_rekap = $validated['id_rekap'];
-        $netto = $validated['netto'];
-        $harga = $validated['harga'];
-        $berat_gudang = $validated['berat_gudang'];
-        $grade = $validated['grade'];
-        $redirect_url = $validated['redirect_url'];
+    // Insert the data into the rekap_2024 table
+    DB::table('rekap_2024')->insert([
+        'id_petani' => $validated['id_petani'],
+        'netto' => $validated['netto'],
+        'harga' => $validated['harga'],
+        'berat_gudang' => $validated['berat_gudang'],
+        'grade' => $validated['grade'],
+    ]);
 
-        // Update the data in the database
-        $affected = DB::table('rekap_2024')
-            ->where('id_rekap', $id_rekap)
-            ->update([
-                'netto' => $netto,
-                'harga' => $harga,
-                'berat_gudang' => $berat_gudang,
-                'grade' => $grade,
-            ]);
+    // Redirect or return a response
+    return redirect()->back()->with('success', 'Data berhasil ditambahkan!');
+}
 
-        if ($affected) {
-            // Redirect back to the previous URL
-            return redirect($redirect_url)->with('success', 'Data berhasil diubah!');
-        } else {
-            return redirect()->back()->with('error', 'Data tidak ditemukan atau tidak ada perubahan!');
-        }
-    }
+
     public function update(Request $request)
     {
-        // Validate the request
+        // Validate the data
         $request->validate([
             'netto' => 'required|numeric',
             'harga' => 'required|numeric',
             'berat_gudang' => 'required|numeric',
             'grade' => 'required|string',
-            'id_rekap' => 'required|integer',
         ]);
 
-        // Collect data from the request
+        // Fetch the current id_rekap from the request
         $id_rekap = $request->input('id_rekap');
-        $netto = $request->input('netto');
-        $harga = $request->input('harga');
-        $berat_gudang = $request->input('berat_gudang');
-        $grade = $request->input('grade');
 
-        // Update the existing data in the rekap_2024 table
+        // Find the existing rekap_2024 entry by id_rekap
+        $rekap = DB::table('rekap_2024')->where('id_rekap', $id_rekap)->first();
+
+        if (!$rekap) {
+            return redirect()->back()->with('error', 'Data not found.');
+        }
+
+        // Update the rekap_2024 entry
         DB::table('rekap_2024')
             ->where('id_rekap', $id_rekap)
             ->update([
-                'netto' => $netto,
-                'harga' => $harga,
-                'berat_gudang' => $berat_gudang,
-                'grade' => $grade,
+                'netto' => $request->input('netto'),
+                'harga' => $request->input('harga'),
+                'berat_gudang' => $request->input('berat_gudang'),
+                'grade' => $request->input('grade'),
             ]);
 
-        // Redirect with success message
-        return redirect('/input')->with('success', 'Data berhasil diubah!');
+        // Redirect to the previous page with the same ID
+        return redirect()
+            ->to(url()->previous() . '?id=' . urlencode($id_rekap))
+            ->with('success', 'Data successfully updated!');
     }
 
     public function hutangLunas(Request $request)
@@ -296,4 +288,7 @@ class SesiController extends Controller
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Data berhasil dihapus!');
     }
+
+
+    
 }

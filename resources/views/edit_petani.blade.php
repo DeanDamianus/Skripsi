@@ -107,9 +107,6 @@ $con->close();
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <button onclick="window.location.href='{{ url('/dataInput') }}?id={{ $id_rekap }}'">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
                     <div class="col-sm-6">
                         <h1>Edit Nota <?php echo htmlspecialchars($user_name); ?></h1>
                     </div>
@@ -118,7 +115,7 @@ $con->close();
         </section>
 
         <!-- Main content -->
-        <form method="POST" action="{{ route('inputPetani.store') }}">
+        <form method="POST" action="{{ route('editInput.update') }}">
             @csrf
             <input type="hidden" name="id_rekap" value="<?php echo htmlspecialchars($id_rekap); ?>">
             <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($_SERVER['HTTP_REFERER']); ?>">

@@ -16,11 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $berat_gudang = $_POST['berat_gudang'];
     $grade = $_POST['grade'];
     $id_petani = $_GET['id']; // Assuming the ID is passed via the URL
-
     // Insert the data into the rekap_2024 table
     $insert_query = "INSERT INTO rekap_2024 (id_petani, netto, harga, berat_gudang, grade) 
                      VALUES ('$id_petani', '$netto', '$harga', '$berat_gudang', '$grade')";
-
     if (mysqli_query($con, $insert_query)) {
         echo "Data berhasil ditambahkan!";
     } else {
@@ -187,17 +185,12 @@ $total_harga = 0;
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var form = document.querySelector('form');
+    var form = document.querySelector('form');
     
-        form.addEventListener('submit', function(event) {
-            // Display confirmation dialog
-            var confirmed = confirm('Apakah anda yakin ingin menambahkan data berikut?');
-            if (!confirmed) {
-                // Prevent form submission if not confirmed
-                event.preventDefault();
-            }
-        });
+    form.addEventListener('submit', function(event) {
+
     });
+});
     </script>
     
 </html>
