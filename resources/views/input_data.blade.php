@@ -11,6 +11,7 @@ if (!$con) {
 $user_data = [];
 $total_harga = 0;
 $total_netto = 0;
+$total_gudang = 0; // Initialize total_gudang
 
 // Check if 'id' exists in the URL
 if (isset($_GET['id']) && !empty($_GET['id'])) {
@@ -24,7 +25,10 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         $user_data = mysqli_fetch_assoc($user_result);
 
         // Fetch rekap data for the current user
-        $query_rekap = "SELECT * FROM rekap_2024 WHERE id_petani = $id";
+        $query_rekap = "SELECT rekap_2024.*, parameter_2024.biaya_jual, parameter_2024.naik_turun,parameter_2024.kepala_petani 
+                FROM rekap_2024 
+                JOIN parameter_2024 ON parameter_2024.id = 1
+                WHERE rekap_2024.id_petani = $id";
         $rekap_result = mysqli_query($con, $query_rekap);
 
         // Check if rekap data query is successful
@@ -159,12 +163,12 @@ mysqli_close($con);
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0">
-                                <table class="table table-hover text-nowrap">
+                                <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            {{-- <th>ID Petani</th> --}}
+                                            <th>ID</th>
                                             <th>Netto Total</th>
-                                            <th>Harga Keranjang</th>
+                                            <th>Harga</th>
                                             <th>Jumlah</th>
                                             <th>KJ</th>
                                             <th>Komisi</th>
@@ -173,96 +177,96 @@ mysqli_close($con);
                                             <th>Berat Gudang</th>
                                             <th>Grade</th>
                                             <th>Action</th>
-                            </div>
-                            </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <?php while ($row = mysqli_fetch_assoc($rekap_result)) {
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php while ($row = mysqli_fetch_assoc($rekap_result)) {
                                             // Get data for each rekap row
+                                            $id_rekap = $row['id_rekap'];
                                             $id_petani = $row['id_petani'];
                                             $netto = $row['netto'];
                                             $harga_per_unit = $row['harga'];
                                             $grade = $row['grade'];
                                             $beratgg = $row['berat_gudang'];
-
+                                            $biaya_jual = $row['biaya_jual'];
+                                            $naik_turun = $row['naik_turun'];
+                                            $kepala_petani = $row['kepala_petani'];
+                        
                                             // Calculate total harga
                                             $jumlah = $netto * $harga_per_unit;
-                                            $komisi = $jumlah * 0.1; 
-                                            $hasil_bersih = $jumlah - $komisi; // belom selesai = jumlah kotor - komisi
-
+                                            
+                                            $komisi = $jumlah * $kepala_petani; 
+                                            $hasil_bersih = $jumlah - $komisi;
+                        
                                             // Format harga for display
                                             $jumlahFormatted = 'Rp. ' . number_format($jumlah, 0, ',', '.');
-                                            $komisiFormatted = 'Rp. ' . number_format($komisi, 0, ',', '.');
                                             $hasilBersihFormatted = 'Rp. ' . number_format($hasil_bersih, 0, ',', '.');
                                             $hargaFormatted = 'Rp. ' . number_format($harga_per_unit, 0, ',', '.');
-
-                                            // Add to total_harga and total_netto
+                                            $komisiFormatted = 'Rp. ' . number_format($komisi, 0, ',', '.');
+                                            
+                        
+                                            // Add to total_harga, total_netto, total_gudang
                                             $total_harga += $jumlah;
                                             $total_netto += $netto;
-
-                                            //menghitung KJ
+                                            $total_gudang += $beratgg; // Accumulate total berat_gudang
+                        
+                                            // Calculate KJ
                                             $pajak_kj = 0;
-                                    
                                             if ($harga_per_unit <= 50000) {
-                                            $pajak_kj = 1000 * $netto;
-                                        } elseif ($harga_per_unit <= 75000) {
-                                            $pajak_kj = 2000 * $netto;
-                                        } elseif ($harga_per_unit <= 100000) {
-                                            $pajak_kj = 3000 * $netto;
-                                        } elseif ($harga_per_unit <= 125000) {
-                                            $pajak_kj = 4000 * $netto;
-                                        } elseif ($harga_per_unit <= 150000) {
-                                            $pajak_kj = 5000 * $netto;
-                                        } else {
-                                            $pajak_kj = 6000 * $netto;
-                                        }
+                                                $pajak_kj = 1000 * $netto;
+                                            } else {
+                                                $pajak_kj = 2000 * $netto;
+                                            }
 
-                                        $pajakKJFormatted = 'Rp. ' . number_format($pajak_kj, 0, ',', '.');
-                                            ?>
-                                <tr>
-                                    {{-- <td><?php echo htmlspecialchars($id_petani); ?></td> --}}
-                                    <td><?php echo htmlspecialchars(number_format($netto, 0, ',', '.') . ' kg'); ?></td>
-                                    <td><?php echo htmlspecialchars($hargaFormatted); ?></td>
-                                    <td><?php echo htmlspecialchars($jumlahFormatted); ?></td>
-                                    <td><?php echo htmlspecialchars($pajakKJFormatted); ?></td>
-                                    <td><?php echo htmlspecialchars($komisiFormatted); ?></td>
-                                    <td></td>
-                                    <td><?php echo htmlspecialchars($hasilBersihFormatted); ?></td>
-                                    <td><?php echo htmlspecialchars($beratgg); ?></td>
-                                    <td><?php echo htmlspecialchars($grade); ?></td>
-                                    <td>
-                                        <button
-                                            onclick="window.location.href='/editInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
-                                            class="btn btn-block btn-success">
-                                            <a><i class="fas fa-edit"></i></a>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button
-                                            onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
-                                            class="btn btn-block btn-danger">
-                                            <a><i class="fas fa-trash"></i></a>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <?php } ?>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    {{-- <th></th> --}}
-                                    <th>Total Netto: <?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>   
-                                    <th></th>
-                                    <th>Total Jumlah : <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                            </tfoot>
-                            </table>
+                                            $pajakKJFormatted = 'Rp. ' . number_format($pajak_kj, 0, ',', '.');
+
+                                            $jumlahKotor = $jumlah - $pajak_kj - $biaya_jual - $naik_turun  ;
+                                            $jumlahkotorFormatted = 'Rp. ' . number_format($jumlahKotor, 0, ',', '.');
+                                        ?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($id_rekap); ?></td>
+                                                <td><?php echo number_format($netto, 0, ',', '.') . ' kg'; ?></td>
+                                                <td><?php echo $hargaFormatted; ?></td>
+                                                <td><?php echo htmlspecialchars($jumlahFormatted); ?></td>
+                                                <td><?php echo htmlspecialchars($pajakKJFormatted); ?></td>
+                                                <td><?php echo htmlspecialchars($komisiFormatted); ?></td>
+                                                <td><?php echo $jumlahkotorFormatted; ?></td>
+                                                <td><?php echo $hasilBersihFormatted; ?></td>
+                                                <td><?php echo htmlspecialchars($beratgg); ?></td>
+                                                <td><?php echo htmlspecialchars($grade); ?></td>
+                                                <td>
+                                                    <button
+                                                        onclick="window.location.href='/editInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
+                                                        class="btn btn-block btn-success">
+                                                        <a><i class="fas fa-edit"></i></a>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
+                                                        class="btn btn-block btn-danger">
+                                                        <a><i class="fas fa-trash"></i></a>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th>Total: <?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>   
+                                            <th></th>
+                                            <th>Total: <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>Total: <?php echo 'Rp. ' . number_format($total_harga - ($total_harga * 0.1), 0, ',', '.'); ?></th>
+                                            <th>Total: <?php echo htmlspecialchars($total_gudang); ?></th> <!-- Display total berat_gudang -->
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                         </div>
                         <!-- /.card-body -->
                     </div>
