@@ -10,7 +10,7 @@ if (!$con) {
 // Initialize variables
 $user_data = [];
 $total_harga = 0;
-$total_netto = 0; // Initialize $total_netto
+$total_netto = 0;
 
 // Check if 'id' exists in the URL
 if (isset($_GET['id']) && !empty($_GET['id'])) {
@@ -164,8 +164,8 @@ mysqli_close($con);
                                         <tr>
                                             {{-- <th>ID Petani</th> --}}
                                             <th>Netto Total</th>
-                                            <th>Jumlah</th>
                                             <th>Harga Keranjang</th>
+                                            <th>Jumlah</th>
                                             <th>KJ</th>
                                             <th>Komisi</th>
                                             <th>Jumlah Kotor</th>
@@ -200,14 +200,32 @@ mysqli_close($con);
                                             // Add to total_harga and total_netto
                                             $total_harga += $jumlah;
                                             $total_netto += $netto;
-                                        ?>
+
+                                            //menghitung KJ
+                                            $pajak_kj = 0;
+                                    
+                                            if ($harga_per_unit <= 50000) {
+                                            $pajak_kj = 1000 * $netto;
+                                        } elseif ($harga_per_unit <= 75000) {
+                                            $pajak_kj = 2000 * $netto;
+                                        } elseif ($harga_per_unit <= 100000) {
+                                            $pajak_kj = 3000 * $netto;
+                                        } elseif ($harga_per_unit <= 125000) {
+                                            $pajak_kj = 4000 * $netto;
+                                        } elseif ($harga_per_unit <= 150000) {
+                                            $pajak_kj = 5000 * $netto;
+                                        } else {
+                                            $pajak_kj = 6000 * $netto;
+                                        }
+
+                                        $pajakKJFormatted = 'Rp. ' . number_format($pajak_kj, 0, ',', '.');
+                                            ?>
                                 <tr>
                                     {{-- <td><?php echo htmlspecialchars($id_petani); ?></td> --}}
                                     <td><?php echo htmlspecialchars(number_format($netto, 0, ',', '.') . ' kg'); ?></td>
-                                    <td><?php echo htmlspecialchars($jumlahFormatted); ?></td>
                                     <td><?php echo htmlspecialchars($hargaFormatted); ?></td>
-                                    </td>
-                                    <td></td>
+                                    <td><?php echo htmlspecialchars($jumlahFormatted); ?></td>
+                                    <td><?php echo htmlspecialchars($pajakKJFormatted); ?></td>
                                     <td><?php echo htmlspecialchars($komisiFormatted); ?></td>
                                     <td></td>
                                     <td><?php echo htmlspecialchars($hasilBersihFormatted); ?></td>
@@ -233,9 +251,9 @@ mysqli_close($con);
                             <tfoot>
                                 <tr>
                                     {{-- <th></th> --}}
-                                    <th>Total Netto: <?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
-                                    <th>Total Jumlah : <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
+                                    <th>Total Netto: <?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>   
                                     <th></th>
+                                    <th>Total Jumlah : <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>

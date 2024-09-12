@@ -13,6 +13,10 @@ $result = mysqli_query($con, $nama);
 
 $total_harga = 0; // Initialize total harga
 $total_netto = 0; // Initialize total netto
+
+if (!$result) {
+    die('Error fetching petani data: ' . mysqli_error($con));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -213,42 +217,69 @@ $total_netto = 0; // Initialize total netto
                                         <?php
                                         while ($row = mysqli_fetch_assoc($result)) {
                                             $id_petani = $row['id'];
-
+                                    
                                             // Query to get the total netto for each petani
                                             $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
                                             $bruto_result = mysqli_query($con, $query_bruto);
                                             $bruto_data = mysqli_fetch_assoc($bruto_result);
-                                            
+                                    
+                                            // Debugging output
+                                            if (!$bruto_data) {
+                                                echo "<tr><td colspan='7'>Error fetching netto for petani ID: $id_petani</td></tr>";
+                                                continue; // Skip this iteration if there's no data
+                                            }
+                                    
                                             $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
-                                            
+                                    
                                             // Query to get the total harga for each petani
                                             $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
                                             $harga_result = mysqli_query($con, $query_harga);
                                             $harga_data = mysqli_fetch_assoc($harga_result);
-                                            
+                                    
+                                            if (!$harga_data) {
+                                                echo "<tr><td colspan='7'>Error fetching harga for petani ID: $id_petani</td></tr>";
+                                                continue; // Skip if no data
+                                            }
+                                    
                                             $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
-                                            
+                                    
                                             // Format harga
                                             $hargaFormatted = 'Rp. ' . number_format($total_harga_per_petani, 0, ',', '.');
-                                            
+                                    
                                             // Accumulate totals
                                             $total_netto += $total_bruto;
                                             $total_harga += $total_harga_per_petani;
+                                    
+                                            $pajak_kj = 0;
+                                    
+                                            if ($total_harga_per_petani < 0) {
+                                                $pajak_kj = $total_bruto * 1000;
+                                            } elseif ($total_harga_per_petani > 0 && $total_harga_per_petani <= 50000) {
+                                                $pajak_kj = $total_bruto * 2000;
+                                            } elseif ($total_harga_per_petani > 50000 && $total_harga_per_petani <= 75000) {
+                                                $pajak_kj = $total_bruto * 3000;
+                                            } elseif ($total_harga_per_petani > 75000 && $total_harga_per_petani <= 100000) {
+                                                $pajak_kj = $total_bruto * 4000;
+                                            } elseif ($total_harga_per_petani > 100000 && $total_harga_per_petani <= 125000) {
+                                                $pajak_kj = $total_bruto * 5000;
+                                            } elseif ($total_harga_per_petani > 125000 && $total_harga_per_petani <= 150000) {
+                                                $pajak_kj = $total_bruto * 6000;
+                                            }
+
+                                            $pajakKJFormatted = 'Rp. ' . number_format($pajak_kj, 0, ',', '.');
                                             ?>
-                                        <tr>
-                                            <td><?php echo $row['id']; ?></td>
-                                            <td><?php echo $row['name']; ?></td>
-                                            <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
-                                            <td></td>
-                                            <td><?php echo $hargaFormatted; ?></td>
-                                            <td></td>
-                                            <td><a href="{{ url('/dataInput?id=' . $row['id']) }}" type="button"
-                                                    class="btn btn-block btn-success"><i
-                                                        class="nav-icon fas fa-edit"></i></a></td>
-                                        </tr>
-                                        <?php 
-                }
-                ?>
+                                    
+                                            <tr>
+                                                <td><?php echo $row['id']; ?></td>
+                                                <td><?php echo $row['name']; ?></td>
+                                                <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
+                                                <td><?php echo $pajakKJFormatted; ?></td>
+                                                <td><?php echo $hargaFormatted; ?></td>
+                                                <td><?php echo $pajakKJFormatted; ?></td>
+                                                <td><a href="{{ url('/dataInput?id=' . $row['id']) }}" type="button" class="btn btn-block btn-success"><i class="nav-icon fas fa-edit"></i></a></td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
                                         <tfoot>
                                             <tr>
                                                 <th></th>
