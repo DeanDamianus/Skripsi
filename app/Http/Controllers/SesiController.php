@@ -135,10 +135,12 @@ class SesiController extends Controller
             'periode' => 'required|string',
             'seri'=> 'required|string',
             'no_gg'=> 'required|numeric',
+            'id_petani' => 'required|integer'
         ]);
 
         // Fetch the current id_rekap from the request
         $id_rekap = $request->input('id_rekap');
+        $id_petani = $request->input('id_petani');
 
         // Find the existing rekap_2024 entry by id_rekap
         $rekap = DB::table('rekap_2024')->where('id_rekap', $id_rekap)->first();
@@ -159,11 +161,9 @@ class SesiController extends Controller
                 'seri' => $request->input('seri'),
                 'no_gg' => $request->input('no_gg'),
             ]);
-
-        // Redirect to the previous page with the same ID
-        return redirect()
-        ->to(url()->previous() . '?id=' . urlencode($id_rekap))
-        ->with('success', 'Data successfully updated!');
+            return redirect()
+            ->to('http://127.0.0.1:8000/dataInput?id=' . urlencode($id_petani))
+            ->with('success', 'Data successfully updated!');
 
     }
 

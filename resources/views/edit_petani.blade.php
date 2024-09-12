@@ -7,8 +7,7 @@ if ($con->connect_error) {
     die('Connection Error: ' . $con->connect_error);
 }
 
-
-// Get the current `id_rekap` from the URL (assuming it's passed in the URL)
+// Get the current `id_rekap` from the URL
 $id_rekap = isset($_GET['id_rekap']) ? intval($_GET['id_rekap']) : 0;
 
 // Fetch the existing data for the selected `id_rekap`
@@ -23,8 +22,7 @@ if ($data = $result->fetch_assoc()) {
     $harga = $data['harga'];
     $berat_gudang = $data['berat_gudang'];
     $grade = $data['grade'];
-    $grade = $data['grade'];
-    $periode= $data['periode'];
+    $periode = $data['periode'];
     $seri = $data['seri'];
     $no_gg = $data['no_gg'];
     $id_petani = $data['id_petani'];
@@ -39,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $harga = $_POST['harga'];
     $berat_gudang = $_POST['berat_gudang'];
     $grade = $_POST['grade'];
-    $periode= $_POST['periode'];
+    $periode = $_POST['periode'];
     $seri = $_POST['seri'];
     $no_gg = $_POST['no_gg'];
 
@@ -50,13 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $update_query->bind_param('ddsisssi', $netto, $harga, $berat_gudang, $grade, $periode, $seri, $no_gg, $id_rekap);
 
     if ($update_query->execute()) {
-        // Redirect using PHP header function
-        header("Location: http://127.0.0.1:8000/input");
+        // Redirect to the desired URL with the current id_rekap
+        $redirect_url = "http://127.0.0.1:8000/dataInput?id=" . urlencode($id_rekap);
+        header("Location: " . $redirect_url);
         exit; // Ensure no further code is executed after the redirect
     } else {
         echo "Error: " . $update_query->error;
     }
-
 }
 
 // Fetch the user's data from the `users` table
@@ -73,6 +71,8 @@ if ($user_data = $result->fetch_assoc()) {
 
 $con->close();
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -152,6 +152,9 @@ $con->close();
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
+                    <a href="javascript:history.back()" class="btn btn-outline-dark float-right" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding: 0; border: 2px solid black; background-color: transparent;">
+                        <i class="fas fa-arrow-left" style="font-size: 20px; color: black;"></i>
+                    </a>   
                     <div class="col-sm-6">
                         <h1>Edit Nota <?php echo htmlspecialchars($user_name); ?></h1>
                     </div>
@@ -163,6 +166,7 @@ $con->close();
         <form method="POST" action="{{ route('editInput.update') }}">
             @csrf
             <input type="hidden" name="id_rekap" value="<?php echo htmlspecialchars($id_rekap); ?>">
+            <input type="hidden" name="id_petani" value="<?php echo htmlspecialchars($id_petani); ?>">
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
@@ -171,7 +175,6 @@ $con->close();
                             <input type="number" name="netto" class="form-control" value="<?php echo htmlspecialchars($netto); ?>"
                                 placeholder="Masukkan Netto" required>
                         </div>
-                        <!-- /.form-group -->
                         <div class="form-group">
                             <label>Harga Keranjang</label>
                             <input type="number" name="harga" class="form-control" value="<?php echo htmlspecialchars($harga); ?>"
@@ -183,7 +186,6 @@ $con->close();
                         </div>
                         <div class="form-group">
                             <label>Grade</label>
-                            <br>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="gradeA" name="grade" value="A" class="form-check-input" <?php echo ($grade == 'A') ? 'checked' : ''; ?> required>
                                 <label class="form-check-label" for="gradeA">A</label>
@@ -201,39 +203,29 @@ $con->close();
                                 <label class="form-check-label" for="gradeD">D</label>
                             </div>
                         </div>
-                        
-                        <!-- /.form-group -->
                     </div>
-                    <!-- /.col -->
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Berat Gudang</label>
                             <input type="number" name="berat_gudang" class="form-control" value="<?php echo htmlspecialchars($berat_gudang); ?>"
                                 placeholder="Masukkan Berat Gudang (Kg)" required>
                         </div>
-                        <!-- /.form-group -->
-
-                        
                         <div class="form-group">
                             <label>Periode</label>
-                            <input type="text" name="periode" value="<?php echo htmlspecialchars($periode); ?>"class="form-control" placeholder="Masukkan periode (1-A) " required>
+                            <input type="text" name="periode" value="<?php echo htmlspecialchars($periode); ?>"class="form-control" placeholder="Masukkan periode (1-A)" required>
                         </div>
                         <div class="form-group">
                             <label>No.GG</label>
-                            <input type="text" name="no_gg" class="form-control" value="<?php echo htmlspecialchars($no_gg); ?>"placeholder="Masukkan No.GG" required>
+                            <input type="text" name="no_gg" class="form-control" value="<?php echo htmlspecialchars($no_gg); ?>" placeholder="Masukkan No.GG" required>
                         </div>
-                       
-                        
-                        <!-- /.form-group -->
                     </div>
-                    <!-- /.col -->
                 </div>
-                <!-- /.row -->
             </div>
             <div class="card-footer text-center">
                 <button type="submit" class="btn btn-primary">Ubah</button>
             </div>
         </form>
+        
         <!-- /.content-wrapper -->
 
         <!-- Control Sidebar -->
@@ -251,23 +243,14 @@ $con->close();
     <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../../dist/js/adminlte.min.js"></script>
-</body>
-@if (session('success'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                alert('{{ session('success') }}');
-            });
-        </script>
-    @endif
-
+    @if (session('success'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if the URL contains 'success=true'
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('success') === 'true') {
-                alert('Data berhasil diubah!');
-            }
+            alert('{{ session('success') }}');
         });
     </script>
+@endif
+
+</body>
 
 </html>
