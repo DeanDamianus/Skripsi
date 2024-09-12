@@ -199,17 +199,8 @@ if (!$result) {
                                             <th>ID Petani</th>
                                             <th>Nama Petani</th>
                                             <th>Netto Total</th>
-                                            <th>Pajak KJ</th> 
-                                            <!-- i want to make th Pajak KJ to make a calculation of if harga is <= 0
-                                                then the netto will be * 1000, if harga <= 50000 netto will be * 2000,
-                                                if harga <= 75000 netto will be * 3000,if harga <= 100000 netto will be * 4000,
-                                                if harga <= 125000 netto will be * 5000,if harga <= 150000 netto will be * 6000,
-                                             -->
+                                            {{-- <th>Jumlah Bersih</th> --}}
                                             <th>Jumlah Total</th>
-                                            <th>Jumlah Kotor</th> <!-- 
-                                                i want the jumlah kotor to make the calculations of the value of Jumlah  total - pajak KJ - 
-                                                table value from parameter_2024 name borong_jual - table value from parameter_2024 name naik_turun, 
-                                             -->
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -249,33 +240,15 @@ if (!$result) {
                                             // Accumulate totals
                                             $total_netto += $total_bruto;
                                             $total_harga += $total_harga_per_petani;
-                                    
-                                            $pajak_kj = 0;
-                                    
-                                            if ($total_harga_per_petani < 0) {
-                                                $pajak_kj = $total_bruto * 1000;
-                                            } elseif ($total_harga_per_petani > 0 && $total_harga_per_petani <= 50000) {
-                                                $pajak_kj = $total_bruto * 2000;
-                                            } elseif ($total_harga_per_petani > 50000 && $total_harga_per_petani <= 75000) {
-                                                $pajak_kj = $total_bruto * 3000;
-                                            } elseif ($total_harga_per_petani > 75000 && $total_harga_per_petani <= 100000) {
-                                                $pajak_kj = $total_bruto * 4000;
-                                            } elseif ($total_harga_per_petani > 100000 && $total_harga_per_petani <= 125000) {
-                                                $pajak_kj = $total_bruto * 5000;
-                                            } elseif ($total_harga_per_petani > 125000 && $total_harga_per_petani <= 150000) {
-                                                $pajak_kj = $total_bruto * 6000;
-                                            }
-
-                                            $pajakKJFormatted = 'Rp. ' . number_format($pajak_kj, 0, ',', '.');
+                                            
                                             ?>
                                     
                                             <tr>
                                                 <td><?php echo $row['id']; ?></td>
                                                 <td><?php echo $row['name']; ?></td>
                                                 <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
-                                                <td><?php echo $pajakKJFormatted; ?></td>
+                                                {{-- <td></td> --}}
                                                 <td><?php echo $hargaFormatted; ?></td>
-                                                <td><?php echo $pajakKJFormatted; ?></td>
                                                 <td><a href="{{ url('/dataInput?id=' . $row['id']) }}" type="button" class="btn btn-block btn-success"><i class="nav-icon fas fa-edit"></i></a></td>
                                             </tr>
                                         <?php } ?>
@@ -285,9 +258,8 @@ if (!$result) {
                                                 <th></th>
                                                 <th></th>
                                                 <th><?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
-                                                <th></th>
+                                                {{-- <th></th> --}}
                                                 <th><?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
-                                                <th></th>
                                                 <td></td>
                                                 
                                             </tr>

@@ -261,7 +261,7 @@ mysqli_close($con);
                                             <th></th>
                                             <th></th>
                                             <th>Total: <?php echo 'Rp. ' . number_format($total_harga - ($total_harga * 0.1), 0, ',', '.'); ?></th>
-                                            <th>Total: <?php echo htmlspecialchars($total_gudang); ?></th> <!-- Display total berat_gudang -->
+                                            <th></th>
                                             <th></th>
                                             <th></th>
                                         </tr>
