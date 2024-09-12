@@ -222,7 +222,7 @@ mysqli_close($con);
 
                                             $jumlahKotor = $jumlah - $pajak_kj - $biaya_jual - $naik_turun  ;
                                             $komisi = $jumlahKotor * $kepala_petani; 
-                                            $hasil_bersih = $jumlah - $komisi;
+                                            $hasil_bersih = $jumlahKotor - $komisi;
 
                                             //formatting 
                                             $jumlahFormatted = 'Rp. ' . number_format($jumlah, 0, ',', '.');

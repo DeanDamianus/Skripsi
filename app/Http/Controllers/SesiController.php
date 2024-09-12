@@ -99,28 +99,41 @@ class SesiController extends Controller
 
         return redirect()->back()->with('message', 'Record updated successfully!');
     }
+
     public function input(Request $request)
 {
     // Validate the form data
     $validated = $request->validate([
         'netto' => 'required|numeric',
+        'jual_luar_value' => 'nullable|in:0,1',
         'harga' => 'required|numeric',
         'berat_gudang' => 'required|numeric',
-        'grade' => 'required|string|max:255',
+        'grade' => 'required|string',
+        'periode' => 'required|string',
+        'seri' => 'nullable|string',
+        'no_gg' => 'nullable|numeric',
         'id_petani' => 'required|integer',
     ]);
+    $id_petani = $request->input('id_petani');
+    $jual_luar = $request->input('jual_luar_value') === '1' ? true : false;
 
     // Insert the data into the rekap_2024 table
     DB::table('rekap_2024')->insert([
         'id_petani' => $validated['id_petani'],
         'netto' => $validated['netto'],
+        'jual_luar' => $jual_luar,
         'harga' => $validated['harga'],
         'berat_gudang' => $validated['berat_gudang'],
         'grade' => $validated['grade'],
+        'periode' => $validated['periode'],
+        'seri' => $validated['seri'],
+        'no_gg' => $validated['no_gg'],
     ]);
 
-    // Redirect or return a response
-    return redirect()->back()->with('success', 'Data berhasil ditambahkan!');
+    // Redirect to the specified route with the 'id' parameter
+    return redirect()
+            ->to('http://127.0.0.1:8000/dataInput?id=' . urlencode($id_petani))
+            ->with('success', 'Data successfully updated!');
 }
 
 
@@ -133,9 +146,9 @@ class SesiController extends Controller
             'berat_gudang' => 'required|numeric',
             'grade' => 'required|string',
             'periode' => 'required|string',
-            'seri'=> 'required|string',
-            'no_gg'=> 'required|numeric',
-            'id_petani' => 'required|integer'
+            'seri' => 'required|string',
+            'no_gg' => 'required|numeric',
+            'id_petani' => 'required|integer',
         ]);
 
         // Fetch the current id_rekap from the request
@@ -161,10 +174,9 @@ class SesiController extends Controller
                 'seri' => $request->input('seri'),
                 'no_gg' => $request->input('no_gg'),
             ]);
-            return redirect()
+        return redirect()
             ->to('http://127.0.0.1:8000/dataInput?id=' . urlencode($id_petani))
             ->with('success', 'Data successfully updated!');
-
     }
 
     public function hutangLunas(Request $request)
@@ -295,7 +307,4 @@ class SesiController extends Controller
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Data berhasil dihapus!');
     }
-
-
-    
 }

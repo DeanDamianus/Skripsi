@@ -1,5 +1,4 @@
 <?php
-
 // Establish the connection
 $con = mysqli_connect('localhost', 'root', '', 'simbako_app');
 
@@ -13,17 +12,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Collect data from the form
     $netto = $_POST['netto'];
     $harga = $_POST['harga'];
-    $jual_luar = $_POST['jual_luar'];
+    $jual_luar = isset($_POST['jual_luar']) ? $_POST['jual_luar'] : '0';
     $berat_gudang = $_POST['berat_gudang'];
     $grade = $_POST['grade'];
-    $periode= $_POST['periode'];
+    $id_petani = $_POST['id_petani'];
+    $periode = $_POST['periode'];
     $seri = $_POST['seri'];
     $no_gg = $_POST['no_gg'];
-    $id_petani = $_GET['id'];
 
     // Insert the data into the rekap_2024 table
-    $insert_query = "INSERT INTO rekap_2024 (id_petani, netto, jual_luar, harga, berat_gudang, grade,berat_gudang,periode,seri,no_gg) 
-                     VALUES ('$id_petani', '$netto','$jual_luar', '$harga', '$berat_gudang', '$grade','$berat_gudang' , '$periode', '$seri', '$no_gg')";
+    $insert_query = "INSERT INTO rekap_2024 (id_petani, netto, jual_luar, harga, berat_gudang, grade, periode, seri, no_gg) 
+                     VALUES ('$id_petani', '$netto', '$jual_luar', '$harga', '$berat_gudang', '$grade', '$periode', '$seri', '$no_gg')";
+
     if (mysqli_query($con, $insert_query)) {
         echo "Data berhasil ditambahkan!";
     } else {
@@ -32,9 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Fetch the user's data from the database
-$id = $_GET['id'];
-$nama = "SELECT * FROM users WHERE id = $id";
-$result = mysqli_query($con, $nama);
+$id = isset($_GET['id']) ? $_GET['id'] : null;
+if ($id === null) {
+    die('Error: ID parameter is missing.');
+}
+
+$nama_query = "SELECT * FROM users WHERE id = $id";
+$result = mysqli_query($con, $nama_query);
 
 if ($user_data = mysqli_fetch_assoc($result)) {
     $user_name = $user_data['name'];
@@ -44,6 +48,7 @@ if ($user_data = mysqli_fetch_assoc($result)) {
 
 $total_harga = 0;
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -138,8 +143,9 @@ $total_harga = 0;
                 <div class="col-md-12">
                     <!-- jquery validation -->
                     <div class="card card-primary">
-                        <form method="POST" action="">
+                        <form method="POST" action="{{ route('inputPetani.store') }}">
                             @csrf
+                            <input type="hidden" name="jual_luar_value" id="jual_luar_value" value="0">
                             <input type="hidden" name="id_petani" value="<?php echo htmlspecialchars($id); ?>">
                             <div class="card-body">
                                 <div class="row">
@@ -243,28 +249,37 @@ $total_harga = 0;
     <script src="../../dist/js/adminlte.min.js"></script>
 </body>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     var form = document.querySelector('form');
     var jualLuarCheckbox = document.getElementById('jual_luar');
+    var jualLuarValueField = document.getElementById('jual_luar_value');
     var seriField = document.getElementById('seri');
     var noGGField = document.getElementById('no_gg');
-    var gradeField = document.getElementById('grade');
+    var gradeFields = document.querySelectorAll('input[name="grade"]');
 
-    // Function to toggle disabled state and clear input fields
+    // Function to toggle disabled state and update hidden field
     function toggleFields() {
         if (jualLuarCheckbox.checked) {
+            jualLuarValueField.value = '1';
             seriField.disabled = true;
             noGGField.disabled = true;
-            gradeField.disabled = true;
+            gradeFields.forEach(function(field) {
+                field.disabled = true;
+            });
 
             // Clear the fields when checkbox is checked
             seriField.value = '';
             noGGField.value = '';
-            gradeField.value = '';
+            gradeFields.forEach(function(field) {
+                field.checked = false;
+            });
         } else {
+            jualLuarValueField.value = '0';
             seriField.disabled = false;
             noGGField.disabled = false;
-            gradeField.disabled = false;
+            gradeFields.forEach(function(field) {
+                field.disabled = false;
+            });
         }
     }
 
@@ -273,11 +288,9 @@ $total_harga = 0;
 
     // Call function on page load to set initial state
     toggleFields();
-    
-    form.addEventListener('submit', function(event) {
-
-    });
 });
+
+
 </script>
 <script>
 
