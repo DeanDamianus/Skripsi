@@ -132,6 +132,9 @@ class SesiController extends Controller
             'harga' => 'required|numeric',
             'berat_gudang' => 'required|numeric',
             'grade' => 'required|string',
+            'periode' => 'required|string',
+            'seri'=> 'required|string',
+            'no_gg'=> 'required|numeric',
         ]);
 
         // Fetch the current id_rekap from the request
@@ -152,12 +155,16 @@ class SesiController extends Controller
                 'harga' => $request->input('harga'),
                 'berat_gudang' => $request->input('berat_gudang'),
                 'grade' => $request->input('grade'),
+                'periode' => $request->input('periode'),
+                'seri' => $request->input('seri'),
+                'no_gg' => $request->input('no_gg'),
             ]);
 
         // Redirect to the previous page with the same ID
         return redirect()
-            ->to(url()->previous() . '?id=' . urlencode($id_rekap))
-            ->with('success', 'Data successfully updated!');
+        ->to(url()->previous() . '?id=' . urlencode($id_rekap))
+        ->with('success', 'Data successfully updated!');
+
     }
 
     public function hutangLunas(Request $request)

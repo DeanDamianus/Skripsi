@@ -143,7 +143,7 @@ mysqli_close($con);
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>List Rekap </span><?php echo htmlspecialchars($user_data['name']); ?></h1>
+                        <h1>List Rekap <label> <?php echo htmlspecialchars($user_data['name']); ?> </label></h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -171,8 +171,8 @@ mysqli_close($con);
                                             <th>Harga</th>
                                             <th>Jumlah</th>
                                             <th>KJ</th>
-                                            <th>Komisi</th>
                                             <th>Jumlah Kotor</th>
+                                            <th>Komisi</th>
                                             <th>Jumlah Bersih</th>
                                             <th>Berat Gudang</th>
                                             <th>Grade</th>
@@ -184,6 +184,7 @@ mysqli_close($con);
                                             // Get data for each rekap row
                                             $id_rekap = $row['id_rekap'];
                                             $id_petani = $row['id_petani'];
+                                            $jual_luar = $row['jual_luar'];
                                             $netto = $row['netto'];
                                             $harga_per_unit = $row['harga'];
                                             $grade = $row['grade'];
@@ -192,19 +193,8 @@ mysqli_close($con);
                                             $naik_turun = $row['naik_turun'];
                                             $kepala_petani = $row['kepala_petani'];
                         
-                                            // Calculate total harga
                                             $jumlah = $netto * $harga_per_unit;
                                             
-                                            $komisi = $jumlah * $kepala_petani; 
-                                            $hasil_bersih = $jumlah - $komisi;
-                        
-                                            // Format harga for display
-                                            $jumlahFormatted = 'Rp. ' . number_format($jumlah, 0, ',', '.');
-                                            $hasilBersihFormatted = 'Rp. ' . number_format($hasil_bersih, 0, ',', '.');
-                                            $hargaFormatted = 'Rp. ' . number_format($harga_per_unit, 0, ',', '.');
-                                            $komisiFormatted = 'Rp. ' . number_format($komisi, 0, ',', '.');
-                                            
-                        
                                             // Add to total_harga, total_netto, total_gudang
                                             $total_harga += $jumlah;
                                             $total_netto += $netto;
@@ -213,14 +203,30 @@ mysqli_close($con);
                                             // Calculate KJ
                                             $pajak_kj = 0;
                                             if ($harga_per_unit <= 50000) {
-                                                $pajak_kj = 1000 * $netto;
-                                            } else {
+                                            $pajak_kj = 1000 * $netto;
+                                            } elseif ($harga_per_unit <= 75000) {
                                                 $pajak_kj = 2000 * $netto;
+                                            } elseif ($harga_per_unit <= 100000) {
+                                                $pajak_kj = 3000 * $netto;
+                                            } elseif ($harga_per_unit <= 125000) {
+                                                $pajak_kj = 4000 * $netto;
+                                            } elseif ($harga_per_unit <= 150000) {
+                                                $pajak_kj = 5000 * $netto;
+                                            } else {
+                                                $pajak_kj = 6000 * $netto;
                                             }
 
-                                            $pajakKJFormatted = 'Rp. ' . number_format($pajak_kj, 0, ',', '.');
 
                                             $jumlahKotor = $jumlah - $pajak_kj - $biaya_jual - $naik_turun  ;
+                                            $komisi = $jumlahKotor * $kepala_petani; 
+                                            $hasil_bersih = $jumlah - $komisi;
+
+                                            //formatting 
+                                            $jumlahFormatted = 'Rp. ' . number_format($jumlah, 0, ',', '.');
+                                            $hargaFormatted = 'Rp. ' . number_format($harga_per_unit, 0, ',', '.');
+                                            $pajakKJFormatted = 'Rp. ' . number_format($pajak_kj, 0, ',', '.');
+                                            $hasilBersihFormatted = 'Rp. ' . number_format($hasil_bersih, 0, ',', '.');
+                                            $komisiFormatted = 'Rp. ' . number_format($komisi, 0, ',', '.');
                                             $jumlahkotorFormatted = 'Rp. ' . number_format($jumlahKotor, 0, ',', '.');
                                         ?>
                                             <tr>
@@ -229,8 +235,8 @@ mysqli_close($con);
                                                 <td><?php echo $hargaFormatted; ?></td>
                                                 <td><?php echo htmlspecialchars($jumlahFormatted); ?></td>
                                                 <td><?php echo htmlspecialchars($pajakKJFormatted); ?></td>
-                                                <td><?php echo htmlspecialchars($komisiFormatted); ?></td>
                                                 <td><?php echo $jumlahkotorFormatted; ?></td>
+                                                <td><?php echo htmlspecialchars($komisiFormatted); ?></td>
                                                 <td><?php echo $hasilBersihFormatted; ?></td>
                                                 <td><?php echo htmlspecialchars($beratgg); ?></td>
                                                 <td><?php echo htmlspecialchars($grade); ?></td>

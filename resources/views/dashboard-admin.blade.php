@@ -282,7 +282,7 @@ mysqli_close($con);
                                 }
                                 ?>
                                 <h3><sup style="font-size: 20px">Rp.</sup><?php echo number_format($total_harga, 0, ',', '.'); ?></h3>
-                                <p>Total Jumlah</p>
+                                <p>Total Harga Keranjang</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-coins"></i> <!-- Ikon koin -->

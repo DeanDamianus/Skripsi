@@ -7,8 +7,6 @@ if ($con->connect_error) {
     die('Connection Error: ' . $con->connect_error);
 }
 
-// Enable error reporting
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 // Get the current `id_rekap` from the URL (assuming it's passed in the URL)
 $id_rekap = isset($_GET['id_rekap']) ? intval($_GET['id_rekap']) : 0;
@@ -25,6 +23,10 @@ if ($data = $result->fetch_assoc()) {
     $harga = $data['harga'];
     $berat_gudang = $data['berat_gudang'];
     $grade = $data['grade'];
+    $grade = $data['grade'];
+    $periode= $data['periode'];
+    $seri = $data['seri'];
+    $no_gg = $data['no_gg'];
     $id_petani = $data['id_petani'];
 } else {
     die('Data not found!');
@@ -37,20 +39,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $harga = $_POST['harga'];
     $berat_gudang = $_POST['berat_gudang'];
     $grade = $_POST['grade'];
+    $periode= $_POST['periode'];
+    $seri = $_POST['seri'];
+    $no_gg = $_POST['no_gg'];
 
     // Update the existing data in the rekap_2024 table
     $update_query = $con->prepare("UPDATE rekap_2024 
-                                    SET netto = ?, harga = ?, berat_gudang = ?, grade = ? 
-                                    WHERE id_rekap = ?");
-    $update_query->bind_param('ddsdi', $netto, $harga, $berat_gudang, $grade, $id_rekap);
+                                SET netto = ?, harga = ?, berat_gudang = ?, grade = ?, periode = ?, seri = ?, no_gg = ?   
+                                WHERE id_rekap = ?");
+    $update_query->bind_param('ddsisssi', $netto, $harga, $berat_gudang, $grade, $periode, $seri, $no_gg, $id_rekap);
 
     if ($update_query->execute()) {
-    // Redirect using PHP header function
-    header("Location: http://127.0.0.1:8000/input");
-    exit; // Ensure no further code is executed after the redirect
-} else {
-    echo "Error: " . $update_query->error;
-}
+        // Redirect using PHP header function
+        header("Location: http://127.0.0.1:8000/input");
+        exit; // Ensure no further code is executed after the redirect
+    } else {
+        echo "Error: " . $update_query->error;
+    }
 
 }
 
@@ -158,7 +163,6 @@ $con->close();
         <form method="POST" action="{{ route('editInput.update') }}">
             @csrf
             <input type="hidden" name="id_rekap" value="<?php echo htmlspecialchars($id_rekap); ?>">
-            <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($_SERVER['HTTP_REFERER']); ?>">
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
@@ -169,10 +173,35 @@ $con->close();
                         </div>
                         <!-- /.form-group -->
                         <div class="form-group">
-                            <label>Harga Berat Keranjang</label>
+                            <label>Harga Keranjang</label>
                             <input type="number" name="harga" class="form-control" value="<?php echo htmlspecialchars($harga); ?>"
                                 placeholder="Masukkan Harga" required>
                         </div>
+                        <div class="form-group">
+                            <label>Seri</label>
+                            <input type="text" id="seri" name="seri" class="form-control" value="<?php echo htmlspecialchars($seri); ?>" placeholder="Masukkan Seri (TGL01)" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Grade</label>
+                            <br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="gradeA" name="grade" value="A" class="form-check-input" <?php echo ($grade == 'A') ? 'checked' : ''; ?> required>
+                                <label class="form-check-label" for="gradeA">A</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="gradeB" name="grade" value="B" class="form-check-input" <?php echo ($grade == 'B') ? 'checked' : ''; ?> required>
+                                <label class="form-check-label" for="gradeB">B</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="gradeC" name="grade" value="C" class="form-check-input" <?php echo ($grade == 'C') ? 'checked' : ''; ?> required>
+                                <label class="form-check-label" for="gradeC">C</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="gradeD" name="grade" value="D" class="form-check-input" <?php echo ($grade == 'D') ? 'checked' : ''; ?> required>
+                                <label class="form-check-label" for="gradeD">D</label>
+                            </div>
+                        </div>
+                        
                         <!-- /.form-group -->
                     </div>
                     <!-- /.col -->
@@ -183,11 +212,18 @@ $con->close();
                                 placeholder="Masukkan Berat Gudang (Kg)" required>
                         </div>
                         <!-- /.form-group -->
+
+                        
                         <div class="form-group">
-                            <label>Grade</label>
-                            <input type="text" name="grade" class="form-control" value="<?php echo htmlspecialchars($grade); ?>"
-                                placeholder="Masukkan Grade" required>
+                            <label>Periode</label>
+                            <input type="text" name="periode" value="<?php echo htmlspecialchars($periode); ?>"class="form-control" placeholder="Masukkan periode (1-A) " required>
                         </div>
+                        <div class="form-group">
+                            <label>No.GG</label>
+                            <input type="text" name="no_gg" class="form-control" value="<?php echo htmlspecialchars($no_gg); ?>"placeholder="Masukkan No.GG" required>
+                        </div>
+                       
+                        
                         <!-- /.form-group -->
                     </div>
                     <!-- /.col -->

@@ -13,12 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Collect data from the form
     $netto = $_POST['netto'];
     $harga = $_POST['harga'];
+    $jual_luar = $_POST['jual_luar'];
     $berat_gudang = $_POST['berat_gudang'];
     $grade = $_POST['grade'];
-    $id_petani = $_GET['id']; // Assuming the ID is passed via the URL
+    $periode= $_POST['periode'];
+    $seri = $_POST['seri'];
+    $no_gg = $_POST['no_gg'];
+    $id_petani = $_GET['id'];
+
     // Insert the data into the rekap_2024 table
-    $insert_query = "INSERT INTO rekap_2024 (id_petani, netto, harga, berat_gudang, grade) 
-                     VALUES ('$id_petani', '$netto', '$harga', '$berat_gudang', '$grade')";
+    $insert_query = "INSERT INTO rekap_2024 (id_petani, netto, jual_luar, harga, berat_gudang, grade,berat_gudang,periode,seri,no_gg) 
+                     VALUES ('$id_petani', '$netto','$jual_luar', '$harga', '$berat_gudang', '$grade','$berat_gudang' , '$periode', '$seri', '$no_gg')";
     if (mysqli_query($con, $insert_query)) {
         echo "Data berhasil ditambahkan!";
     } else {
@@ -121,52 +126,101 @@ $total_harga = 0;
                         <i class="fas fa-arrow-left"></i>
                     </button>
                     <div class="col-sm-6">
-                        <h1>Input Nota <?php echo htmlspecialchars($user_name); ?></h1>
+                        <h1>Input Nota <label> <?php echo htmlspecialchars($user_name); ?> </label></h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
         </section>
 
-        <!-- Main content -->
-        <form method="POST" action="">
-            @csrf
-            <input type="hidden" name="id_petani" value="<?php echo htmlspecialchars($id); ?>">
-        
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Netto</label>
-                            <input type="number" name="netto" class="form-control" placeholder="Masukkan Netto" required>
-                        </div>
-                        <!-- /.form-group -->
-                        <div class="form-group">
-                            <label>Harga Berat Keranjang</label>
-                            <input type="number" name="harga" class="form-control" placeholder="Masukkan Harga" required>
-                        </div>
-                        <!-- /.form-group -->
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- jquery validation -->
+                    <div class="card card-primary">
+                        <form method="POST" action="">
+                            @csrf
+                            <input type="hidden" name="id_petani" value="<?php echo htmlspecialchars($id); ?>">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Netto</label>
+                                            <input type="number" name="netto" class="form-control" placeholder="Masukkan Netto" required>
+                                        </div>
+                                        <!-- /.form-group -->
+                                        <div class="form-group">
+                                            <label>Harga Keranjang</label>
+                                            <input type="number" name="harga" class="form-control" placeholder="Masukkan Harga" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Seri</label>
+                                            <input type="text" id="seri" name="seri" class="form-control" placeholder="Masukkan Seri (TGL01)" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Tipe</label><br>
+                                            <input type="checkbox" id="jual_luar" name="jual_luar" class="">
+                                            <a>Jual Luar</a>
+                                        </div>
+                                        <!-- /.form-group -->
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Berat Gudang</label>
+                                            <input type="number" name="berat_gudang" class="form-control" placeholder="Masukkan Berat Gudang (Kg)" required>
+                                        </div>
+                                        <!-- /.form-group -->
+                                        
+                                        
+                                        <div class="form-group">
+                                            <label>Periode</label>
+                                            <input type="text" name="periode" class="form-control" placeholder="Masukkan periode (1-A) " required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>No.GG</label>
+                                            <input type="text" id="no_gg" name="no_gg" class="form-control" placeholder="Masukkan No.GG" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Grade</label>
+                                            <br>
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" id="gradeA" name="grade" value="A" class="form-check-input" required>
+                                                <label class="form-check-label" for="gradeA">A</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" id="gradeB" name="grade" value="B" class="form-check-input" required>
+                                                <label class="form-check-label" for="gradeB">B</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" id="gradeC" name="grade" value="C" class="form-check-input" required>
+                                                <label class="form-check-label" for="gradeC">C</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" id="gradeD" name="grade" value="D" class="form-check-input" required>
+                                                <label class="form-check-label" for="gradeD">D</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- /.form-group -->
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+                            </div>
+                            <div class="card-footer text-center">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
                     </div>
-                    <!-- /.col -->
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Berat Gudang</label>
-                            <input type="number" name="berat_gudang" class="form-control" placeholder="Masukkan Berat Gudang (Kg)" required>
-                        </div>
-                        <!-- /.form-group -->
-                        <div class="form-group">
-                            <label>Grade</label>
-                            <input type="text" name="grade" class="form-control" placeholder="Masukkan Grade" required>
-                        </div>
-                        <!-- /.form-group -->
-                    </div>
-                    <!-- /.col -->
+                    <!-- /.card -->
                 </div>
-                <!-- /.row -->
+                <!--/.col (left) -->
             </div>
-            <div class="card-footer text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </form>
+            <!-- /.row -->
+        </div>
+        <!-- Main content -->
+        
         
         
         <!-- /.content-wrapper -->
@@ -191,11 +245,42 @@ $total_harga = 0;
 <script>
     document.addEventListener('DOMContentLoaded', function() {
     var form = document.querySelector('form');
+    var jualLuarCheckbox = document.getElementById('jual_luar');
+    var seriField = document.getElementById('seri');
+    var noGGField = document.getElementById('no_gg');
+    var gradeField = document.getElementById('grade');
+
+    // Function to toggle disabled state and clear input fields
+    function toggleFields() {
+        if (jualLuarCheckbox.checked) {
+            seriField.disabled = true;
+            noGGField.disabled = true;
+            gradeField.disabled = true;
+
+            // Clear the fields when checkbox is checked
+            seriField.value = '';
+            noGGField.value = '';
+            gradeField.value = '';
+        } else {
+            seriField.disabled = false;
+            noGGField.disabled = false;
+            gradeField.disabled = false;
+        }
+    }
+
+    // Attach event listener to the checkbox
+    jualLuarCheckbox.addEventListener('change', toggleFields);
+
+    // Call function on page load to set initial state
+    toggleFields();
     
     form.addEventListener('submit', function(event) {
 
     });
 });
-    </script>
+</script>
+<script>
+
+
     
 </html>
