@@ -108,33 +108,38 @@ class SesiController extends Controller
         'jual_luar_value' => 'nullable|in:0,1',
         'harga' => 'required|numeric',
         'berat_gudang' => 'required|numeric',
-        'grade' => 'required|string',
-        'periode' => 'required|string',
+        'grade' => 'nullable|string',  // Nullable fields
+        'periode' => 'nullable|string',
         'seri' => 'nullable|string',
         'no_gg' => 'nullable|numeric',
         'id_petani' => 'required|integer',
     ]);
-    $id_petani = $request->input('id_petani');
-    $jual_luar = $request->input('jual_luar_value') === '1' ? true : false;
 
-    // Insert the data into the rekap_2024 table
-    DB::table('rekap_2024')->insert([
-        'id_petani' => $validated['id_petani'],
+    $id_petani = $validated['id_petani'];
+    $jual_luar = $validated['jual_luar_value'] === '1';
+
+    // Prepare the data for insertion, use null if fields are missing
+    $data = [
+        'id_petani' => $id_petani,
         'netto' => $validated['netto'],
         'jual_luar' => $jual_luar,
         'harga' => $validated['harga'],
         'berat_gudang' => $validated['berat_gudang'],
-        'grade' => $validated['grade'],
-        'periode' => $validated['periode'],
-        'seri' => $validated['seri'],
-        'no_gg' => $validated['no_gg'],
-    ]);
+        'grade' => $validated['grade'] ?? null, // Check for nullable fields
+        'periode' => $validated['periode'] ?? null,
+        'seri' => $validated['seri'] ?? null,
+        'no_gg' => $validated['no_gg'] ?? null,
+    ];
+
+    // Insert the data into the rekap_2024 table
+    DB::table('rekap_2024')->insert($data);
 
     // Redirect to the specified route with the 'id' parameter
     return redirect()
             ->to('http://127.0.0.1:8000/dataInput?id=' . urlencode($id_petani))
             ->with('success', 'Data successfully updated!');
 }
+
 
 
     public function update(Request $request)

@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Collect data from the form
     $netto = $_POST['netto'];
     $harga = $_POST['harga'];
-    $jual_luar = isset($_POST['jual_luar']) ? $_POST['jual_luar'] : '0';
+    $jual_luar = $_POST['jual_luar']; 
     $berat_gudang = $_POST['berat_gudang'];
     $grade = $_POST['grade'];
     $id_petani = $_POST['id_petani'];
@@ -164,9 +164,9 @@ $total_harga = 0;
                                             <input type="text" id="seri" name="seri" class="form-control" placeholder="Masukkan Seri (TGL01)" required>
                                         </div>
                                         <div class="form-group">
-                                            <label >Tipe</label><br>
-                                            <input type="checkbox" id="jual_luar" name="jual_luar" class="">
-                                            <a>Jual Luar</a>
+                                            <label>Tipe</label><br>
+                                            <input type="checkbox" id="jual_luar_checkbox" name="jual_luar_checkbox">
+                                            <label for="jual_luar_checkbox">Jual Luar</label>
                                         </div>
                                         <!-- /.form-group -->
                                     </div>
@@ -249,51 +249,54 @@ $total_harga = 0;
     <script src="../../dist/js/adminlte.min.js"></script>
 </body>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var form = document.querySelector('form');
-    var jualLuarCheckbox = document.getElementById('jual_luar');
-    var jualLuarValueField = document.getElementById('jual_luar_value');
-    var seriField = document.getElementById('seri');
-    var noGGField = document.getElementById('no_gg');
-    var gradeFields = document.querySelectorAll('input[name="grade"]');
-
-    // Function to toggle disabled state and update hidden field
-    function toggleFields() {
-        if (jualLuarCheckbox.checked) {
-            jualLuarValueField.value = '1';
-            seriField.disabled = true;
-            noGGField.disabled = true;
-            gradeFields.forEach(function(field) {
-                field.disabled = true;
-            });
-
-            // Clear the fields when checkbox is checked
-            seriField.value = '';
-            noGGField.value = '';
-            gradeFields.forEach(function(field) {
-                field.checked = false;
-            });
-        } else {
-            jualLuarValueField.value = '0';
-            seriField.disabled = false;
-            noGGField.disabled = false;
-            gradeFields.forEach(function(field) {
-                field.disabled = false;
-            });
+    document.addEventListener('DOMContentLoaded', function() {
+        var jualLuarCheckbox = document.getElementById('jual_luar_checkbox');
+        var jualLuarValueField = document.getElementById('jual_luar_value');
+    
+        // Get the form fields to be disabled and cleared
+        var periodeField = document.querySelector('input[name="periode"]');
+        var seriField = document.getElementById('seri');
+        var noGGField = document.getElementById('no_gg');
+        var gradeFields = document.querySelectorAll('input[name="grade"]');
+    
+        // Function to update hidden input based on checkbox state and clear inputs if needed
+        function updateJualLuarValue() {
+            if (jualLuarCheckbox.checked) {
+                jualLuarValueField.value = '1';  // Checked state, value = 1
+                
+                // Disable and clear the fields when Jual Luar is selected
+                periodeField.disabled = true;
+                periodeField.value = '';  // Clear input
+    
+                seriField.disabled = true;
+                seriField.value = '';     // Clear input
+    
+                noGGField.disabled = true;
+                noGGField.value = '';     // Clear input
+    
+                gradeFields.forEach(function(field) {
+                    field.disabled = true;
+                    field.checked = false;  // Clear selection
+                });
+            } else {
+                jualLuarValueField.value = '0'; 
+                
+                periodeField.disabled = false;
+                seriField.disabled = false;
+                noGGField.disabled = false;
+                gradeFields.forEach(function(field) {
+                    field.disabled = false;
+                });
+            }
         }
-    }
-
-    // Attach event listener to the checkbox
-    jualLuarCheckbox.addEventListener('change', toggleFields);
-
-    // Call function on page load to set initial state
-    toggleFields();
-});
-
-
+    
+        // Attach event listener to the checkbox
+        jualLuarCheckbox.addEventListener('change', updateJualLuarValue);
+    
+        // Call the function on page load to set initial state
+        updateJualLuarValue();
+    });
 </script>
-<script>
-
-
+    
     
 </html>
