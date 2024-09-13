@@ -11,7 +11,8 @@ if (!$con) {
 $user_data = [];
 $total_harga = 0;
 $total_netto = 0;
-$total_gudang = 0; // Initialize total_gudang
+$total_gudang = 0; 
+$total_bersih = 0;
 
 // Check if 'id' exists in the URL
 if (isset($_GET['id']) && !empty($_GET['id'])) {
@@ -185,7 +186,9 @@ mysqli_close($con);
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php while ($row = mysqli_fetch_assoc($rekap_result)) {
+                                        <?php 
+                                        $subtotal_bersih = 0;
+                                        while ($row = mysqli_fetch_assoc($rekap_result)) {
                                             // Get data for each rekap row
                                             $id_rekap = $row['id_rekap'];
                                             $id_petani = $row['id_petani'];
@@ -203,7 +206,7 @@ mysqli_close($con);
                                             // Add to total_harga, total_netto, total_gudang
                                             $total_harga += $jumlah;
                                             $total_netto += $netto;
-                                            $total_gudang += $beratgg; // Accumulate total berat_gudang
+                                            
                                         
                                             // Calculate KJ
                                             $pajak_kj = 0;
@@ -231,7 +234,8 @@ mysqli_close($con);
                                                 $hasil_bersih = $jumlahKotor - $komisi;
                                                 $indicator = ''; // No indicator
                                             }
-                                        
+                                            
+                                            $subtotal_bersih += $hasil_bersih;
                                             // Formatting 
                                             $jumlahFormatted = 'Rp. ' . number_format($jumlah, 0, ',', '.');
                                             $hargaFormatted = 'Rp. ' . number_format($harga_per_unit, 0, ',', '.');
@@ -278,7 +282,7 @@ mysqli_close($con);
                                             <th></th>
                                             <th></th>
                                             <th></th>
-                                            <th>Total Bersih: <?php echo 'Rp. ' . number_format($total_harga - ($total_harga * 0.1), 0, ',', '.'); ?></th>
+                                            <th>Total Bersih: <?php echo number_format($subtotal_bersih, 0, ',', '.'); ?></th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
