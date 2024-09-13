@@ -22,7 +22,7 @@ while ($userRow = mysqli_fetch_assoc($allPetaniResult)) {
 // Query to get users with entries in hutang_2024
 $petaniInHutangQuery = "SELECT DISTINCT users.id, users.name 
                         FROM hutang_2024 
-                        JOIN users ON hutang_2024.id_hutang = users.id 
+                        JOIN users ON hutang_2024.id_petani = users.id 
                         WHERE users.role = 'petani'";
 $petaniInHutangResult = mysqli_query($con, $petaniInHutangQuery);
 
@@ -36,9 +36,9 @@ while ($userRow = mysqli_fetch_assoc($petaniInHutangResult)) {
 }
 
 // Query to get hutang_2024 data
-$query = "SELECT hutang_2024.id_hutang, hutang_2024.tanggal_hutang, hutang_2024.bon, hutang_2024.cicilan, hutang_2024.tanggal_lunas, users.name 
+$query = "SELECT hutang_2024.id_petani, hutang_2024.tanggal_hutang, hutang_2024.bon, hutang_2024.cicilan, hutang_2024.tanggal_lunas, users.name 
           FROM hutang_2024
-          JOIN users ON hutang_2024.id_hutang = users.id
+          JOIN users ON hutang_2024.id_petani = users.id
           WHERE users.role = 'petani'";
 
 $result = mysqli_query($con, $query);
@@ -270,14 +270,14 @@ if (!$result) {
                                                 $bonFormatted = number_format($row['bon'], 0, ',', '.');
                                                 $cicilanFormatted = number_format($row['cicilan'], 0, ',', '.');
                                                 echo '<tr>';
-                                                echo '<td>' . $row['id_hutang'] . '</td>';
+                                                echo '<td>' . $row['id_petani'] . '</td>';
                                                 echo '<td>' . $row['name'] . '</td>';
                                                 echo '<td>' . $row['tanggal_hutang'] . '</td>';
                                                 echo '<td>Rp. ' . $bonFormatted . '</td>';
                                                 echo '<td>Rp. ' . $cicilanFormatted . '</td>';
                                                 echo '<td>' . $row['tanggal_lunas'] . '</td>';
                                                 echo '<td>
-                                                        <form action="' . route('hutang.delete', ['id' => $row['id_hutang']]) . '" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus data ini?\');">
+                                                        <form action="' . route('hutang.delete', ['id' => $row['id_petani']]) . '" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus data ini?\');">
                                                             ' . csrf_field() . '
                                                             ' . method_field('DELETE') . '
                                                             <button type="submit" class="btn btn-danger btn-sm">
@@ -335,7 +335,7 @@ if (!$result) {
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
                                                             </div>
-                                                            <input type="number" name="bon" class="form-control" required>
+                                                            <input type="number" name="bon" class="form-control" id='bon-input' required>
                                                         </div>
                                                     </div>
                                                     <div class="row" style="width: 100%; justify-content: center;">
@@ -462,7 +462,6 @@ if (!$result) {
 </body>
 
 </html>
-
 </body>
 
-</html>
+

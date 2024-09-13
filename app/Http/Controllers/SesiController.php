@@ -187,28 +187,45 @@ class SesiController extends Controller
     public function hutangLunas(Request $request)
     {
         $request->validate([
-            'id_hutang' => 'required|exists:users,id',
+            'id' => 'required|numeric', // Assuming this is some kind of identifier or primary key
+            'id_petani' => 'required|exists:users,id',
+            'tanggal_hutang' => 'required|date',
+            'bon' => 'required|numeric',
             'cicilan' => 'required|numeric',
+            'tanggal_lunas' => 'nullable|date',
         ]);
-
-        $petaniId = $request->input('petani_id');
-        $jumlahBayar = $request->input('cicilan');
-
-        // Fetch the outstanding debt for this petani
-        $debt = DB::table('hutang_2024')->where('id_hutang', $petaniId)->select(DB::raw('bon - cicilan AS outstanding_debt'))->first();
-
-        if ($debt && $jumlahBayar == $debt->outstanding_debt) {
-            $tanggalLunas = now()->format('Y-m-d'); // Set today's date
-
-            // Update the database to set the `tanggal_lunas`
+    
+        // Check if there is an existing record with the same id_petani and a non-null tanggal_lunas
+        $existingRecord = DB::table('hutang_2024')
+            ->where('id_petani', $request->input('id_petani'))
+            ->whereNotNull('tanggal_lunas')
+            ->first();
+    
+        if ($existingRecord) {
+            // Create a new entry if the existing record has a tanggal_lunas
+            DB::table('hutang_2024')->insert([
+                'id' => $request->input('id'), // Include the id in the new record
+                'id_petani' => $request->input('id_petani'),
+                'tanggal_hutang' => $request->input('tanggal_hutang'),
+                'bon' => $request->input('bon'),
+                'cicilan' => $request->input('cicilan'),
+                'tanggal_lunas' => $request->input('tanggal_lunas'),
+            ]);
+    
+            return redirect()->back()->with('success', 'Data added successfully!');
+        } else {
+            // Update the existing record if no tanggal_lunas
             DB::table('hutang_2024')
-                ->where('id_hutang', $petaniId)
-                ->update(['tanggal_lunas' => $tanggalLunas]);
-
-            return redirect()->back()->with('success', 'Payment successful and date updated.');
+                ->where('id_petani', $request->input('id_petani'))
+                ->update([
+                    'tanggal_hutang' => $request->input('tanggal_hutang'),
+                    'bon' => $request->input('bon'),
+                    'cicilan' => $request->input('cicilan'),
+                    'tanggal_lunas' => $request->input('tanggal_lunas'),
+                ]);
+    
+            return redirect()->back()->with('success', 'Data updated successfully!');
         }
-
-        return redirect()->back()->with('error', 'Payment failed or amount does not match outstanding debt.');
     }
 
     public function edit($id)
@@ -238,14 +255,14 @@ class SesiController extends Controller
         $bon = $request->bon;
 
         // Check if there is already a record for this petani
-        $existingHutang = DB::table('hutang_2024')->where('id_hutang', $id_petani)->first();
+        $existingHutang = DB::table('hutang_2024')->where('id_petani', $id_petani)->first();
 
         if ($existingHutang) {
             // If record exists, update it by adding the new bon to the existing bon
             $newBon = $existingHutang->bon + $bon;
 
             DB::table('hutang_2024')
-                ->where('id_hutang', $id_petani)
+                ->where('id_petani', $id_petani)
                 ->update([
                     'tanggal_hutang' => $tanggal_hutang,
                     'bon' => $newBon,
@@ -255,7 +272,7 @@ class SesiController extends Controller
         } else {
             // If no record exists, insert a new one
             DB::table('hutang_2024')->insert([
-                'id_hutang' => $id_petani,
+                'id_petani' => $id_petani,
                 'tanggal_hutang' => $tanggal_hutang,
                 'bon' => $bon,
                 // cicilan and tanggal_lunas are not included in this insertion
@@ -269,7 +286,7 @@ class SesiController extends Controller
     {
         // Validate the incoming request data
         $request->validate([
-            'id_petani' => 'required|exists:hutang_2024,id_hutang', // Ensure id_petani exists in hutang_2024
+            'id_petani' => 'required|exists:hutang_2024,id_petani', // Ensure id_petani exists in hutang_2024
             'jumlah_bayar' => 'required|numeric',
         ]);
 
@@ -277,7 +294,7 @@ class SesiController extends Controller
         $jumlah_bayar = $request->jumlah_bayar;
 
         // Fetch the current hutang entry
-        $hutang = DB::table('hutang_2024')->where('id_hutang', $id_petani)->first();
+        $hutang = DB::table('hutang_2024')->where('id_petani', $id_petani)->first();
 
         if ($hutang) {
             // Check if tanggal_lunas is already filled
@@ -293,7 +310,7 @@ class SesiController extends Controller
 
             // Update the hutang entry
             DB::table('hutang_2024')
-                ->where('id_hutang', $id_petani)
+                ->where('id_petani', $id_petani)
                 ->update([
                     'cicilan' => $newCicilan,
                     'tanggal_lunas' => $tanggalLunas,
@@ -307,7 +324,7 @@ class SesiController extends Controller
     public function destroy($id)
     {
         // Delete the record from the hutang_2024 table
-        DB::table('hutang_2024')->where('id_hutang', $id)->delete();
+        DB::table('hutang_2024')->where('id_petani', $id)->delete();
 
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Data berhasil dihapus!');
