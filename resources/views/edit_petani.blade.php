@@ -171,21 +171,47 @@ $con->close();
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Netto</label>
-                            <input type="number" name="netto" class="form-control" value="<?php echo htmlspecialchars($netto); ?>"
-                                placeholder="Masukkan Netto" required>
+                            <label>Berat Gudang <i class="fas fa-warehouse"></i></label>
+                            <input type="number" name="berat_gudang" class="form-control" value="<?php echo htmlspecialchars($berat_gudang); ?>"
+                                placeholder="Masukkan Berat Gudang (Kg)" required>
+                        </div>
+                        <!-- /.form-group -->
+                        <div class="form-group">
+                            <label>Harga Keranjang <i class="fas fa-dollar-sign"></i></label>
+                        </label>
+                        <input type="number" name="harga" class="form-control" value="<?php echo htmlspecialchars($harga); ?>"
+                        placeholder="Masukkan Harga" required>
                         </div>
                         <div class="form-group">
-                            <label>Harga Keranjang</label>
-                            <input type="number" name="harga" class="form-control" value="<?php echo htmlspecialchars($harga); ?>"
-                                placeholder="Masukkan Harga" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Seri</label>
+                            <label>Seri <i class="fas fa-calendar"></i></label>
                             <input type="text" id="seri" name="seri" class="form-control" value="<?php echo htmlspecialchars($seri); ?>" placeholder="Masukkan Seri (TGL01)" required>
                         </div>
                         <div class="form-group">
-                            <label>Grade</label>
+                            <label>Tipe </label> <i class="fas fa-exchange-alt"></i><br>
+                            <input type="checkbox" id="jual_luar_checkbox" name="jual_luar_checkbox">
+                            <label for="jual_luar_checkbox"> <span class="badge badge-warning">Jual Luar</span></label>
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Netto <i class="fas fa-weight-hanging"></i></label>
+                            <input type="number" name="netto" class="form-control" value="<?php echo htmlspecialchars($netto); ?>"
+                                placeholder="Masukkan Netto" required>
+                        </div>
+                        <!-- /.form-group -->
+                        <div class="form-group">
+                            <label>Periode <i class="fas fa-clock"></i></label></label>
+                            <input type="text" name="periode" value="<?php echo htmlspecialchars($periode); ?>"class="form-control" placeholder="Masukkan periode (1-A)" required>
+                        </div>
+                        <div class="form-group">
+                            <label>No.GG <i class="fas fa-hashtag"></i></label>
+                            <input type="text" name="no_gg" class="form-control" value="<?php echo htmlspecialchars($no_gg); ?>" placeholder="Masukkan No.GG" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Grade <i class="fas fa-star-half-alt"></i></i></label>
+                            <br>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="gradeA" name="grade" value="A" class="form-check-input" <?php echo ($grade == 'A') ? 'checked' : ''; ?> required>
                                 <label class="form-check-label" for="gradeA">A</label>
@@ -193,7 +219,6 @@ $con->close();
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="gradeB" name="grade" value="B" class="form-check-input" <?php echo ($grade == 'B') ? 'checked' : ''; ?> required>
                                 <label class="form-check-label" for="gradeB">B</label>
-                            </div>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="gradeC" name="grade" value="C" class="form-check-input" <?php echo ($grade == 'C') ? 'checked' : ''; ?> required>
                                 <label class="form-check-label" for="gradeC">C</label>
@@ -203,22 +228,10 @@ $con->close();
                                 <label class="form-check-label" for="gradeD">D</label>
                             </div>
                         </div>
+                        
+                        <!-- /.form-group -->
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Berat Gudang</label>
-                            <input type="number" name="berat_gudang" class="form-control" value="<?php echo htmlspecialchars($berat_gudang); ?>"
-                                placeholder="Masukkan Berat Gudang (Kg)" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Periode</label>
-                            <input type="text" name="periode" value="<?php echo htmlspecialchars($periode); ?>"class="form-control" placeholder="Masukkan periode (1-A)" required>
-                        </div>
-                        <div class="form-group">
-                            <label>No.GG</label>
-                            <input type="text" name="no_gg" class="form-control" value="<?php echo htmlspecialchars($no_gg); ?>" placeholder="Masukkan No.GG" required>
-                        </div>
-                    </div>
+                    <!-- /.col -->
                 </div>
             </div>
             <div class="card-footer text-center">
@@ -251,6 +264,57 @@ $con->close();
     </script>
 @endif
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var jualLuarCheckbox = document.getElementById('jual_luar_checkbox');
+        var jualLuarValueField = document.getElementById('jual_luar_value');
+    
+        // Get the form fields to be disabled and cleared
+        var periodeField = document.querySelector('input[name="periode"]');
+        var seriField = document.getElementById('seri');
+        var noGGField = document.getElementById('no_gg');
+        var gradeFields = document.querySelectorAll('input[name="grade"]');
+    
+        // Function to update hidden input based on checkbox state and clear inputs if needed
+        function updateJualLuarValue() {
+            if (jualLuarCheckbox.checked) {
+                jualLuarValueField.value = '1';  // Checked state, value = 1
+                
+                // Disable and clear the fields when Jual Luar is selected
+                periodeField.disabled = true;
+                periodeField.value = '';  // Clear input
+    
+                seriField.disabled = true;
+                seriField.value = '';     // Clear input
+    
+                noGGField.disabled = true;
+                noGGField.value = '';     // Clear input
+    
+                gradeFields.forEach(function(field) {
+                    field.disabled = true;
+                    field.checked = false;  // Clear selection
+                });
+            } else {
+                jualLuarValueField.value = '0'; 
+                
+                periodeField.disabled = false;
+                seriField.disabled = false;
+                noGGField.disabled = false;
+                gradeFields.forEach(function(field) {
+                    field.disabled = false;
+                });
+            }
+        }
+    
+        // Attach event listener to the checkbox
+        jualLuarCheckbox.addEventListener('change', updateJualLuarValue);
+    
+        // Call the function on page load to set initial state
+        updateJualLuarValue();
+    });
+</script>
+    
 </body>
 
 </html>
