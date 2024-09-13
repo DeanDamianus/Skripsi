@@ -81,6 +81,24 @@ mysqli_close($con);
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
+<style>
+    .card-header {
+    position: relative;
+}
+
+.purple-square {
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+    background-color: purple;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+</style>
 
 <body class="hold-transition layout-top-nav">
     <div class="wrapper">
@@ -142,7 +160,7 @@ mysqli_close($con);
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <a href="javascript:history.back()" class="btn btn-outline-dark float-right" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding: 0; border: 2px solid black; background-color: transparent;">
+                    <a href="{{ url('/input') }}"class="btn btn-outline-dark float-right" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding: 0; border: 2px solid black; background-color: transparent;">
                         <i class="fas fa-arrow-left" style="font-size: 20px; color: black;"></i>
                     </a>         
                     <div class="col-sm-6">
@@ -177,8 +195,9 @@ mysqli_close($con);
                                             <th>Jumlah Kotor</th>
                                             <th>Komisi</th>
                                             <th>Jumlah Bersih</th>
-                                            <th>Berat Gudang</th>
+                                            <th>Berat Gg</th>
                                             <th>Grade</th>
+                                            <th>Info</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -195,18 +214,18 @@ mysqli_close($con);
                                             $biaya_jual = $row['biaya_jual'];
                                             $naik_turun = $row['naik_turun'];
                                             $kepala_petani = $row['kepala_petani'];
-                        
+                                        
                                             $jumlah = $netto * $harga_per_unit;
-                                            
+                                        
                                             // Add to total_harga, total_netto, total_gudang
                                             $total_harga += $jumlah;
                                             $total_netto += $netto;
                                             $total_gudang += $beratgg; // Accumulate total berat_gudang
-                        
+                                        
                                             // Calculate KJ
                                             $pajak_kj = 0;
                                             if ($harga_per_unit <= 50000) {
-                                            $pajak_kj = 1000 * $netto;
+                                                $pajak_kj = 1000 * $netto;
                                             } elseif ($harga_per_unit <= 75000) {
                                                 $pajak_kj = 2000 * $netto;
                                             } elseif ($harga_per_unit <= 100000) {
@@ -218,13 +237,19 @@ mysqli_close($con);
                                             } else {
                                                 $pajak_kj = 6000 * $netto;
                                             }
-
-
-                                            $jumlahKotor = $jumlah - $pajak_kj - $biaya_jual - $naik_turun  ;
-                                            $komisi = $jumlahKotor * $kepala_petani; 
-                                            $hasil_bersih = $jumlahKotor - $komisi;
-
-                                            //formatting 
+                                        
+                                            $jumlahKotor = $jumlah - $pajak_kj - $biaya_jual - $naik_turun;
+                                            $komisi = $jumlahKotor * $kepala_petani;
+                                        
+                                            if ($jual_luar == 1) {
+                                                $hasil_bersih = $jumlahKotor; // Set hasil_bersih to jumlahKotor
+                                                $indicator = '<span class="badge badge-warning">Jual Luar</span>'; // Visual indicator
+                                            } else {
+                                                $hasil_bersih = $jumlahKotor - $komisi;
+                                                $indicator = ''; // No indicator
+                                            }
+                                        
+                                            // Formatting 
                                             $jumlahFormatted = 'Rp. ' . number_format($jumlah, 0, ',', '.');
                                             $hargaFormatted = 'Rp. ' . number_format($harga_per_unit, 0, ',', '.');
                                             $pajakKJFormatted = 'Rp. ' . number_format($pajak_kj, 0, ',', '.');
@@ -243,6 +268,7 @@ mysqli_close($con);
                                                 <td><?php echo $hasilBersihFormatted; ?></td>
                                                 <td><?php echo htmlspecialchars($beratgg); ?></td>
                                                 <td><?php echo htmlspecialchars($grade); ?></td>
+                                                <td><?php echo $indicator; ?></td> <!-- New Column for Indicator -->
                                                 <td>
                                                     <button
                                                         onclick="window.location.href='/editInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
