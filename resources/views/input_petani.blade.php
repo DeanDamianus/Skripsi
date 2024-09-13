@@ -151,44 +151,43 @@ $total_harga = 0;
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Netto</label>
-                                            <input type="number" name="netto" class="form-control" placeholder="Masukkan Netto" required>
+                                            <label>Berat Gudang <i class="fas fa-warehouse"></i></label>
+                                            <input type="number" name="berat_gudang" class="form-control" placeholder="Masukkan Berat Gudang (Kg)" required>
                                         </div>
                                         <!-- /.form-group -->
                                         <div class="form-group">
-                                            <label>Harga Keranjang</label>
+                                            <label>Harga Keranjang <i class="fas fa-dollar-sign"></i></label>
+                                        </label>
                                             <input type="number" name="harga" class="form-control" placeholder="Masukkan Harga" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Seri</label>
+                                            <label>Seri <i class="fas fa-calendar"></i></label>
                                             <input type="text" id="seri" name="seri" class="form-control" placeholder="Masukkan Seri (TGL01)" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Tipe</label><br>
+                                            <label>Tipe </label> <i class="fas fa-exchange-alt"></i><br>
                                             <input type="checkbox" id="jual_luar_checkbox" name="jual_luar_checkbox">
-                                            <label for="jual_luar_checkbox">Jual Luar</label>
+                                            <label for="jual_luar_checkbox"> <span class="badge badge-warning">Jual Luar</span></label>
                                         </div>
                                         <!-- /.form-group -->
                                     </div>
                                     <!-- /.col -->
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Berat Gudang</label>
-                                            <input type="number" name="berat_gudang" class="form-control" placeholder="Masukkan Berat Gudang (Kg)" required>
+                                            <label>Netto <i class="fas fa-weight-hanging"></i></label>
+                                            <input type="number" name="netto" class="form-control" placeholder="Masukkan Netto" required>
                                         </div>
                                         <!-- /.form-group -->
-                                        
-                                        
                                         <div class="form-group">
-                                            <label>Periode</label>
+                                            <label>Periode <i class="fas fa-clock"></i></label></label>
                                             <input type="text" name="periode" class="form-control" placeholder="Masukkan periode (1-A) " required>
                                         </div>
                                         <div class="form-group">
-                                            <label>No.GG</label>
+                                            <label>No.GG <i class="fas fa-hashtag"></i></label>
                                             <input type="text" id="no_gg" name="no_gg" class="form-control" placeholder="Masukkan No.GG" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Grade</label>
+                                            <label>Grade <i class="fas fa-star-half-alt"></i></i></label>
                                             <br>
                                             <div class="form-check form-check-inline">
                                                 <input type="radio" id="gradeA" name="grade" value="A" class="form-check-input" required>

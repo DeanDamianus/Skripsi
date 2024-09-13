@@ -17,6 +17,14 @@ $result = mysqli_query($con, $query);
 $data = mysqli_fetch_assoc($result);
 $jumlah_petani = $data['jumlah_petani'] ?? 0;
 
+// Query to count rows with jual_luar = 1
+$query_jual = "SELECT COUNT(*) AS jumlah_jual_luar FROM rekap_2024 WHERE jual_luar = 1";
+$result_jual = mysqli_query($con, $query_jual);
+
+// Fetch the result
+$data_jual = mysqli_fetch_assoc($result_jual);
+$jual_luar = $data_jual['jumlah_jual_luar'] ?? 0;
+
 // Netto
 $nettoQuery = "SELECT SUM(netto) AS total_netto FROM rekap_2024";
 $nettoResult = mysqli_query($con, $nettoQuery);
@@ -26,6 +34,8 @@ $totalNetto = $nettoData['total_netto'] ?? 0;
 // Query to get all 'id_petani' from 'rekap_2024'
 $query_petani = "SELECT DISTINCT id_petani FROM rekap_2024";
 $result_petani = mysqli_query($con, $query_petani);
+
+$jumlah_bersih = isset($_GET['jumlah_bersih']) ? htmlspecialchars($_GET['jumlah_bersih']) : '0';
 
 while ($row = mysqli_fetch_assoc($result_petani)) {
     $id_petani = $row['id_petani'];
@@ -253,7 +263,7 @@ mysqli_close($con);
                             <div class="icon">
                                 <i class="fas fa-weight-hanging"></i> <!-- Ikon timbangan menggantung -->
                             </div>
-                            <a href="{{ url('/datapetani') }}" class="small-box-footer">
+                            <a href="{{ url('/input') }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -295,15 +305,15 @@ mysqli_close($con);
                     <!-- Jumlah Kotor-->
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
-                        <div class="small-box bg-warning">
+                        <div class="small-box bg-yellow">
                             <div class="inner">
-                                <h3><sup style="font-size: 20px">Rp.</sup>128.348.900</h3>
-                                <p>Total Jumlah Bersih</p>
+                                <h3><?php echo $jual_luar; ?><sup style="font-size: 20px"> Keranjang</sup></h3>
+                                <p>Jual Luar</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-dollar-sign"></i> <!-- Ikon tanda dolar -->
+                                <i class="fas fa-exchange-alt"></i> <!-- Ikon pertukaran -->
                             </div>
-                            <a href="#" class="small-box-footer">
+                            <a href="{{ url('/input') }}"class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -325,21 +335,6 @@ mysqli_close($con);
                         </div>
                     </div>
                     <!-- Jumlah Petani -->
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-purple">
-                            <div class="inner">
-                                <h3>3<sup style="font-size: 20px"> Keranjang</sup></h3>
-                                <p>Jual Luar</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-exchange-alt"></i> <!-- Ikon pertukaran -->
-                            </div>
-                            <a href="#" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
-                        </div>
-                    </div>
                     <!-- Jumlah Jual Lua -->
                 </div>
                 <!-- /.container-fluid -->

@@ -81,24 +81,7 @@ mysqli_close($con);
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
-<style>
-    .card-header {
-    position: relative;
-}
 
-.purple-square {
-    position: absolute;
-    top: 10px; /* Adjust as needed */
-    right: 10px; /* Adjust as needed */
-    background-color: purple;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    text-align: center;
-}
-
-</style>
 
 <body class="hold-transition layout-top-nav">
     <div class="wrapper">
@@ -268,7 +251,7 @@ mysqli_close($con);
                                                 <td><?php echo $hasilBersihFormatted; ?></td>
                                                 <td><?php echo htmlspecialchars($beratgg); ?></td>
                                                 <td><?php echo htmlspecialchars($grade); ?></td>
-                                                <td><?php echo $indicator; ?></td> <!-- New Column for Indicator -->
+                                                <td><?php echo $indicator; ?></td>
                                                 <td>
                                                     <button
                                                         onclick="window.location.href='/editInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
@@ -295,7 +278,7 @@ mysqli_close($con);
                                             <th></th>
                                             <th></th>
                                             <th></th>
-                                            <th>Total: <?php echo 'Rp. ' . number_format($total_harga - ($total_harga * 0.1), 0, ',', '.'); ?></th>
+                                            <th>Total Bersih: <?php echo 'Rp. ' . number_format($total_harga - ($total_harga * 0.1), 0, ',', '.'); ?></th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
