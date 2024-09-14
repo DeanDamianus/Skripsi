@@ -256,13 +256,13 @@ mysqli_close($con);
                                                 <td><?php echo htmlspecialchars($beratgg); ?></td>
                                                 <td><?php echo htmlspecialchars($grade); ?></td>
                                                 <td><?php echo $indicator; ?></td>
-                                                <td>
+                                                {{-- <td>
                                                     <button
                                                         onclick="window.location.href='/editInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
                                                         class="btn btn-block btn-success">
                                                         <a><i class="fas fa-edit"></i></a>
                                                     </button>
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     <button
                                                         onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
@@ -283,6 +283,7 @@ mysqli_close($con);
                                             <th></th>
                                             <th></th>
                                             <th>Total Bersih: <?php echo number_format($subtotal_bersih, 0, ',', '.'); ?></th>
+                                            <th></th>
                                             <th></th>
                                             <th></th>
                                             <th></th>

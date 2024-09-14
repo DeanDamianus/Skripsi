@@ -19,6 +19,7 @@ $result = $fetch_query->get_result();
 if ($data = $result->fetch_assoc()) {
     // Populate form with existing data
     $netto = $data['netto'];
+    $jual_luar = $data['jual_luar'];
     $harga = $data['harga'];
     $berat_gudang = $data['berat_gudang'];
     $grade = $data['grade'];
@@ -34,6 +35,7 @@ if ($data = $result->fetch_assoc()) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Collect data from the form
     $netto = $_POST['netto'];
+    $jual_luar = $_POST['jual_luar'];
     $harga = $_POST['harga'];
     $berat_gudang = $_POST['berat_gudang'];
     $grade = $_POST['grade'];
@@ -43,9 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Update the existing data in the rekap_2024 table
     $update_query = $con->prepare("UPDATE rekap_2024 
-                                SET netto = ?, harga = ?, berat_gudang = ?, grade = ?, periode = ?, seri = ?, no_gg = ?   
+                                SET netto = ?, harga = ?,jual_luar = ?, berat_gudang = ?, grade = ?, periode = ?, seri = ?, no_gg = ?   
                                 WHERE id_rekap = ?");
-    $update_query->bind_param('ddsisssi', $netto, $harga, $berat_gudang, $grade, $periode, $seri, $no_gg, $id_rekap);
+    $update_query->bind_param('ddsisssi', $netto, $harga,$jual_luar, $berat_gudang, $grade, $periode, $seri, $no_gg, $id_rekap);
 
     if ($update_query->execute()) {
         // Redirect to the desired URL with the current id_rekap
@@ -163,8 +165,9 @@ $con->close();
         </section>
 
         <!-- Main content -->
-        <form method="POST" action="{{ route('editInput.update') }}">
+        <form method="POST" action="">
             @csrf
+            <input type="hidden" id="jual_luar_value" name="jual_luar_value" value="0">
             <input type="hidden" name="id_rekap" value="<?php echo htmlspecialchars($id_rekap); ?>">
             <input type="hidden" name="id_petani" value="<?php echo htmlspecialchars($id_petani); ?>">
             <div class="card-body">
@@ -207,7 +210,7 @@ $con->close();
                         </div>
                         <div class="form-group">
                             <label>No.GG <i class="fas fa-hashtag"></i></label>
-                            <input type="text" name="no_gg" class="form-control" value="<?php echo htmlspecialchars($no_gg); ?>" placeholder="Masukkan No.GG" required>
+                            <input type="text" id="no_gg" name="no_gg" class="form-control" placeholder="Masukkan No.GG" value="<?php echo htmlspecialchars($no_gg); ?>" required>
                         </div>
                         <div class="form-group">
                             <label>Grade <i class="fas fa-star-half-alt"></i></i></label>
@@ -219,6 +222,7 @@ $con->close();
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="gradeB" name="grade" value="B" class="form-check-input" <?php echo ($grade == 'B') ? 'checked' : ''; ?> required>
                                 <label class="form-check-label" for="gradeB">B</label>
+                            </div>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="gradeC" name="grade" value="C" class="form-check-input" <?php echo ($grade == 'C') ? 'checked' : ''; ?> required>
                                 <label class="form-check-label" for="gradeC">C</label>
@@ -275,6 +279,8 @@ $con->close();
         var seriField = document.getElementById('seri');
         var noGGField = document.getElementById('no_gg');
         var gradeFields = document.querySelectorAll('input[name="grade"]');
+
+        jualLuarCheckbox.addEventListener('change', updateJualLuarValue);
     
         // Function to update hidden input based on checkbox state and clear inputs if needed
         function updateJualLuarValue() {
@@ -307,14 +313,10 @@ $con->close();
             }
         }
     
-        // Attach event listener to the checkbox
-        jualLuarCheckbox.addEventListener('change', updateJualLuarValue);
-    
         // Call the function on page load to set initial state
         updateJualLuarValue();
     });
 </script>
-    
 </body>
 
 </html>

@@ -147,6 +147,7 @@ class SesiController extends Controller
         // Validate the data
         $request->validate([
             'netto' => 'required|numeric',
+            'jual_luar' => 'nullable|in:0,1',
             'harga' => 'required|numeric',
             'berat_gudang' => 'required|numeric',
             'grade' => 'required|string',
@@ -159,6 +160,7 @@ class SesiController extends Controller
         // Fetch the current id_rekap from the request
         $id_rekap = $request->input('id_rekap');
         $id_petani = $request->input('id_petani');
+        $jual_luar = $request->input('jual_luar_value') === '1';
 
         // Find the existing rekap_2024 entry by id_rekap
         $rekap = DB::table('rekap_2024')->where('id_rekap', $id_rekap)->first();
@@ -172,6 +174,7 @@ class SesiController extends Controller
             ->where('id_rekap', $id_rekap)
             ->update([
                 'netto' => $request->input('netto'),
+                'jual_luar' => $jual_luar,
                 'harga' => $request->input('harga'),
                 'berat_gudang' => $request->input('berat_gudang'),
                 'grade' => $request->input('grade'),
