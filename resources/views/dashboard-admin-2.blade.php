@@ -18,7 +18,7 @@ $data = mysqli_fetch_assoc($result);
 $jumlah_petani = $data['jumlah_petani'] ?? 0;
 
 // Query to count rows with jual_luar = 1
-$query_jual = "SELECT COUNT(*) AS jumlah_jual_luar FROM rekap_2024 WHERE jual_luar = 1";
+$query_jual = "SELECT COUNT(*) AS jumlah_jual_luar FROM rekap_2025 WHERE jual_luar = 1";
 $result_jual = mysqli_query($con, $query_jual);
 
 // Fetch the result
@@ -26,13 +26,13 @@ $data_jual = mysqli_fetch_assoc($result_jual);
 $jual_luar = $data_jual['jumlah_jual_luar'] ?? 0;
 
 // Netto
-$nettoQuery = "SELECT SUM(netto) AS total_netto FROM rekap_2024";
+$nettoQuery = "SELECT SUM(netto) AS total_netto FROM rekap_2025";
 $nettoResult = mysqli_query($con, $nettoQuery);
 $nettoData = mysqli_fetch_assoc($nettoResult);
 $totalNetto = $nettoData['total_netto'] ?? 0;
 
-// Query to get all 'id_petani' from 'rekap_2024'
-$query_petani = "SELECT DISTINCT id_petani FROM rekap_2024";
+// Query to get all 'id_petani' from 'rekap_2025'
+$query_petani = "SELECT DISTINCT id_petani FROM rekap_2025";
 $result_petani = mysqli_query($con, $query_petani);
 
 $jumlah_bersih = isset($_GET['jumlah_bersih']) ? htmlspecialchars($_GET['jumlah_bersih']) : '0';
@@ -41,7 +41,7 @@ while ($row = mysqli_fetch_assoc($result_petani)) {
     $id_petani = $row['id_petani'];
     
     // Query to calculate total harga for each 'id_petani'
-    $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
+    $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2025 WHERE id_petani = '$id_petani'";
     $harga_result = mysqli_query($con, $query_harga);
     $harga_data = mysqli_fetch_assoc($harga_result);
     
@@ -54,6 +54,7 @@ while ($row = mysqli_fetch_assoc($result_petani)) {
 // Close the connection
 mysqli_close($con);
 ?>
+
 
 
 <!DOCTYPE html>
@@ -104,12 +105,12 @@ mysqli_close($con);
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
                         <button class="nav-link" type="button" data-toggle="dropdown" style=" border: black;">
-                            2024
+                            2025
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <div class="dropdown-divider"></div>
-                            <a href="{{ url('/owner2025') }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> 2025
+                            <a href="{{ url('/owner') }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> 2024
                             </a>
                         </div>
                     </div>
@@ -162,7 +163,7 @@ mysqli_close($con);
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/input') }}" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -171,7 +172,7 @@ mysqli_close($con);
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/hutang-admin') }}" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-hand-holding-usd"></i>
                                 <p>
                                     <strong>HUTANG</strong>
@@ -244,7 +245,7 @@ mysqli_close($con);
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1 class="m-0">Rekap Pengumpulan 2024</h1>
+                                <h1 class="m-0">Rekap Pengumpulan 2025</h1>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                             </div><!-- /.col -->
@@ -277,7 +278,7 @@ mysqli_close($con);
                                 <?php
                                 while ($row = mysqli_fetch_assoc($result_petani)) {
                                 $id_petani = $row['id'];
-                                $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                                $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2025 WHERE id_petani = '$id_petani'";
                                 $harga_result = mysqli_query($con, $query_harga);
                                 $harga_data = mysqli_fetch_assoc($harga_result);
                                 

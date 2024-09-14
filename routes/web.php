@@ -38,6 +38,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/owner', function() {
             return view('dashboard-admin');
         })->name('owner.dashboard');
+        Route::get('/owner2025', function() {
+            return view('dashboard-admin-2');
+        })->name('owner.dashboard');
         Route::get('/hutang-admin', function() {
             return view('hutang_admin');
         })->name('hutang-admin');
