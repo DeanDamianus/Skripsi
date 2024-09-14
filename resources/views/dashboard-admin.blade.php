@@ -10,6 +10,7 @@ if (!$con) {
 // Initialize variables
 $total_harga = 0;
 $total_netto = 0;
+$harga_jual = 0;
 
 // Query to get all petani
 $query = "SELECT COUNT(*) AS jumlah_petani FROM users WHERE role = 'petani'";
@@ -17,11 +18,14 @@ $result = mysqli_query($con, $query);
 $data = mysqli_fetch_assoc($result);
 $jumlah_petani = $data['jumlah_petani'] ?? 0;
 
+// Query to get the biaya_jual
+$queryparam = "SELECT biaya_jual FROM parameter_2024 WHERE id = 1";
+$resultparam = mysqli_query($con, $queryparam);
+$biaya_param = mysqli_fetch_assoc($resultparam)['biaya_jual'] ?? 0;
+
 // Query to count rows with jual_luar = 1
 $query_jual = "SELECT COUNT(*) AS jumlah_jual_luar FROM rekap_2024 WHERE jual_luar = 1";
 $result_jual = mysqli_query($con, $query_jual);
-
-// Fetch the result
 $data_jual = mysqli_fetch_assoc($result_jual);
 $jual_luar = $data_jual['jumlah_jual_luar'] ?? 0;
 
@@ -34,8 +38,6 @@ $totalNetto = $nettoData['total_netto'] ?? 0;
 // Query to get all 'id_petani' from 'rekap_2024'
 $query_petani = "SELECT DISTINCT id_petani FROM rekap_2024";
 $result_petani = mysqli_query($con, $query_petani);
-
-$jumlah_bersih = isset($_GET['jumlah_bersih']) ? htmlspecialchars($_GET['jumlah_bersih']) : '0';
 
 while ($row = mysqli_fetch_assoc($result_petani)) {
     $id_petani = $row['id_petani'];
@@ -54,6 +56,8 @@ while ($row = mysqli_fetch_assoc($result_petani)) {
 // Close the connection
 mysqli_close($con);
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -252,7 +256,6 @@ mysqli_close($con);
                     </div><!-- /.container-fluid -->
                 </div>
                 <div class="row">
-
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
                         <div class="small-box bg-info">
@@ -318,6 +321,7 @@ mysqli_close($con);
                             </a>
                         </div>
                     </div>
+
                     <!-- Jumlah Bersih -->
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
@@ -335,6 +339,24 @@ mysqli_close($con);
                         </div>
                     </div>
                     <!-- Jumlah Petani -->
+                    <!-- Jumlah Jual Lua -->
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-dark">
+                            <div class="inner">
+                                <h3><sup style="font-size: 20px">Rp. </sup><?php echo number_format($biaya_param, 0, ',', '.'); ?></h3>
+                                <p>Biaya Jual</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-dollar-sign"></i> <!-- Icon for money -->
+                            </div>
+                            <a href="{{ url('/parameter') }}" class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
                     <!-- Jumlah Jual Lua -->
                 </div>
                 <!-- /.container-fluid -->

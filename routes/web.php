@@ -18,7 +18,8 @@ Route::get('/error', function() {
 // Register routes
 Route::get('/register', [SesiController::class, 'register'])->name('register.form');
 Route::post('/register', [SesiController::class, 'create'])->name('register.store');
-Route::post('/parameter', [SesiController::class, 'store']);
+Route::post('/parameter', [SesiController::class, 'parameter']);
+Route::post('/parameter2025', [SesiController::class, 'parameter2025']);
 Route::post('/inputPetani', [SesiController::class, 'input'])->name('inputPetani.store');
 Route::post('/hapuspetani', [PetaniController::class, 'delete'])->name('hapus-petani');
 Route::post('/editInput', [SesiController::class, 'update'])->name('editInput.update');
@@ -40,7 +41,7 @@ Route::middleware('auth')->group(function () {
         })->name('owner.dashboard');
         Route::get('/owner2025', function() {
             return view('dashboard-admin-2');
-        })->name('owner.dashboard');
+        })->name('owner.dashboard2');
         Route::get('/hutang-admin', function() {
             return view('hutang_admin');
         })->name('hutang-admin');
@@ -50,6 +51,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/parameter', function (){
             return view ('parameter');
         })->name('parameter');
+        Route::get('/parameter2025', function (){
+            return view ('parameter-2025');
+        })->name('parameter_2');
         Route::get('/hapuspetani', function (){
             return view ('hapus-petani');
         })->name('hapus-petani');

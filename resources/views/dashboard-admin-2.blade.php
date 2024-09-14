@@ -190,19 +190,19 @@ mysqli_close($con);
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('/datapetani') }}" class="nav-link">
+                                    <a href="#" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Petani</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a a href="{{ url('/register') }}" class="nav-link">
+                                    <a a href="#" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Tambah Akun</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ url('/hapuspetani') }}" class="nav-link">
+                                    <a href="#" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Hapus Akun</p>
                                     </a>
@@ -210,7 +210,7 @@ mysqli_close($con);
                             </ul>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/parameter') }}" class="nav-link">
+                            <a href="{{ url('/parameter2025') }}" class="nav-link">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     <strong>PARAMETER</strong>
@@ -310,6 +310,21 @@ mysqli_close($con);
                             <div class="inner">
                                 <h3><?php echo $jual_luar; ?><sup style="font-size: 20px"> Keranjang</sup></h3>
                                 <p>Jual Luar</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-exchange-alt"></i> <!-- Ikon pertukaran -->
+                            </div>
+                            <a href="{{ url('/input') }}"class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-succsess">
+                            <div class="inner">
+                                <h3><?php echo $jual_luar; ?><sup style="font-size: 20px"> Keranjang</sup></h3>
+                                <p>Biaya Jual</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-exchange-alt"></i> <!-- Ikon pertukaran -->

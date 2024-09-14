@@ -1,23 +1,43 @@
 <?php
-// Establish the connection
+// Connect to the database
 $con = mysqli_connect('localhost', 'root', '', 'simbako_app');
 
 // Check connection
 if (!$con) {
-    die('Koneksi Error: ' . mysqli_connect_error());
+    die('Connection failed: ' . mysqli_connect_error());
 }
 
-// Query to get all petani
-$nama = "SELECT * FROM users WHERE role = 'petani'";
-$result = mysqli_query($con, $nama);
+// Fetch the record with ID 1
+$id = 1;
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Update the record
+    $biaya_jual = $_POST['biaya_jual'];
+    $naik_turun = $_POST['naik_turun'];
 
-$total_harga = 0; // Initialize total harga
-$total_netto = 0; // Initialize total netto
+    $sql_update = 'UPDATE parameter_2025 SET biaya_jual = ?, naik_turun = ? WHERE id = ?';
+    $stmt_update = $con->prepare($sql_update);
+    $stmt_update->bind_param('ddi', $biaya_jual, $naik_turun, $id);
+    $stmt_update->execute();
+    $stmt_update->close();
 
-if (!$result) {
-    die('Error fetching petani data: ' . mysqli_error($con));
+    // Redirect with success flag
+    header('Location: parameter.php?success=true');
+    exit();
+} else {
+    $sql = 'SELECT * FROM parameter_2025 WHERE id = ?';
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $stmt->close();
 }
+
+// Close connection
+mysqli_close($con);
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -52,12 +72,12 @@ if (!$result) {
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
                         <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
-                            2024
+                            2025
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <div class="dropdown-divider"></div>
-                            <a href="{{ url('/owner2025') }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> 2025
+                            <a href="{{ url('/owner') }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> 2024
                             </a>
                         </div>
                     </div>
@@ -97,7 +117,7 @@ if (!$result) {
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/owner') }}" class="nav-link">
+                            <a href="{{ url('/owner2025') }}" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -105,8 +125,8 @@ if (!$result) {
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                        <li class="nav-item menu-close">
+                            <a href="{{ url('/input') }}" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -119,7 +139,7 @@ if (!$result) {
                                 <i class="nav-icon fas fa-hand-holding-usd"></i>
                                 <p>
                                     <strong>HUTANG</strong>
-                                    <i class="right fas fa-angle-left "></i>
+                                    <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
                         </li>
@@ -152,8 +172,8 @@ if (!$result) {
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item menu-close">
-                            <a href="{{ url('/parameter') }}" class="nav-link">
+                        <li class="nav-item menu-open">
+                            <a href="{{ url('/parameter') }}" class="nav-link active">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     <strong>PARAMETER</strong>
@@ -173,129 +193,84 @@ if (!$result) {
         </aside>
 
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-
-            <!-- /.content-header -->
             <section class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Data Rekap</h1>
+                            <h1>Input Parameter</h1>
                         </div>
                     </div>
-                </div><!-- /.container-fluid -->
+                </div>
             </section>
 
-            <!-- Main content -->
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <!-- /.card-header -->
-                            <div class="card-body table-responsive p-0">
-                                <table class="table table-hover text-nowrap">
-                                    <thead> 
-                                        <tr>
-                                            <th>ID Petani</th>
-                                            <th>Nama Petani</th>
-                                            <th>Netto Total</th>
-                                            {{-- <th>Jumlah Bersih</th> --}}
-                                            <th>Jumlah Total</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        while ($row = mysqli_fetch_assoc($result)) {
-                                            $id_petani = $row['id'];
-                                    
-                                            // Query to get the total netto for each petani
-                                            $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                                            $bruto_result = mysqli_query($con, $query_bruto);
-                                            $bruto_data = mysqli_fetch_assoc($bruto_result);
-                                    
-                                            // Debugging output
-                                            if (!$bruto_data) {
-                                                echo "<tr><td colspan='7'>Error fetching netto for petani ID: $id_petani</td></tr>";
-                                                continue; // Skip this iteration if there's no data
-                                            }
-                                    
-                                            $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
-                                    
-                                            // Query to get the total harga for each petani
-                                            $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                                            $harga_result = mysqli_query($con, $query_harga);
-                                            $harga_data = mysqli_fetch_assoc($harga_result);
-                                    
-                                            if (!$harga_data) {
-                                                echo "<tr><td colspan='7'>Error fetching harga for petani ID: $id_petani</td></tr>";
-                                                continue; // Skip if no data
-                                            }
-                                    
-                                            $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
-                                    
-                                            // Format harga
-                                            $hargaFormatted = 'Rp. ' . number_format($total_harga_per_petani, 0, ',', '.');
-                                    
-                                            // Accumulate totals
-                                            $total_netto += $total_bruto;
-                                            $total_harga += $total_harga_per_petani;
-                                            
-                                            ?>
-                                    
-                                            <tr>
-                                                <td><?php echo $row['id']; ?></td>
-                                                <td><?php echo $row['name']; ?></td>
-                                                <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
-                                                {{-- <td></td> --}}
-                                                <td><?php echo $hargaFormatted; ?></td>
-                                                <td><a href="{{ url('/dataInput?id=' . $row['id']) }}" type="button" class="btn btn-block btn-success"><i class="nav-icon fas fa-edit"></i></a></td>
-                                            </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-                                                <th><?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
-                                                {{-- <th></th> --}}
-                                                <th><?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
-                                                <td></td>
-                                                
-                                            </tr>
-                                        </tfoot>
-                                    </tbody>
-                                </table>
+            <div class="content">
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-primary">
+                                    <div class="card-body">
+                                        <!-- Display message if available -->
+                                        <?php if (isset($message)): ?>
+                                        <div class="alert alert-info"><?= htmlspecialchars($message) ?></div>
+                                        <?php endif; ?>
+
+                                        <!-- Form for Editing Parameter -->
+                                        <form method="POST" href="{{ url('/parameter2025') }}">
+                                            @csrf
+                                            <input type="hidden" name="id"
+                                                value="<?= htmlspecialchars($row['id']) ?>">
+
+                                            <div class="form-group">
+                                                <label for="biaya_jual">Biaya Jual</label>
+                                                <input type="number" name="biaya_jual" class="form-control"
+                                                    id="biaya_jual"
+                                                    value="<?= htmlspecialchars($row['biaya_jual']) ?>" step="0.01"
+                                                    required>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="naik_turun">Naik Turun</label>
+                                                <input type="number" name="naik_turun" class="form-control"
+                                                    id="naik_turun"
+                                                    value="<?= htmlspecialchars($row['naik_turun']) ?>" step="0.01"
+                                                    required>
+                                            </div>
+
+                                            <div class="form-group mb-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" name="terms"
+                                                        class="custom-control-input" id="exampleCheck1" required>
+                                                    <label class="custom-control-label" for="exampleCheck1">Saya
+                                                        Setuju akan <a href="#">pergantian Parameter
+                                                            Berikut</a>.</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-footer">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- /.card-body -->
                         </div>
-                        <!-- /.card -->
                     </div>
                 </div>
             </div>
-            <!-- /.row -->
         </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
-    </div>
-    <!-- /.content -->
-    </div>
-    </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-    </div>
 
-    <footer class="main-footer">
-        <div class="float-right d-none d-sm-block">
-            <b>Version</b> 3.2.0
-        </div>
-        <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-    </footer>
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-block">
+                <b>Version</b> 3.2.0
+            </div>
+            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights
+            reserved.
+        </footer>
 
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Add Content Here -->
-    </aside>
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Add Content Here -->
+        </aside>
     </div>
 
     <script>
@@ -310,7 +285,6 @@ if (!$result) {
     <script src="plugins/jquery/jquery.min.js"></script>
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="dist/js/adminlte.js"></script>
-    <!-- Add your custom JavaScript here -->
 </body>
 
 </html>

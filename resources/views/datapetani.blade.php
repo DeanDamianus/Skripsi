@@ -59,7 +59,7 @@ $total_netto = 0; // Initialize total netto
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
+                            <a href="{{ url('/owner2025') }}" class="dropdown-item">
                                 <i class="fas fa-calendar"></i> 2025
                             </a>
                         </div>
