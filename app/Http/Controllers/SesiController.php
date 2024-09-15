@@ -128,6 +128,7 @@ class SesiController extends Controller
     // Validate the form data
     $validated = $request->validate([
         'netto' => 'required|numeric',
+        'bruto' => 'required|numeric',
         'jual_luar_value' => 'nullable|in:0,1',
         'harga' => 'required|numeric',
         'berat_gudang' => 'required|numeric',
@@ -145,6 +146,7 @@ class SesiController extends Controller
     $data = [
         'id_petani' => $id_petani,
         'netto' => $validated['netto'],
+        'bruto' => $validated['bruto'],
         'jual_luar' => $jual_luar,
         'harga' => $validated['harga'],
         'berat_gudang' => $validated['berat_gudang'],

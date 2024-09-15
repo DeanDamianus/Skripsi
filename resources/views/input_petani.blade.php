@@ -11,6 +11,7 @@ if (!$con) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Collect data from the form
     $netto = $_POST['netto'];
+    $bruto = $_POST['bruto'];
     $harga = $_POST['harga'];
     $jual_luar = $_POST['jual_luar']; 
     $berat_gudang = $_POST['berat_gudang'];
@@ -21,8 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $no_gg = $_POST['no_gg'];
 
     // Insert the data into the rekap_2024 table
-    $insert_query = "INSERT INTO rekap_2024 (id_petani, netto, jual_luar, harga, berat_gudang, grade, periode, seri, no_gg) 
-                     VALUES ('$id_petani', '$netto', '$jual_luar', '$harga', '$berat_gudang', '$grade', '$periode', '$seri', '$no_gg')";
+    $insert_query = "INSERT INTO rekap_2024 (id_petani, netto, bruto, jual_luar, harga, berat_gudang, grade, periode, seri, no_gg) 
+                     VALUES ('$id_petani', '$netto','$bruto', '$jual_luar', '$harga', '$berat_gudang', '$grade', '$periode', '$seri', '$no_gg')";
 
     if (mysqli_query($con, $insert_query)) {
         echo "Data berhasil ditambahkan!";
@@ -165,28 +166,6 @@ $total_harga = 0;
                                             <input type="text" id="seri" name="seri" class="form-control" placeholder="Masukkan Seri (TGL01)" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Tipe </label> <i class="fas fa-exchange-alt"></i><br>
-                                            <input type="checkbox" id="jual_luar_checkbox" name="jual_luar_checkbox">
-                                            <label for="jual_luar_checkbox"> <span class="badge badge-warning">Jual Luar</span></label>
-                                        </div>
-                                        <!-- /.form-group -->
-                                    </div>
-                                    <!-- /.col -->
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Netto <i class="fas fa-weight-hanging"></i></label>
-                                            <input type="number" name="netto" class="form-control" placeholder="Masukkan Netto" required>
-                                        </div>
-                                        <!-- /.form-group -->
-                                        <div class="form-group">
-                                            <label>Periode <i class="fas fa-clock"></i></label></label>
-                                            <input type="text" name="periode" class="form-control" placeholder="Masukkan periode (1-A) " required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>No.GG <i class="fas fa-hashtag"></i></label>
-                                            <input type="text" id="no_gg" name="no_gg" class="form-control" placeholder="Masukkan No.GG" required>
-                                        </div>
-                                        <div class="form-group">
                                             <label>Grade <i class="fas fa-star-half-alt"></i></i></label>
                                             <br>
                                             <div class="form-check form-check-inline">
@@ -205,6 +184,32 @@ $total_harga = 0;
                                                 <input type="radio" id="gradeD" name="grade" value="D" class="form-check-input" required>
                                                 <label class="form-check-label" for="gradeD">D</label>
                                             </div>
+                                        </div>
+                                        <!-- /.form-group -->
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Bruto <i class="fas fa-weight-hanging"></i></label>
+                                            <input type="number" name="bruto" class="form-control" placeholder="Masukkan Bruto" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Netto <i class="fas fa-weight-hanging"></i></label>
+                                            <input type="number" name="netto" class="form-control" placeholder="Masukkan Netto" required>
+                                        </div>
+                                        <!-- /.form-group -->
+                                        <div class="form-group">
+                                            <label>Periode <i class="fas fa-clock"></i></label></label>
+                                            <input type="text" name="periode" class="form-control" placeholder="Masukkan periode (1-A) " required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>No.GG <i class="fas fa-hashtag"></i></label>
+                                            <input type="text" id="no_gg" name="no_gg" class="form-control" placeholder="Masukkan No.GG" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tipe </label> <i class="fas fa-exchange-alt"></i><br>
+                                            <input type="checkbox" id="jual_luar_checkbox" name="jual_luar_checkbox">
+                                            <label for="jual_luar_checkbox"> <span class="badge badge-warning">Jual Luar</span></label>
                                         </div>
                                         
                                         <!-- /.form-group -->

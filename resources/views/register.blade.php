@@ -126,12 +126,12 @@
                                         <p>Tambah Akun</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a href="{{ url('/hapuspetani') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Hapus Akun</p>
                                     </a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li>
                         <li class="nav-item menu-active">

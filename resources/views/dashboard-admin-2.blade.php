@@ -25,6 +25,10 @@ $result_jual = mysqli_query($con, $query_jual);
 $data_jual = mysqli_fetch_assoc($result_jual);
 $jual_luar = $data_jual['jumlah_jual_luar'] ?? 0;
 
+$queryparam = "SELECT biaya_jual FROM parameter_2025 WHERE id = 1";
+$resultparam = mysqli_query($con, $queryparam);
+$biaya_param = mysqli_fetch_assoc($resultparam)['biaya_jual'] ?? 0;
+
 // Netto
 $nettoQuery = "SELECT SUM(netto) AS total_netto FROM rekap_2025";
 $nettoResult = mysqli_query($con, $nettoQuery);
@@ -201,12 +205,12 @@ mysqli_close($con);
                                         <p>Tambah Akun</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a href="#" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Hapus Akun</p>
                                     </a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li>
                         <li class="nav-item menu-close">
@@ -245,7 +249,7 @@ mysqli_close($con);
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1 class="m-0">Rekap Pengumpulan 2025</h1>
+                                <h1 class="m-0">Rekap Pengumpulan 2024</h1>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                             </div><!-- /.col -->
@@ -253,7 +257,6 @@ mysqli_close($con);
                     </div><!-- /.container-fluid -->
                 </div>
                 <div class="row">
-
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
                         <div class="small-box bg-info">
@@ -278,7 +281,7 @@ mysqli_close($con);
                                 <?php
                                 while ($row = mysqli_fetch_assoc($result_petani)) {
                                 $id_petani = $row['id'];
-                                $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2025 WHERE id_petani = '$id_petani'";
+                                $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
                                 $harga_result = mysqli_query($con, $query_harga);
                                 $harga_data = mysqli_fetch_assoc($harga_result);
                                 
@@ -319,21 +322,7 @@ mysqli_close($con);
                             </a>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-succsess">
-                            <div class="inner">
-                                <h3><?php echo $jual_luar; ?><sup style="font-size: 20px"> Keranjang</sup></h3>
-                                <p>Biaya Jual</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-exchange-alt"></i> <!-- Ikon pertukaran -->
-                            </div>
-                            <a href="{{ url('/input') }}"class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
-                        </div>
-                    </div>
+
                     <!-- Jumlah Bersih -->
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
@@ -351,6 +340,24 @@ mysqli_close($con);
                         </div>
                     </div>
                     <!-- Jumlah Petani -->
+                    <!-- Jumlah Jual Lua -->
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-dark">
+                            <div class="inner">
+                                <h3><sup style="font-size: 20px">Rp. </sup><?php echo number_format($biaya_param, 0, ',', '.'); ?></h3>
+                                <p>Biaya Jual</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-dollar-sign"></i> <!-- Icon for money -->
+                            </div>
+                            <a href="{{ url('/parameter') }}" class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
                     <!-- Jumlah Jual Lua -->
                 </div>
                 <!-- /.container-fluid -->

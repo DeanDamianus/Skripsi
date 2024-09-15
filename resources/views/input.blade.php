@@ -12,7 +12,8 @@ $nama = "SELECT * FROM users WHERE role = 'petani'";
 $result = mysqli_query($con, $nama);
 
 $total_harga = 0; // Initialize total harga
-$total_netto = 0; // Initialize total netto
+$total_netto = 0;
+$totaljualluar = 0; // Initialize total netto
 
 if (!$result) {
     die('Error fetching petani data: ' . mysqli_error($con));
@@ -144,12 +145,12 @@ if (!$result) {
                                         <p>Tambah Akun</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a href="{{ url('/hapuspetani') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Hapus Akun</p>
                                     </a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li>
                         <li class="nav-item menu-close">
@@ -180,7 +181,7 @@ if (!$result) {
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Data Rekap</h1>
+                            <h1>Data Nota 2024</h1>
                         </div>
                     </div>
                 </div><!-- /.container-fluid -->
@@ -201,6 +202,7 @@ if (!$result) {
                                             <th>Netto Total</th>
                                             {{-- <th>Jumlah Bersih</th> --}}
                                             <th>Jumlah Total</th>
+                                            <th>Jual Luar</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -221,7 +223,20 @@ if (!$result) {
                                             }
                                     
                                             $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
+                                            
+
+                                            $query_jual = "SELECT SUM(jual_luar) AS total_jualluar FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                                            $jual_result = mysqli_query($con, $query_jual);
+                                            $jual_data = mysqli_fetch_assoc($jual_result);
                                     
+                                            // Debugging output
+                                            if (!$jual_data) {
+                                                echo "<tr><td colspan='7'>Error fetching jual luar for petani ID: $id_petani</td></tr>";
+                                                continue; // Skip this iteration if there's no data
+                                            }
+                                    
+                                            $total_jualluarpetani = isset($jual_data['total_jualluar']) ? $jual_data['total_jualluar'] : 0;
+
                                             // Query to get the total harga for each petani
                                             $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
                                             $harga_result = mysqli_query($con, $query_harga);
@@ -240,6 +255,7 @@ if (!$result) {
                                             // Accumulate totals
                                             $total_netto += $total_bruto;
                                             $total_harga += $total_harga_per_petani;
+                                            $totaljualluar += $total_jualluarpetani;
                                             
                                             ?>
                                     
@@ -247,8 +263,8 @@ if (!$result) {
                                                 <td><?php echo $row['id']; ?></td>
                                                 <td><?php echo $row['name']; ?></td>
                                                 <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
-                                                {{-- <td></td> --}}
                                                 <td><?php echo $hargaFormatted; ?></td>
+                                                <td><?php echo $total_jualluarpetani != 0 ? $total_jualluarpetani : '-'; ?></td>    
                                                 <td><a href="{{ url('/dataInput?id=' . $row['id']) }}" type="button" class="btn btn-block btn-success"><i class="nav-icon fas fa-edit"></i></a></td>
                                             </tr>
                                         <?php } ?>
@@ -258,8 +274,8 @@ if (!$result) {
                                                 <th></th>
                                                 <th></th>
                                                 <th><?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>
-                                                {{-- <th></th> --}}
                                                 <th><?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
+                                                <th><?php echo ($totaljualluar)?></th>
                                                 <td></td>
                                                 
                                             </tr>
