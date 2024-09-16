@@ -173,7 +173,7 @@ mysqli_close($con);
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No.Krj</th>
                                             <th>Bruto</th>
                                             <th>Netto</th>
                                             <th>Harga</th>

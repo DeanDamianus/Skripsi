@@ -1,10 +1,10 @@
 <?php
 // Establish the connection
-$con = mysqli_connect("localhost", "root", "", "simbako_app");
+$con = mysqli_connect('localhost', 'root', '', 'simbako_app');
 
 // Check connection
 if (!$con) {
-    die("Koneksi Error: " . mysqli_connect_error());
+    die('Koneksi Error: ' . mysqli_connect_error());
 }
 
 // Initialize variables
@@ -19,36 +19,36 @@ $data = mysqli_fetch_assoc($result);
 $jumlah_petani = $data['jumlah_petani'] ?? 0;
 
 // Query to get the biaya_jual
-$queryparam = "SELECT biaya_jual FROM parameter_2024 WHERE id = 1";
+$queryparam = 'SELECT biaya_jual FROM parameter_2024 WHERE id = 1';
 $resultparam = mysqli_query($con, $queryparam);
 $biaya_param = mysqli_fetch_assoc($resultparam)['biaya_jual'] ?? 0;
 
 // Query to count rows with jual_luar = 1
-$query_jual = "SELECT COUNT(*) AS jumlah_jual_luar FROM rekap_2024 WHERE jual_luar = 1";
+$query_jual = 'SELECT COUNT(*) AS jumlah_jual_luar FROM rekap_2024 WHERE jual_luar = 1';
 $result_jual = mysqli_query($con, $query_jual);
 $data_jual = mysqli_fetch_assoc($result_jual);
 $jual_luar = $data_jual['jumlah_jual_luar'] ?? 0;
 
 // Netto
-$nettoQuery = "SELECT SUM(netto) AS total_netto FROM rekap_2024";
+$nettoQuery = 'SELECT SUM(netto) AS total_netto FROM rekap_2024';
 $nettoResult = mysqli_query($con, $nettoQuery);
 $nettoData = mysqli_fetch_assoc($nettoResult);
 $totalNetto = $nettoData['total_netto'] ?? 0;
 
 // Query to get all 'id_petani' from 'rekap_2024'
-$query_petani = "SELECT DISTINCT id_petani FROM rekap_2024";
+$query_petani = 'SELECT DISTINCT id_petani FROM rekap_2024';
 $result_petani = mysqli_query($con, $query_petani);
 
 while ($row = mysqli_fetch_assoc($result_petani)) {
     $id_petani = $row['id_petani'];
-    
+
     // Query to calculate total harga for each 'id_petani'
     $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
     $harga_result = mysqli_query($con, $query_harga);
     $harga_data = mysqli_fetch_assoc($harga_result);
-    
+
     $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
-    
+
     // Accumulate totals
     $total_harga += $total_harga_per_petani;
 }
@@ -243,12 +243,6 @@ mysqli_close($con);
 
 
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <!-- /.col-md-6 -->
             <div class="content">
                 <div class="content-header">
                     <div class="container-fluid">
@@ -285,19 +279,19 @@ mysqli_close($con);
                             <div class="inner">
                                 {{-- <?php
                                 while ($row = mysqli_fetch_assoc($result_petani)) {
-                                $id_petani = $row['id'];
-                                $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                                $harga_result = mysqli_query($con, $query_harga);
-                                $harga_data = mysqli_fetch_assoc($harga_result);
+                                    $id_petani = $row['id'];
+                                    $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                                    $harga_result = mysqli_query($con, $query_harga);
+                                    $harga_data = mysqli_fetch_assoc($harga_result);
                                 
-                                $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
+                                    $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
                                 
-                                // Format harga
-                                $hargaFormatted = 'Rp. ' . number_format($total_harga_per_petani, 0, ',', '.');
+                                    // Format harga
+                                    $hargaFormatted = 'Rp. ' . number_format($total_harga_per_petani, 0, ',', '.');
                                 
-                                // Accumulate totals
-                                $total_netto += $total_bruto;
-                                $total_harga += $total_harga_per_petani;
+                                    // Accumulate totals
+                                    $total_netto += $total_bruto;
+                                    $total_harga += $total_harga_per_petani;
                                 }
                                 ?> --}}
                                 {{-- <h3><sup style="font-size: 20px">Rp.</sup><?php echo number_format($total_harga, 0, ',', '.'); ?></h3> --}}
@@ -347,24 +341,100 @@ mysqli_close($con);
                     <!-- Jumlah Petani -->
                     <!-- Jumlah Jual Lua -->
                 </div>
-                <div class="row">
-                    <div class="col-lg-3 col-6">
-                        <div class="small-box bg-dark">
-                            <div class="inner">
-                                {{-- <h3><sup style="font-size: 20px">Rp. </sup><?php echo number_format($biaya_param, 0, ',', '.'); ?></h3> --}}
-                                <p>Distribusi Visual 4</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-dollar-sign"></i> <!-- Icon for money -->
-                            </div>
-                            <a href="{{ url('/parameter') }}" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
-                        </div>
+                <div class="card">
+                    <div class="card-header border-transparent">
+                      <h3 class="card-title">Distribusi</h3>
+      
+                      <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                          <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </div>
                     </div>
-                    
-                    <!-- Jumlah Jual Lua -->
-                </div>
+                    <!-- /.card-header -->
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table m-0">
+                          <thead>
+                          <tr>
+                            <th>ID Distribusi</th>
+                            <th>Periode</th>
+                            <th>Status</th>
+                            <th>Popularity</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr>
+                            <td><a href="pages/examples/invoice.html">OR9842</a></td>
+                            <td>Call of Duty IV</td>
+                            <td><span class="badge badge-success">Shipped</span></td>
+                            <td>
+                              <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><a href="pages/examples/invoice.html">OR1848</a></td>
+                            <td>Samsung Smart TV</td>
+                            <td><span class="badge badge-warning">Pending</span></td>
+                            <td>
+                              <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><a href="pages/examples/invoice.html">OR7429</a></td>
+                            <td>iPhone 6 Plus</td>
+                            <td><span class="badge badge-danger">Delivered</span></td>
+                            <td>
+                              <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><a href="pages/examples/invoice.html">OR7429</a></td>
+                            <td>Samsung Smart TV</td>
+                            <td><span class="badge badge-info">Processing</span></td>
+                            <td>
+                              <div class="sparkbar" data-color="#00c0ef" data-height="20">90,80,-90,70,-61,83,63</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><a href="pages/examples/invoice.html">OR1848</a></td>
+                            <td>Samsung Smart TV</td>
+                            <td><span class="badge badge-warning">Pending</span></td>
+                            <td>
+                              <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><a href="pages/examples/invoice.html">OR7429</a></td>
+                            <td>iPhone 6 Plus</td>
+                            <td><span class="badge badge-danger">Delivered</span></td>
+                            <td>
+                              <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td><a href="pages/examples/invoice.html">OR9842</a></td>
+                            <td>Call of Duty IV</td>
+                            <td><span class="badge badge-success">Shipped</span></td>
+                            <td>
+                              <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                      <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Input Distribusi Baru</a>
+                      {{-- <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Orders</a> --}}
+                    </div>
+                    <!-- /.card-footer -->
+                  </div>
                 <!-- /.container-fluid -->
             </div>
             <!-- /.row -->
