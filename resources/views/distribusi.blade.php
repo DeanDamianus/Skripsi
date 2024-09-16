@@ -266,8 +266,8 @@ mysqli_close($con);
                         <!-- small card -->
                         <div class="small-box bg-info">
                             <div class="inner">
-                                <h3><?php echo number_format($totalNetto, 0, ',', '.'); ?><sup style="font-size: 20px"> Kg</sup></h3>
-                                <p>Total Netto Keranjang</p>
+                                {{-- <h3><?php echo number_format($totalNetto, 0, ',', '.'); ?><sup style="font-size: 20px"> Kg</sup></h3> --}}
+                                <p>Distribusi Visual 0</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-weight-hanging"></i> <!-- Ikon timbangan menggantung -->
@@ -283,7 +283,7 @@ mysqli_close($con);
                         <!-- small card -->
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <?php
+                                {{-- <?php
                                 while ($row = mysqli_fetch_assoc($result_petani)) {
                                 $id_petani = $row['id'];
                                 $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
@@ -299,9 +299,9 @@ mysqli_close($con);
                                 $total_netto += $total_bruto;
                                 $total_harga += $total_harga_per_petani;
                                 }
-                                ?>
-                                <h3><sup style="font-size: 20px">Rp.</sup><?php echo number_format($total_harga, 0, ',', '.'); ?></h3>
-                                <p>Total Harga Keranjang</p>
+                                ?> --}}
+                                {{-- <h3><sup style="font-size: 20px">Rp.</sup><?php echo number_format($total_harga, 0, ',', '.'); ?></h3> --}}
+                                <p>Distribusi Visual 1</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-coins"></i> <!-- Ikon koin -->
@@ -316,8 +316,8 @@ mysqli_close($con);
                         <!-- small card -->
                         <div class="small-box bg-yellow">
                             <div class="inner">
-                                <h3><?php echo $jual_luar; ?><sup style="font-size: 20px"> Keranjang</sup></h3>
-                                <p>Jual Luar</p>
+                                {{-- <h3><?php echo $jual_luar; ?><sup style="font-size: 20px"> Keranjang</sup></h3> --}}
+                                <p>Distribusi Visual 2</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-exchange-alt"></i> <!-- Ikon pertukaran -->
@@ -333,8 +333,8 @@ mysqli_close($con);
                         <!-- small card -->
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                <h3><?php echo $jumlah_petani; ?></h3>
-                                <p>Jumlah Petani</p>
+                                {{-- <h3><?php echo $jumlah_petani; ?></h3> --}}
+                                <p>Distribusi Visual 3</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-user"></i> <!-- Ikon orang -->
@@ -351,8 +351,8 @@ mysqli_close($con);
                     <div class="col-lg-3 col-6">
                         <div class="small-box bg-dark">
                             <div class="inner">
-                                <h3><sup style="font-size: 20px">Rp. </sup><?php echo number_format($biaya_param, 0, ',', '.'); ?></h3>
-                                <p>Biaya Jual</p>
+                                {{-- <h3><sup style="font-size: 20px">Rp. </sup><?php echo number_format($biaya_param, 0, ',', '.'); ?></h3> --}}
+                                <p>Distribusi Visual 4</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-dollar-sign"></i> <!-- Icon for money -->
