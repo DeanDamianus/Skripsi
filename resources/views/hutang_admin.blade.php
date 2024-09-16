@@ -174,6 +174,15 @@ if (!$result) {
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item menu-closed">
+                            <a href="{{ url('/distribusi') }}" class="nav-link">
+                                <i class="nav-icon fas fa-truck"></i>
+                                <p>
+                                    <strong>DISTRIBUSI</strong>
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tractor"></i>

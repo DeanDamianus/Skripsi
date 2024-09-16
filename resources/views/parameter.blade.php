@@ -144,6 +144,15 @@ mysqli_close($con);
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item menu-">
+                            <a href="{{ url('/distribusi') }}" class="nav-link">
+                                <i class="nav-icon fas fa-truck"></i>
+                                <p>
+                                    <strong>DISTRIBUSI</strong>
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tractor"></i>
@@ -198,7 +207,7 @@ mysqli_close($con);
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Input Parameter</h1>
+                            <h1>Input Parameter 2024</h1>
                         </div>
                     </div>
                 </div>

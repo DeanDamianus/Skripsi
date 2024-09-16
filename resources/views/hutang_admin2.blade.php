@@ -148,7 +148,7 @@ if (!$result) {
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/owner') }}" class="nav-link">
+                            <a href="{{ url('/owner2025') }}" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -157,7 +157,7 @@ if (!$result) {
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/hutang-admin2') }}" class="nav-link">
+                            <a href="{{ url('/input2025') }}" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>

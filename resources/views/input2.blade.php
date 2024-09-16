@@ -53,12 +53,12 @@ if (!$result) {
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
                         <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
-                            2024
+                            2025
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <div class="dropdown-divider"></div>
-                            <a href="{{ url('/owner2025') }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> 2025
+                            <a href="{{ url('/owner') }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> 2024
                             </a>
                         </div>
                     </div>
@@ -98,7 +98,7 @@ if (!$result) {
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/owner') }}" class="nav-link">
+                            <a href="{{ url('/owner2025') }}" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -107,7 +107,7 @@ if (!$result) {
                             </a>
                         </li>
                         <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                            <a href="{{ url('/input2025') }}" class="nav-link active">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -116,20 +116,11 @@ if (!$result) {
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/hutang-admin') }}" class="nav-link">
+                            <a href="{{ url('/hutang-admin2') }}" class="nav-link">
                                 <i class="nav-icon fas fa-hand-holding-usd"></i>
                                 <p>
                                     <strong>HUTANG</strong>
                                     <i class="right fas fa-angle-left "></i>
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item menu-closed">
-                            <a href="{{ url('/distribusi') }}" class="nav-link">
-                                <i class="nav-icon fas fa-truck"></i>
-                                <p>
-                                    <strong>DISTRIBUSI</strong>
-                                    <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
                         </li>
@@ -163,7 +154,7 @@ if (!$result) {
                             </ul>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/parameter') }}" class="nav-link">
+                            <a href="{{ url('/parameter2025') }}" class="nav-link">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     <strong>PARAMETER</strong>
@@ -190,7 +181,7 @@ if (!$result) {
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Data Nota 2024</h1>
+                            <h1>Data Nota 2025</h1>
                         </div>
                     </div>
                 </div><!-- /.container-fluid -->
@@ -221,7 +212,7 @@ if (!$result) {
                                             $id_petani = $row['id'];
                                     
                                             // Query to get the total netto for each petani
-                                            $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                                            $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2025 WHERE id_petani = '$id_petani'";
                                             $bruto_result = mysqli_query($con, $query_bruto);
                                             $bruto_data = mysqli_fetch_assoc($bruto_result);
                                     
@@ -234,7 +225,7 @@ if (!$result) {
                                             $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
                                             
 
-                                            $query_jual = "SELECT SUM(jual_luar) AS total_jualluar FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                                            $query_jual = "SELECT SUM(jual_luar) AS total_jualluar FROM rekap_2025 WHERE id_petani = '$id_petani'";
                                             $jual_result = mysqli_query($con, $query_jual);
                                             $jual_data = mysqli_fetch_assoc($jual_result);
                                     
@@ -247,7 +238,7 @@ if (!$result) {
                                             $total_jualluarpetani = isset($jual_data['total_jualluar']) ? $jual_data['total_jualluar'] : 0;
 
                                             // Query to get the total harga for each petani
-                                            $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                                            $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2025 WHERE id_petani = '$id_petani'";
                                             $harga_result = mysqli_query($con, $query_harga);
                                             $harga_data = mysqli_fetch_assoc($harga_result);
                                     
@@ -274,7 +265,7 @@ if (!$result) {
                                                 <td><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></td>
                                                 <td><?php echo $hargaFormatted; ?></td>
                                                 <td><?php echo $total_jualluarpetani != 0 ? $total_jualluarpetani : '-'; ?></td>    
-                                                <td><a href="{{ url('/dataInput?id=' . $row['id']) }}" type="button" class="btn btn-block btn-success"><i class="nav-icon fas fa-edit"></i></a></td>
+                                                <td><a href="{{ url('/dataInput2025?id=' . $row['id']) }}" type="button" class="btn btn-block btn-success"><i class="nav-icon fas fa-edit"></i></a></td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>

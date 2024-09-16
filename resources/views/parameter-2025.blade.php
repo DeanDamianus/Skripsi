@@ -126,7 +126,7 @@ mysqli_close($con);
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/input') }}" class="nav-link">
+                            <a href="{{ url('/input2025') }}" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -135,7 +135,7 @@ mysqli_close($con);
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/hutang-admin') }}" class="nav-link">
+                            <a href="{{ url('/hutang-admin2') }}" class="nav-link">
                                 <i class="nav-icon fas fa-hand-holding-usd"></i>
                                 <p>
                                     <strong>HUTANG</strong>
@@ -197,7 +197,7 @@ mysqli_close($con);
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Input Parameter</h1>
+                            <h1>Input Parameter 2025</h1>
                         </div>
                     </div>
                 </div>

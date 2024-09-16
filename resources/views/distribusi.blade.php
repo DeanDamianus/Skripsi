@@ -1,21 +1,62 @@
 <?php
-
 // Establish the connection
-$con = mysqli_connect('localhost', 'root', '', 'simbako_app');
+$con = mysqli_connect("localhost", "root", "", "simbako_app");
 
 // Check connection
 if (!$con) {
-    die('Koneksi Error: ' . mysqli_connect_error());
+    die("Koneksi Error: " . mysqli_connect_error());
 }
 
-// Query nama
-$nama = "SELECT * FROM users WHERE role = 'petani'";
-$result = mysqli_query($con, $nama);
-
+// Initialize variables
 $total_harga = 0;
-$total_netto = 0; // Initialize total netto
+$total_netto = 0;
+$harga_jual = 0;
 
+// Query to get all petani
+$query = "SELECT COUNT(*) AS jumlah_petani FROM users WHERE role = 'petani'";
+$result = mysqli_query($con, $query);
+$data = mysqli_fetch_assoc($result);
+$jumlah_petani = $data['jumlah_petani'] ?? 0;
+
+// Query to get the biaya_jual
+$queryparam = "SELECT biaya_jual FROM parameter_2024 WHERE id = 1";
+$resultparam = mysqli_query($con, $queryparam);
+$biaya_param = mysqli_fetch_assoc($resultparam)['biaya_jual'] ?? 0;
+
+// Query to count rows with jual_luar = 1
+$query_jual = "SELECT COUNT(*) AS jumlah_jual_luar FROM rekap_2024 WHERE jual_luar = 1";
+$result_jual = mysqli_query($con, $query_jual);
+$data_jual = mysqli_fetch_assoc($result_jual);
+$jual_luar = $data_jual['jumlah_jual_luar'] ?? 0;
+
+// Netto
+$nettoQuery = "SELECT SUM(netto) AS total_netto FROM rekap_2024";
+$nettoResult = mysqli_query($con, $nettoQuery);
+$nettoData = mysqli_fetch_assoc($nettoResult);
+$totalNetto = $nettoData['total_netto'] ?? 0;
+
+// Query to get all 'id_petani' from 'rekap_2024'
+$query_petani = "SELECT DISTINCT id_petani FROM rekap_2024";
+$result_petani = mysqli_query($con, $query_petani);
+
+while ($row = mysqli_fetch_assoc($result_petani)) {
+    $id_petani = $row['id_petani'];
+    
+    // Query to calculate total harga for each 'id_petani'
+    $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
+    $harga_result = mysqli_query($con, $query_harga);
+    $harga_data = mysqli_fetch_assoc($harga_result);
+    
+    $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
+    
+    // Accumulate totals
+    $total_harga += $total_harga_per_petani;
+}
+
+// Close the connection
+mysqli_close($con);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,6 +75,15 @@ $total_netto = 0; // Initialize total netto
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
+<!--
+`body` tag options:
+
+  Apply one or more of the following classes to to the body tag
+  to get the desired effect
+
+  * sidebar-collapse
+  * sidebar-mini
+-->
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -45,7 +95,7 @@ $total_netto = 0; // Initialize total netto
                             class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ url('/owner') }}" class="nav-link">Home</a>
+                    <a href="../../index3.html" class="nav-link">Home</a>
                 </li>
 
             </ul>
@@ -72,16 +122,14 @@ $total_netto = 0; // Initialize total netto
                 </li>
             </ul>
         </nav>
-
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="{{ url('/grade') }}" class="brand-link">
+            <a href="#" class="brand-link">
                 <img src="dist/img/simbakologo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
                     style="opacity: .8">
                 <span class="brand-text font-weight-light">SIMBAKO</span>
             </a>
-
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
@@ -98,6 +146,7 @@ $total_netto = 0; // Initialize total netto
                     </div>
                 </div>
 
+
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
@@ -105,7 +154,7 @@ $total_netto = 0; // Initialize total netto
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/owner') }}" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -131,8 +180,8 @@ $total_netto = 0; // Initialize total netto
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item menu-closed">
-                            <a href="{{ url('/distribusi') }}" class="nav-link">
+                        <li class="nav-item menu-open">
+                            <a href"" class="nav-link active">
                                 <i class="nav-icon fas fa-truck"></i>
                                 <p>
                                     <strong>DISTRIBUSI</strong>
@@ -140,8 +189,8 @@ $total_netto = 0; // Initialize total netto
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tractor"></i>
                                 <p>
                                     <strong>PETANI</strong>
@@ -150,7 +199,7 @@ $total_netto = 0; // Initialize total netto
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('/datapetani') }}" class="nav-link active">
+                                    <a href="{{ url('/datapetani') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Petani</p>
                                     </a>
@@ -188,6 +237,8 @@ $total_netto = 0; // Initialize total netto
                         </li>
 
             </div>
+
+            <!-- /.sidebar -->
         </aside>
 
 
@@ -195,84 +246,128 @@ $total_netto = 0; // Initialize total netto
             <!-- Content Header (Page header) -->
 
             <!-- /.content-header -->
-            <section class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1>Data Petani</h1>
-                        </div>
-                    </div>
-                </div><!-- /.container-fluid -->
-            </section>
 
             <!-- Main content -->
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <!-- /.card-header -->
-                            <div class="card-body table-responsive p-0">
-                                <table class="table table-hover text-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th>ID Petani</th>
-                                            <th>Nama Petani</th>
-                                            <th>Dibuat tanggal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                                     
-                                        while ($row = mysqli_fetch_assoc($result)) {
-                                            $id_petani = $row['id'];
-
-                                            // Query to get the total netto for each petani
-                                            $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                                            $bruto_result = mysqli_query($con, $query_bruto);
-                                            $bruto_data = mysqli_fetch_assoc($bruto_result);
-                                            
-                                            $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
-                                            
-                                            // Query to get the total harga for each petani
-                                            $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                                            $harga_result = mysqli_query($con, $query_harga);
-                                            $harga_data = mysqli_fetch_assoc($harga_result);
-                                            
-                                            $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
-                                            
-                                            // Format harga
-                                            $hargaFormatted = 'Rp. ' . number_format($total_harga_per_petani, 0, ',', '.');
-                                            
-                                            // Accumulate totals
-                                            $total_netto += $total_bruto;
-                                            $total_harga += $total_harga_per_petani;
-                                            ?>
-                                        <tr>
-                                            <td><?php echo $row['id']; ?></td>
-                                            <td><?php echo $row['name']; ?></td>
-                                            <td><?php echo $row['created_at']; ?></td>
-                                        </tr>
-                                        <?php 
-                  }
-                  ?>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                    </div>
+            <!-- /.col-md-6 -->
+            <div class="content">
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1 class="m-0">Distribusi 2024</h1>
+                            </div><!-- /.col -->
+                            <div class="col-sm-6">
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container-fluid -->
                 </div>
-                <!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3><?php echo number_format($totalNetto, 0, ',', '.'); ?><sup style="font-size: 20px"> Kg</sup></h3>
+                                <p>Total Netto Keranjang</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-weight-hanging"></i> <!-- Ikon timbangan menggantung -->
+                            </div>
+                            <a href="{{ url('/input') }}" class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+
+                    </div>
+                    <!--NETO-->
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <?php
+                                while ($row = mysqli_fetch_assoc($result_petani)) {
+                                $id_petani = $row['id'];
+                                $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
+                                $harga_result = mysqli_query($con, $query_harga);
+                                $harga_data = mysqli_fetch_assoc($harga_result);
+                                
+                                $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
+                                
+                                // Format harga
+                                $hargaFormatted = 'Rp. ' . number_format($total_harga_per_petani, 0, ',', '.');
+                                
+                                // Accumulate totals
+                                $total_netto += $total_bruto;
+                                $total_harga += $total_harga_per_petani;
+                                }
+                                ?>
+                                <h3><sup style="font-size: 20px">Rp.</sup><?php echo number_format($total_harga, 0, ',', '.'); ?></h3>
+                                <p>Total Harga Keranjang</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-coins"></i> <!-- Ikon koin -->
+                            </div>
+                            <a href="#" class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Jumlah Kotor-->
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-yellow">
+                            <div class="inner">
+                                <h3><?php echo $jual_luar; ?><sup style="font-size: 20px"> Keranjang</sup></h3>
+                                <p>Jual Luar</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-exchange-alt"></i> <!-- Ikon pertukaran -->
+                            </div>
+                            <a href="{{ url('/input') }}"class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Jumlah Bersih -->
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3><?php echo $jumlah_petani; ?></h3>
+                                <p>Jumlah Petani</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-user"></i> <!-- Ikon orang -->
+                            </div>
+                            <a href="{{ url('/datapetani') }}" class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Jumlah Petani -->
+                    <!-- Jumlah Jual Lua -->
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-dark">
+                            <div class="inner">
+                                <h3><sup style="font-size: 20px">Rp. </sup><?php echo number_format($biaya_param, 0, ',', '.'); ?></h3>
+                                <p>Biaya Jual</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-dollar-sign"></i> <!-- Icon for money -->
+                            </div>
+                            <a href="{{ url('/parameter') }}" class="small-box-footer">
+                                More info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Jumlah Jual Lua -->
+                </div>
+                <!-- /.container-fluid -->
             </div>
+            <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
     </div>
@@ -287,7 +382,7 @@ $total_netto = 0; // Initialize total netto
         <div class="float-right d-none d-sm-block">
             <b>Version</b> 3.2.0
         </div>
-        <strong>Copyright &copy; 2014-2021 <a>SIMBAKO</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">SIMBAKO</strong> All rights reserved.
     </footer>
 
     <!-- Control Sidebar -->

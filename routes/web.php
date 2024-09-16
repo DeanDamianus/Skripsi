@@ -76,13 +76,26 @@ Route::middleware('auth')->group(function () {
             return view ('input');
         })->name('input');
 
+        Route::get('/input2025', function (){
+            return view ('input2');
+        })->name('input2');
+
         Route::get('/inputPetani', function (){
             return view ('input_petani');
-        })->name('input_petani');
+        })->name('input_petani'); // input petani merupakan halaman form input untuk rekap
 
         Route::get('/dataInput', function (){
             return view ('input_data');
-        })->name('input_data');
+        })->name('input_data');   //data input ini untuk melihat data rekap dari tiap petani
+
+        
+        Route::get('/dataInput2025', function (){
+            return view ('input_data2025');
+        })->name('input_data2025');
+
+        Route::get('/distribusi', function (){
+            return view ('distribusi');
+        })->name('distribusi');
 
         Route::get('/editInput', function (){
             return view ('edit_petani');
