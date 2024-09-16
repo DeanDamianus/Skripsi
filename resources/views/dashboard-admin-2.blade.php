@@ -149,14 +149,10 @@ mysqli_close($con);
                         @endif
                     </div>
                 </div>
-
-
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
                         <li class="nav-item menu-open">
                             <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -164,6 +160,7 @@ mysqli_close($con);
                                     <strong>DASHBOARD</strong>
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
+                                
                             </a>
                         </li>
                         <li class="nav-item menu-close">
@@ -176,7 +173,7 @@ mysqli_close($con);
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="#" class="nav-link">
+                            <a href="{{ url('/hutang-admin2') }}"class="nav-link">
                                 <i class="nav-icon fas fa-hand-holding-usd"></i>
                                 <p>
                                     <strong>HUTANG</strong>
@@ -249,7 +246,7 @@ mysqli_close($con);
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1 class="m-0">Rekap Pengumpulan 2024</h1>
+                                <h1 class="m-0">Rekap Pengumpulan 2025</h1>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                             </div><!-- /.col -->

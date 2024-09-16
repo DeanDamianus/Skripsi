@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Insert the data into the rekap_2024 table
     $insert_query = "INSERT INTO rekap_2024 (id_petani, netto, bruto, jual_luar, harga, berat_gudang, grade, periode, seri, no_gg) 
-                     VALUES ('$id_petani', '$netto','$bruto', '$jual_luar', '$harga', '$berat_gudang', '$grade', '$periode', '$seri', '$no_gg')";
+                    VALUES ('$id_petani', '$netto','$bruto', '$jual_luar', '$harga', '$berat_gudang', '$grade', '$periode', '$seri', '$no_gg')";
 
     if (mysqli_query($con, $insert_query)) {
         echo "Data berhasil ditambahkan!";
@@ -70,7 +70,6 @@ $total_harga = 0;
 
 <body class="hold-transition layout-top-nav">
     <div class="wrapper">
-
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
             <div class="container">
@@ -81,7 +80,7 @@ $total_harga = 0;
                 </a>
                 <ul class="navbar-nav">
                     <li class="nav-item d-none d-sm-inline-block">
-                      <a href="{{url('/owner')}}" class="nav-link">Home</a>
+                    <a href="{{url('/owner')}}" class="nav-link">Home</a>
                     </li>
                 </ul>
                 <button class="navbar-toggler order-1" type="button" data-toggle="collapse"
@@ -137,6 +136,7 @@ $total_harga = 0;
                 </div>
             </div><!-- /.container-fluid -->
         </section>
+        
 
         <div class="container-fluid">
             <div class="row">

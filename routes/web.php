@@ -39,36 +39,51 @@ Route::middleware('auth')->group(function () {
         Route::get('/owner', function() {
             return view('dashboard-admin');
         })->name('owner.dashboard');
+
         Route::get('/owner2025', function() {
             return view('dashboard-admin-2');
         })->name('owner.dashboard2');
+
         Route::get('/hutang-admin', function() {
             return view('hutang_admin');
         })->name('hutang-admin');
+
+        Route::get('/hutang-admin2', function() {
+            return view('hutang_admin2');
+        })->name('hutang_admin2');
+
         Route::get('/datapetani', function() {
             return view('datapetani');
         })->name('datapetani');
+
         Route::get('/parameter', function (){
             return view ('parameter');
         })->name('parameter');
+
         Route::get('/parameter2025', function (){
             return view ('parameter-2025');
         })->name('parameter_2');
+
         Route::get('/hapuspetani', function (){
             return view ('hapus-petani');
         })->name('hapus-petani');
+
         Route::get('/register', function (){
             return view ('register');
         })->name('register');
+
         Route::get('/input', function (){
             return view ('input');
         })->name('input');
+
         Route::get('/inputPetani', function (){
             return view ('input_petani');
         })->name('input_petani');
+
         Route::get('/dataInput', function (){
             return view ('input_data');
         })->name('input_data');
+
         Route::get('/editInput', function (){
             return view ('edit_petani');
         })->name('edit_petani');

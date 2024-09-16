@@ -296,7 +296,7 @@ mysqli_close($con);
                                             <th></th>
                                             <th></th>
                                             <th></th>
-                                            <th>Total Bersih: <?php echo number_format($subtotal_bersih, 0, ',', '.'); ?></th>
+                                            <th>Total: <?php echo number_format($subtotal_bersih, 0, ',', '.'); ?></th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
