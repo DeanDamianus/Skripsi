@@ -14,6 +14,7 @@ $nama = "SELECT rekap_2024.*, distribusi_2024.*
             ";
 $result = mysqli_query($con, $nama);
 
+$totalditerima = 0;
 
 
 if (!$result) {
@@ -118,7 +119,7 @@ if (!$result) {
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
-                            <a href="#" class="nav-link">
+                            <a href="{{ url('/owner') }}"  class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -325,15 +326,16 @@ if (!$result) {
                                     $pengeluaranFormatted = 'Rp. ' . number_format($pengeluaran, 0, ',', '.');
                         
                                     // Set color based on the status value
-                                    if ($status == 'Dikirim') {
+                                    if ($status == 'Diterima') {
                                         $sparkbarColor = "badge badge-success";
                                     }
-                                    elseif ($status == 'Diterima') {
+                                    elseif ($status == 'Dikirim') {
                                         $sparkbarColor = "badge badge-warning";
                                     }
                                      else {
                                         $sparkbarColor = "badge badge-danger";
                                     }
+
                                 ?>      
                                     <tr>
                                         <td><a href="#"><?php echo htmlspecialchars($id_krj); ?></a></td>
