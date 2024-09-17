@@ -325,17 +325,23 @@ if (!$result) {
                                     $pengeluaranFormatted = 'Rp. ' . number_format($pengeluaran, 0, ',', '.');
                         
                                     // Set color based on the status value
-                                    $sparkbarColor = ($status == 'Dikirim') ? '#f39c12' : '#00a65a';
-                                ?>
+                                    if ($status == 'Dikirim') {
+                                        $sparkbarColor = "badge badge-success";
+                                    }
+                                    elseif ($status == 'Diterima') {
+                                        $sparkbarColor = "badge badge-warning";
+                                    }
+                                     else {
+                                        $sparkbarColor = "badge badge-danger";
+                                    }
+                                ?>      
                                     <tr>
                                         <td><a href="#"><?php echo htmlspecialchars($id_krj); ?></a></td>
                                         <td><?php echo htmlspecialchars($periode); ?></td>
-                                        <td><span class="badge badge-success"><?php echo htmlspecialchars($status); ?></span></td>
                                         <td>
-                                            <div class="sparkbar" data-color="<?php echo $sparkbarColor; ?>" data-height="20">
-                                                <?php echo htmlspecialchars($pengeluaranFormatted); ?>
-                                            </div>
+                                            <div class="<?php echo ($sparkbarColor); ?>" data-height="20"><?php echo htmlspecialchars($status); ?></div>
                                         </td>
+                                        <td><?php echo htmlspecialchars($pengeluaranFormatted); ?></td>
                                         <td><a href="#" type="button" class="btn btn-block btn-danger"><i class="nav-icon fas fa-trash"></i></a></td>
                                     </tr>
                             <?php } ?>
