@@ -15,6 +15,7 @@ $total_bruto = 0;
 $total_gudang = 0; 
 $total_bersih = 0;
 $cekkilo = 0;
+$subtotal_bersih = 0;
 
 // Check if 'id' exists in the URL
 if (isset($_GET['id']) && !empty($_GET['id'])) {
@@ -191,7 +192,7 @@ mysqli_close($con);
                                     </thead>
                                     <tbody>
                                         <?php 
-                                        $subtotal_bersih = 0;
+                                        
                                         while ($row = mysqli_fetch_assoc($rekap_result)) {
                                             // Get data for each rekap row
                                             $id_rekap = $row['id_rekap'];

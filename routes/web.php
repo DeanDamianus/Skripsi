@@ -100,6 +100,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/editInput', function (){
             return view ('edit_petani');
         })->name('edit_petani');
+
+        Route::get('/inputdistribusi', function (){
+            return view ('input_distribusi');
+        })->name('inputdistribusi');
     });
 
 

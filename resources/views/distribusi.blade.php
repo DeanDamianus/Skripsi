@@ -7,54 +7,18 @@ if (!$con) {
     die('Koneksi Error: ' . mysqli_connect_error());
 }
 
-// Initialize variables
-$total_harga = 0;
-$total_netto = 0;
-$harga_jual = 0;
-
 // Query to get all petani
-$query = "SELECT COUNT(*) AS jumlah_petani FROM users WHERE role = 'petani'";
-$result = mysqli_query($con, $query);
-$data = mysqli_fetch_assoc($result);
-$jumlah_petani = $data['jumlah_petani'] ?? 0;
+$nama = "SELECT rekap_2024.*, distribusi_2024.*
+            FROM rekap_2024
+            JOIN distribusi_2024 ON rekap_2024.id_rekap = distribusi_2024.id_krj;
+            ";
+$result = mysqli_query($con, $nama);
 
-// Query to get the biaya_jual
-$queryparam = 'SELECT biaya_jual FROM parameter_2024 WHERE id = 1';
-$resultparam = mysqli_query($con, $queryparam);
-$biaya_param = mysqli_fetch_assoc($resultparam)['biaya_jual'] ?? 0;
 
-// Query to count rows with jual_luar = 1
-$query_jual = 'SELECT COUNT(*) AS jumlah_jual_luar FROM rekap_2024 WHERE jual_luar = 1';
-$result_jual = mysqli_query($con, $query_jual);
-$data_jual = mysqli_fetch_assoc($result_jual);
-$jual_luar = $data_jual['jumlah_jual_luar'] ?? 0;
 
-// Netto
-$nettoQuery = 'SELECT SUM(netto) AS total_netto FROM rekap_2024';
-$nettoResult = mysqli_query($con, $nettoQuery);
-$nettoData = mysqli_fetch_assoc($nettoResult);
-$totalNetto = $nettoData['total_netto'] ?? 0;
-
-// Query to get all 'id_petani' from 'rekap_2024'
-$query_petani = 'SELECT DISTINCT id_petani FROM rekap_2024';
-$result_petani = mysqli_query($con, $query_petani);
-
-while ($row = mysqli_fetch_assoc($result_petani)) {
-    $id_petani = $row['id_petani'];
-
-    // Query to calculate total harga for each 'id_petani'
-    $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
-    $harga_result = mysqli_query($con, $query_harga);
-    $harga_data = mysqli_fetch_assoc($harga_result);
-
-    $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
-
-    // Accumulate totals
-    $total_harga += $total_harga_per_petani;
+if (!$result) {
+    die('Error fetching petani data: ' . mysqli_error($con));
 }
-
-// Close the connection
-mysqli_close($con);
 ?>
 
 <!DOCTYPE html>
@@ -277,23 +241,6 @@ mysqli_close($con);
                         <!-- small card -->
                         <div class="small-box bg-success">
                             <div class="inner">
-                                {{-- <?php
-                                while ($row = mysqli_fetch_assoc($result_petani)) {
-                                    $id_petani = $row['id'];
-                                    $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                                    $harga_result = mysqli_query($con, $query_harga);
-                                    $harga_data = mysqli_fetch_assoc($harga_result);
-                                
-                                    $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
-                                
-                                    // Format harga
-                                    $hargaFormatted = 'Rp. ' . number_format($total_harga_per_petani, 0, ',', '.');
-                                
-                                    // Accumulate totals
-                                    $total_netto += $total_bruto;
-                                    $total_harga += $total_harga_per_petani;
-                                }
-                                ?> --}}
                                 {{-- <h3><sup style="font-size: 20px">Rp.</sup><?php echo number_format($total_harga, 0, ',', '.'); ?></h3> --}}
                                 <p>Distribusi Visual 1</p>
                             </div>
@@ -342,96 +289,61 @@ mysqli_close($con);
                     <!-- Jumlah Jual Lua -->
                 </div>
                 <div class="card">
-                    <div class="card-header border-transparent">
-                      <h3 class="card-title">Distribusi</h3>
-      
-                      <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove">
-                          <i class="fas fa-times"></i>
-                        </button>
+                    <div class="card-footer clearfix">
+                        <a href="#" class="btn btn-sm btn-info float-left">Input Distribusi Baru</a>
+                        {{-- <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Orders</a> --}}
                       </div>
-                    </div>
                     <!-- /.card-header -->
                     <div class="card-body p-0">
                       <div class="table-responsive">
                         <table class="table m-0">
                           <thead>
                           <tr>
-                            <th>ID Distribusi</th>
+                            <th>ID Keranjang</th>
                             <th>Periode</th>
                             <th>Status</th>
-                            <th>Popularity</th>
+                            <th>Pengeluaran</th>
+                            <th>Action</th>
                           </tr>
                           </thead>
                           <tbody>
-                          <tr>
-                            <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                            <td>Call of Duty IV</td>
-                            <td><span class="badge badge-success">Shipped</span></td>
-                            <td>
-                              <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                            <td>Samsung Smart TV</td>
-                            <td><span class="badge badge-warning">Pending</span></td>
-                            <td>
-                              <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                            <td>iPhone 6 Plus</td>
-                            <td><span class="badge badge-danger">Delivered</span></td>
-                            <td>
-                              <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                            <td>Samsung Smart TV</td>
-                            <td><span class="badge badge-info">Processing</span></td>
-                            <td>
-                              <div class="sparkbar" data-color="#00c0ef" data-height="20">90,80,-90,70,-61,83,63</div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                            <td>Samsung Smart TV</td>
-                            <td><span class="badge badge-warning">Pending</span></td>
-                            <td>
-                              <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                            <td>iPhone 6 Plus</td>
-                            <td><span class="badge badge-danger">Delivered</span></td>
-                            <td>
-                              <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                            <td>Call of Duty IV</td>
-                            <td><span class="badge badge-success">Shipped</span></td>
-                            <td>
-                              <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                            </td>
-                          </tr>
-                          </tbody>
+                            <?php 
+                                while ($row = mysqli_fetch_assoc($result)) { 
+                                    // Get data for each rekap row
+                                    $id_krj = $row['id_krj'];
+                                    $periode = $row['periode'];
+                                    $n_gudang = $row['n_gudang'];
+                                    $mobilberangkat = $row['mobil_berangkat'];
+                                    $mobilpulang = $row['mobil_pulang'];
+                                    $nt_pabrik = $row['n-t_pabrik'];
+                                    $kasut = $row['kasut'];
+                                    $transport_gudang = $row['transport_gudang'];
+                                    $status = $row['status'];
+                        
+                                    // Calculate the total expenditure
+                                    $pengeluaran = $n_gudang + $mobilberangkat + $mobilpulang + $nt_pabrik + $kasut + $transport_gudang;
+                                    $pengeluaranFormatted = 'Rp. ' . number_format($pengeluaran, 0, ',', '.');
+                        
+                                    // Set color based on the status value
+                                    $sparkbarColor = ($status == 'Dikirim') ? '#f39c12' : '#00a65a';
+                                ?>
+                                    <tr>
+                                        <td><a href="#"><?php echo htmlspecialchars($id_krj); ?></a></td>
+                                        <td><?php echo htmlspecialchars($periode); ?></td>
+                                        <td><span class="badge badge-success"><?php echo htmlspecialchars($status); ?></span></td>
+                                        <td>
+                                            <div class="sparkbar" data-color="<?php echo $sparkbarColor; ?>" data-height="20">
+                                                <?php echo htmlspecialchars($pengeluaranFormatted); ?>
+                                            </div>
+                                        </td>
+                                        <td><a href="#" type="button" class="btn btn-block btn-danger"><i class="nav-icon fas fa-trash"></i></a></td>
+                                    </tr>
+                            <?php } ?>
+                        </tbody>
+                        
                         </table>
                       </div>
                       <!-- /.table-responsive -->
-                    </div>
-                    <!-- /.card-body -->
-                    <div class="card-footer clearfix">
-                      <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Input Distribusi Baru</a>
-                      {{-- <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Orders</a> --}}
                     </div>
                     <!-- /.card-footer -->
                   </div>
@@ -482,7 +394,7 @@ mysqli_close($con);
     <script src="dist/js/pages/dashboard3.js"></script>
     <script src="dist/js/pages/dashboard2.js"></script>
     <script src="plugins/chart.js/Chart.min.js"></script>
-
+    
     <script>
         $(function() {
             /*
