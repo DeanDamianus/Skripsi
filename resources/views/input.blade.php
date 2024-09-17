@@ -265,7 +265,6 @@ if (!$result) {
                                             $totaljualluar += $total_jualluarpetani;
                                             
                                             ?>
-                                    
                                             <tr>
                                                 <td><?php echo $row['id']; ?></td>
                                                 <td><?php echo $row['name']; ?></td>

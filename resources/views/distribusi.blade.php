@@ -175,12 +175,6 @@ if (!$result) {
                                         <p>Tambah Akun</p>
                                     </a>
                                 </li>
-                                {{-- <li class="nav-item">
-                                    <a href="{{ url('/hapuspetani') }}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Hapus Akun</p>
-                                    </a>
-                                </li> --}}
                             </ul>
                         </li>
                         <li class="nav-item menu-close">
@@ -291,7 +285,7 @@ if (!$result) {
                 </div>
                 <div class="card">
                     <div class="card-footer clearfix">
-                        <a href="#" class="btn btn-sm btn-info float-left">Input Distribusi Baru</a>
+                        <a href="/inputdistribusi" class="btn btn-sm btn-info float-left">Input Distribusi Baru</a>
                         {{-- <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Orders</a> --}}
                       </div>
                     <!-- /.card-header -->
@@ -304,6 +298,7 @@ if (!$result) {
                             <th>Periode</th>
                             <th>Status</th>
                             <th>Pengeluaran</th>
+                            <th></th>
                             <th>Action</th>
                           </tr>
                           </thead>
@@ -344,7 +339,12 @@ if (!$result) {
                                             <div class="<?php echo ($sparkbarColor); ?>" data-height="20"><?php echo htmlspecialchars($status); ?></div>
                                         </td>
                                         <td><?php echo htmlspecialchars($pengeluaranFormatted); ?></td>
-                                        <td><a href="#" type="button" class="btn btn-block btn-danger"><i class="nav-icon fas fa-trash"></i></a></td>
+                                        <td>
+                                            <a href="#" type="button" class="btn btn-block btn-success"><i class="nav-icon fas fa-edit"></i></a>
+                                        </td>
+                                        <td>
+                                            <a href="#" type="button" class="btn btn-block btn-danger"><i class="nav-icon fas fa-trash"></i></a>
+                                        </td>
                                     </tr>
                             <?php } ?>
                         </tbody>
