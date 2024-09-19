@@ -32,17 +32,12 @@ Route::delete('/deletehutang/{id}', [SesiController::class, 'destroy'])->name('h
 
 
 
-
 // Routes for authenticated users based on roles
 Route::middleware('auth')->group(function () {
     Route::middleware(AdminMiddleware::class)->group(function () {
-        Route::get('/owner', function() {
-            return view('dashboard-admin');
-        })->name('owner.dashboard');
 
-        Route::get('/owner2025', function() {
-            return view('dashboard-admin-2');
-        })->name('owner.dashboard2');
+        Route::get('/owner', [SesiController::class, 'dashboard']);
+
 
         Route::get('/hutang-admin', function() {
             return view('hutang_admin');
@@ -72,13 +67,8 @@ Route::middleware('auth')->group(function () {
             return view ('register');
         })->name('register');
 
-        Route::get('/input', function (){
-            return view ('input');
-        })->name('input');
+        Route::get('/input', [SesiController::class, 'input']);
 
-        Route::get('/input2025', function (){
-            return view ('input2');
-        })->name('input2');
 
         Route::get('/inputPetani', function (){
             return view ('input_petani');
@@ -104,6 +94,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/inputdistribusi', function (){
             return view ('input_distribusi');
         })->name('inputdistribusi');
+
+       
     });
 
 

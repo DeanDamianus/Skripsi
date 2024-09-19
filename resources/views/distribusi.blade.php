@@ -311,7 +311,7 @@ if (!$result) {
                                     $n_gudang = $row['n_gudang'];
                                     $mobilberangkat = $row['mobil_berangkat'];
                                     $mobilpulang = $row['mobil_pulang'];
-                                    $nt_pabrik = $row['n-t_pabrik'];
+                                    $nt_pabrik = $row['nt_pabrik'];
                                     $kasut = $row['kasut'];
                                     $transport_gudang = $row['transport_gudang'];
                                     $status = $row['status'];

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\Rekap2024;
 use Illuminate\Support\Facades\DB;
 
 class SesiController extends Controller
@@ -14,6 +13,7 @@ class SesiController extends Controller
     {
         return view('login');
     }
+    
 
     public function login(Request $request)
     {
@@ -124,47 +124,54 @@ class SesiController extends Controller
     }
 
     public function input(Request $request)
-{
-    // Validate the form data
-    $validated = $request->validate([
-        'netto' => 'required|numeric',
-        'bruto' => 'required|numeric',
-        'jual_luar_value' => 'nullable|in:0,1',
-        'harga' => 'required|numeric',
-        'berat_gudang' => 'required|numeric',
-        'grade' => 'nullable|string',  // Nullable fields
-        'periode' => 'nullable|string',
-        'seri' => 'nullable|string',
-        'no_gg' => 'nullable|numeric',
-        'id_petani' => 'required|integer',
-    ]);
+    {
+        // Retrieve the year from the request; default to the current year if not provided
+        $year = $request->input('year', date('Y'));
+        
+        // Fetch the year id from the musim table based on the selected year
+        $musim = DB::table('musim')->where('tahun', $year)->first();
 
-    $id_petani = $validated['id_petani'];
-    $jual_luar = $validated['jual_luar_value'] === '1';
+        if (!$musim) {
+            // Handle the case where no matching year is found in the musim table
+            abort(404, 'Year not found');
+        }
 
-    // Prepare the data for insertion, use null if fields are missing
-    $data = [
-        'id_petani' => $id_petani,
-        'netto' => $validated['netto'],
-        'bruto' => $validated['bruto'],
-        'jual_luar' => $jual_luar,
-        'harga' => $validated['harga'],
-        'berat_gudang' => $validated['berat_gudang'],
-        'grade' => $validated['grade'] ?? null, // Check for nullable fields
-        'periode' => $validated['periode'] ?? null,
-        'seri' => $validated['seri'] ?? null,
-        'no_gg' => $validated['no_gg'] ?? null,
-    ];
+        // Build the table name based on the retrieved id_year
+        $tableName = 'rekap_2024';
 
-    // Insert the data into the rekap_2024 table
-    DB::table('rekap_2024')->insert($data);
+        // Fetch data from the dynamically named table
+        $data = DB::table($tableName)
+                ->join('users', $tableName . '.id_petani', '=', 'users.id')
+                ->select($tableName . '.*', 'users.name')
+                ->get();
 
-    // Redirect to the specified route with the 'id' parameter
-    return redirect()
-            ->to('http://127.0.0.1:8000/dataInput?id=' . urlencode($id_petani))
-            ->with('success', 'Data successfully updated!');
-}
+        // Fetch seasons for the dropdown menu
+        $musimList = DB::table('musim')->get();
 
+        // Calculate totals
+        $total_netto = $data->sum('netto');
+        $total_harga = $data->sum('harga');
+        $total_jual_luar = $data->sum('jual_luar');
+
+        // Return the view with the necessary data
+        return view('input', [
+            'data' => $data,
+            'musim' => $musimList,
+            'selectedYear' => $year,
+            'total_netto' => $total_netto,
+            'total_harga' => $total_harga,
+            'total_jual_luar' => $total_jual_luar
+        ]);
+    }
+
+
+
+    public function dashboard(Request $request)
+    {
+        return view('dashboard-admin');
+    
+    }
+    
 
 
     public function update(Request $request)

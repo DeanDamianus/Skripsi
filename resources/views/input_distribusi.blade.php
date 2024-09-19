@@ -8,25 +8,25 @@ if ($con->connect_error) {
 }
 
 // Get the current `id_rekap` from the URL
-$id_rekap = isset($_GET['id_rekap']) ? intval($_GET['id_rekap']) : 0;
+$id_krj = isset($_GET['id_krj']) ? intval($_GET['id_krj']) : 0;
 
 // Fetch the existing data for the selected `id_rekap`
-$fetch_query = $con->prepare('SELECT * FROM rekap_2024 WHERE id_rekap = ?');
-$fetch_query->bind_param('i', $id_rekap);
+$fetch_query = $con->prepare('SELECT * FROM distribusi_2024 WHERE id_krj = ?');
+$fetch_query->bind_param('i', $id_krj);
 $fetch_query->execute();
 $result = $fetch_query->get_result();
 
 if ($data = $result->fetch_assoc()) {
     // Populate form with existing data
-    $netto = $data['netto'];
-    $jual_luar = $data['jual_luar'];
-    $harga = $data['harga'];
-    $berat_gudang = $data['berat_gudang'];
-    $grade = $data['grade'];
+    $id_krj = $data['id_krj'];
     $periode = $data['periode'];
-    $seri = $data['seri'];
-    $no_gg = $data['no_gg'];
-    $id_petani = $data['id_petani'];
+    $n_gudang = $data['n_gudang'];
+    $mobil_berangkat = $data['mobil_berangkat'];
+    $mobil_pulang = $data['mobil_pulang'];
+    $nt_pabrik = $data['nt_pabrik'];
+    $kasut = $data['kasut'];
+    $transport_gudang = $data['transport_gudang'];
+    $status = $data['status'];
 } else {
     die('Data not found!');
 }

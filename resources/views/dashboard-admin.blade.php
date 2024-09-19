@@ -104,17 +104,19 @@ mysqli_close($con);
             </ul>
 
             <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
+            <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
-                        <button class="nav-link" type="button" data-toggle="dropdown" style=" border: black;">
-                            2024
+                        <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
+                            Pilih Tahun
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            @foreach($musim as $season)
                             <div class="dropdown-divider"></div>
-                            <a href="{{ url('/owner2025') }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> 2025
+                            <a href="{{ url('/owner?musim='.$season->tahun) }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
                             </a>
+                        @endforeach
                         </div>
                     </div>
                 </li>
@@ -124,6 +126,8 @@ mysqli_close($con);
                     </a>
                 </li>
             </ul>
+            
+            
         </nav>
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -166,7 +170,7 @@ mysqli_close($con);
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/input') }}" class="nav-link">
+                            <a href="{{ url('/input?year='.$season->tahun) }}" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -393,17 +397,6 @@ mysqli_close($con);
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    {{-- <div class="d-flex">
-                      <p class="d-flex flex-column">
-                        <span>Total Jumlah Nota A</span>
-                      </p>
-                      <p class="ml-auto d-flex flex-column text-right">
-                        <span class="text-success">
-                          <i class="fas fa-arrow-up"></i> 33.1%
-                        </span>
-                        <span class="text-muted">Since last month</span>
-                      </p>
-                    </div> --}}
                                     <!-- /.d-flex -->
 
                                     <div class="position-relative mb-4">
