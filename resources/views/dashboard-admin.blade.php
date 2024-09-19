@@ -108,15 +108,15 @@ mysqli_close($con);
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
                         <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
-                            Pilih Tahun
+                         {{ $musimdashboard->tahun }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            @foreach($musim as $season)
+                            @foreach($musimdashboard as $season)
                             <div class="dropdown-divider"></div>
-                            <a href="{{ url('/owner?musim='.$season->tahun) }}" class="dropdown-item">
+                            <a href="{{ url('/dashboard?year='.$season->tahun) }}" class="dropdown-item">
                                 <i class="fas fa-calendar"></i> {{ $season->tahun }}
                             </a>
-                        @endforeach
+                            @endforeach
                         </div>
                     </div>
                 </li>

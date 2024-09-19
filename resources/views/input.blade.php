@@ -1,25 +1,3 @@
-<?php
-// Establish the connection
-$con = mysqli_connect('localhost', 'root', '', 'simbako_app');
-
-// Check connection
-if (!$con) {
-    die('Koneksi Error: ' . mysqli_connect_error());
-}
-
-// Query to get all petani
-$nama = "SELECT * FROM users WHERE role = 'petani'";
-$result = mysqli_query($con, $nama);
-
-$total_harga = 0; // Initialize total harga
-$total_netto = 0;
-$totaljualluar = 0; // Initialize total netto
-if (!$result) {
-    die('Error fetching petani data: ' . mysqli_error($con));
-}
-
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -58,20 +36,16 @@ if (!$result) {
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             @foreach($musim as $season)
-                            <div class="dropdown-divider"></div>
-                            <a href="{{ url('/input?year='.$season->tahun) }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
-                            </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ url('/input?year='.$season->tahun) }}" class="dropdown-item">
+                                    <i class="fas fa-calendar"></i> {{ $season->tahun }}
+                                </a>
                             @endforeach
                         </div>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                        <i class="fas fa-expand-arrows-alt"></i>
-                    </a>
-                </li>
             </ul>
+            
         </nav>
 
         <aside class="main-sidebar sidebar-dark-primary elevation-4">

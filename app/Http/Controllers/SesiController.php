@@ -99,29 +99,6 @@ class SesiController extends Controller
 
         return redirect()->back()->with('message', 'Record updated successfully!');
     }
-    public function parameter2025(Request $request)
-    {
-        // Validate the input
-        $request->validate([
-            'biaya_jual' => 'required|numeric',
-            'naik_turun' => 'required|numeric',
-        ]);
-
-        // Update the record
-        $id = $request->input('id');
-        $biaya_jual = $request->input('biaya_jual');
-        $naik_turun = $request->input('naik_turun');
-
-        // Perform update
-        DB::table('parameter_2025')
-            ->where('id', $id)
-            ->update([
-                'biaya_jual' => $biaya_jual,
-                'naik_turun' => $naik_turun,
-            ]);
-
-        return redirect()->back()->with('message', 'Record updated successfully!');
-    }
 
     public function input(Request $request)
     {
@@ -142,6 +119,7 @@ class SesiController extends Controller
         // Fetch data from the dynamically named table
         $data = DB::table($tableName)
                 ->join('users', $tableName . '.id_petani', '=', 'users.id')
+                ->where('id_musim', $musim->id) 
                 ->select($tableName . '.*', 'users.name')
                 ->get();
 
@@ -167,10 +145,32 @@ class SesiController extends Controller
 
 
     public function dashboard(Request $request)
-    {
-        return view('dashboard-admin');
+{
+    // Retrieve the year from the request; default to the current year if not provided
+    $yeardashboard = $request->input('year', date('Y'));
     
+    // Fetch the year id from the musim table based on the selected year
+    $musimdashboard = DB::table('musim')->where('tahun', $yeardashboard)->first();
+
+    if (!$musimdashboard) {
+        // Handle the case where no matching year is found in the musim table
+        abort(404, 'Year not found');
     }
+
+    // Build the table name based on the retrieved id_year
+    $tableName = 'rekap_2024'; // Adjust this based on how you store year IDs
+
+    // Fetch data from the dynamically named table
+    $data = DB::table($tableName)
+            ->join('users', $tableName . '.id_petani', '=', 'users.id')
+            ->select($tableName . '.*', 'users.name')
+            ->get();
+
+    // Return the view with the necessary data
+    return view('dashboard-admin', compact('data', 'musimdashboard'));
+
+}
+
     
 
 

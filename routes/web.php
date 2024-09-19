@@ -38,7 +38,6 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/owner', [SesiController::class, 'dashboard']);
 
-
         Route::get('/hutang-admin', function() {
             return view('hutang_admin');
         })->name('hutang-admin');
