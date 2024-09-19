@@ -98,7 +98,7 @@ mysqli_close($con);
                             class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="../../index3.html" class="nav-link">Home</a>
+                    <a href="" class="nav-link">Home</a>
                 </li>
 
             </ul>
@@ -108,12 +108,12 @@ mysqli_close($con);
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
                         <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
-                         {{ $musimdashboard->tahun }}
+                            {{ $musimdashboard->tahun ?? 'Select Year' }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            @foreach($musimdashboard as $season)
+                            @foreach($musim as $season) <!-- Use $musim for the list of years -->
                             <div class="dropdown-divider"></div>
-                            <a href="{{ url('/dashboard?year='.$season->tahun) }}" class="dropdown-item">
+                            <a href="{{ url('/owner?id_musim=' . $season->tahun) }}" class="dropdown-item">
                                 <i class="fas fa-calendar"></i> {{ $season->tahun }}
                             </a>
                             @endforeach
@@ -170,7 +170,7 @@ mysqli_close($con);
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/input?year='.$season->tahun) }}" class="nav-link">
+                            <a href="{{ url('/input?year='.$musimdashboard->tahun) }}" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -261,7 +261,7 @@ mysqli_close($con);
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1 class="m-0">Rekap Pengumpulan 2024</h1>
+                                <h1 class="m-0">Rekap Pengumpulan {{ $selectedYear }}</h1>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                             </div><!-- /.col -->

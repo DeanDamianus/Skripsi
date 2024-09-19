@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,8 +26,9 @@
                             class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ url('/owner') }}" class="nav-link">Home</a>
+                    <a href="{{ url('/owner?id=&id_musim=' . $selectedYear) }}" class="nav-link">Home</a>
                 </li>
+                
             </ul>
             <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
                 <li class="nav-item d-none d-sm-inline-block">
@@ -43,6 +45,11 @@
                             @endforeach
                         </div>
                     </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
                 </li>
             </ul>
             
@@ -73,7 +80,7 @@
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/owner') }}" class="nav-link">
+                            <a href="{{ url('/owner?id_musim=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -198,7 +205,11 @@
                                             <td>{{ number_format($item->netto, 0, ',', '.') . ' kg' }}</td>
                                             <td>{{ 'Rp. ' . number_format($item->harga, 0, ',', '.') }}</td>
                                             <td>{{ $item->jual_luar != 0 ? $item->jual_luar : '-' }}</td>
-                                            <td><a href="{{ url('/dataInput?id=' . $item->id_petani) }}" class="btn btn-block btn-success"><i class="nav-icon fas fa-edit"></i></a></td>
+                                            <td>
+                                                <a href="{{ url('/dataInput?id=' . $item->id_petani . '&id_musim=' . $id_musim) }}" class="btn btn-block btn-success">
+                                                    <i class="nav-icon fas fa-edit"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                         @endforeach
                                         <tfoot>
