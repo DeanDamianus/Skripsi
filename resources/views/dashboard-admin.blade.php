@@ -1,65 +1,3 @@
-<?php
-// Establish the connection
-$con = mysqli_connect("localhost", "root", "", "simbako_app");
-
-// Check connection
-if (!$con) {
-    die("Koneksi Error: " . mysqli_connect_error());
-}
-
-// Initialize variables
-$total_harga = 0;
-$total_netto = 0;
-$harga_jual = 0;
-
-// Query to get all petani
-$query = "SELECT COUNT(*) AS jumlah_petani FROM users WHERE role = 'petani'";
-$result = mysqli_query($con, $query);
-$data = mysqli_fetch_assoc($result);
-$jumlah_petani = $data['jumlah_petani'] ?? 0;
-
-// Query to get the biaya_jual
-$queryparam = "SELECT biaya_jual FROM parameter_2024 WHERE id = 1";
-$resultparam = mysqli_query($con, $queryparam);
-$biaya_param = mysqli_fetch_assoc($resultparam)['biaya_jual'] ?? 0;
-
-// Query to count rows with jual_luar = 1
-$query_jual = "SELECT COUNT(*) AS jumlah_jual_luar FROM rekap_2024 WHERE jual_luar = 1";
-$result_jual = mysqli_query($con, $query_jual);
-$data_jual = mysqli_fetch_assoc($result_jual);
-$jual_luar = $data_jual['jumlah_jual_luar'] ?? 0;
-
-// Netto
-$nettoQuery = "SELECT SUM(netto) AS total_netto FROM rekap_2024";
-$nettoResult = mysqli_query($con, $nettoQuery);
-$nettoData = mysqli_fetch_assoc($nettoResult);
-$totalNetto = $nettoData['total_netto'] ?? 0;
-
-// Query to get all 'id_petani' from 'rekap_2024'
-$query_petani = "SELECT DISTINCT id_petani FROM rekap_2024";
-$result_petani = mysqli_query($con, $query_petani);
-
-while ($row = mysqli_fetch_assoc($result_petani)) {
-    $id_petani = $row['id_petani'];
-    
-    // Query to calculate total harga for each 'id_petani'
-    $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
-    $harga_result = mysqli_query($con, $query_harga);
-    $harga_data = mysqli_fetch_assoc($harga_result);
-    
-    $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
-    
-    // Accumulate totals
-    $total_harga += $total_harga_per_petani;
-}
-
-// Close the connection
-mysqli_close($con);
-?>
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -78,15 +16,6 @@ mysqli_close($con);
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
-<!--
-`body` tag options:
-
-  Apply one or more of the following classes to to the body tag
-  to get the desired effect
-
-  * sidebar-collapse
-  * sidebar-mini
--->
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -108,14 +37,15 @@ mysqli_close($con);
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
                         <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
-                            {{ $musimdashboard->tahun ?? 'Select Year' }}
+                            {{$selectedYear}}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            @foreach($musim as $season) <!-- Use $musim for the list of years -->
+                            @foreach($musim as $season)
                             <div class="dropdown-divider"></div>
-                            <a href="{{ url('/owner?id_musim=' . $season->tahun) }}" class="dropdown-item">
+                            <a href="{{ url('/owner?tahun=' . $season->tahun) }}" class="dropdown-item">
                                 <i class="fas fa-calendar"></i> {{ $season->tahun }}
                             </a>
+                            
                             @endforeach
                         </div>
                     </div>
@@ -158,8 +88,6 @@ mysqli_close($con);
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
                         <li class="nav-item menu-open">
                             <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -170,7 +98,7 @@ mysqli_close($con);
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/input?year='.$musimdashboard->tahun) }}" class="nav-link">
+                            <a href="{{ url('/input?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -217,12 +145,6 @@ mysqli_close($con);
                                         <p>Tambah Akun</p>
                                     </a>
                                 </li>
-                                {{-- <li class="nav-item">
-                                    <a href="{{ url('/hapuspetani') }}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Hapus Akun</p>
-                                    </a>
-                                </li> --}}
                             </ul>
                         </li>
                         <li class="nav-item menu-close">
@@ -250,12 +172,7 @@ mysqli_close($con);
 
 
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
 
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <!-- /.col-md-6 -->
             <div class="content">
                 <div class="content-header">
                     <div class="container-fluid">
@@ -273,11 +190,11 @@ mysqli_close($con);
                         <!-- small card -->
                         <div class="small-box bg-info">
                             <div class="inner">
-                                <h3><?php echo number_format($totalNetto, 0, ',', '.'); ?><sup style="font-size: 20px"> Kg</sup></h3>
+                                <h3>{{ $totalNetto }} Kg</sup></h3>
                                 <p>Total Netto Keranjang</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-weight-hanging"></i> <!-- Ikon timbangan menggantung -->
+                                <i class="fas fa-weight-hanging"></i> 
                             </div>
                             <a href="{{ url('/input') }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
@@ -290,24 +207,7 @@ mysqli_close($con);
                         <!-- small card -->
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <?php
-                                while ($row = mysqli_fetch_assoc($result_petani)) {
-                                $id_petani = $row['id'];
-                                $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                                $harga_result = mysqli_query($con, $query_harga);
-                                $harga_data = mysqli_fetch_assoc($harga_result);
-                                
-                                $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
-                                
-                                // Format harga
-                                $hargaFormatted = 'Rp. ' . number_format($total_harga_per_petani, 0, ',', '.');
-                                
-                                // Accumulate totals
-                                $total_netto += $total_bruto;
-                                $total_harga += $total_harga_per_petani;
-                                }
-                                ?>
-                                <h3><sup style="font-size: 20px">Rp.</sup><?php echo number_format($total_harga, 0, ',', '.'); ?></h3>
+                                <h3><sup style="font-size: 20px">Rp.</sup>{{ number_format($totalHarga, 0, ',', '.') }}</h3>
                                 <p>Total Harga Keranjang</p>
                             </div>
                             <div class="icon">
@@ -323,7 +223,7 @@ mysqli_close($con);
                         <!-- small card -->
                         <div class="small-box bg-yellow">
                             <div class="inner">
-                                <h3><?php echo $jual_luar; ?><sup style="font-size: 20px"> Keranjang</sup></h3>
+                                <h3>{{ $jualLuar }}<sup style="font-size: 20px"> Keranjang</sup></h3>
                                 <p>Jual Luar</p>
                             </div>
                             <div class="icon">
@@ -340,7 +240,7 @@ mysqli_close($con);
                         <!-- small card -->
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                <h3><?php echo $jumlah_petani; ?></h3>
+                                <h3>{{ $jumlahPetani }}</h3>
                                 <p>Jumlah Petani</p>
                             </div>
                             <div class="icon">
@@ -358,7 +258,7 @@ mysqli_close($con);
                     <div class="col-lg-3 col-6">
                         <div class="small-box bg-dark">
                             <div class="inner">
-                                <h3><sup style="font-size: 20px">Rp. </sup><?php echo number_format($biaya_param, 0, ',', '.'); ?></h3>
+                                <h3><sup style="font-size: 20px">Rp. </sup>{{ number_format($biayaParam, 0, ',', '.') }}</h3>
                                 <p>Biaya Jual</p>
                             </div>
                             <div class="icon">

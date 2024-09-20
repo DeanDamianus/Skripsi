@@ -108,6 +108,7 @@ class SesiController extends Controller
         // Fetch the year id from the musim table based on the selected year
         $musim = DB::table('musim')->where('tahun', $year)->first();
 
+
         if (!$musim) {
             // Handle the case where no matching year is found in the musim table
             abort(404, 'Year not found');
@@ -140,7 +141,7 @@ class SesiController extends Controller
         return view('input', [
             'data' => $data,
             'musim' => $musimList,
-            'selectedYear' => $year,
+            'selectedYears' => $year,
             'id_musim' => $musim->id,
             'total_netto' => $total_netto,
             'total_harga' => $total_harga,
@@ -152,50 +153,60 @@ class SesiController extends Controller
 
     public function dashboard(Request $request)
 {
-    // Retrieve the selected year from the request
-    $selectedYear = $request->input('year', date('Y'));
+    // Ambil tahun yang dipilih dari request
+    $year = $request->input('tahun', date('Y'));
+        
+    // Ambil id musim berdasarkan tahun yang dipilih
+    $musim = DB::table('musim')->where('tahun', $year)->first();
 
-    // Fetch the selected season from the musim table
-    $musimdashboard = DB::table('musim')->where('tahun', $selectedYear)->first();
-    $musim = DB::table('musim')->get(); // Fetch all seasons for the dropdown
-
-    if (!$musimdashboard) {
-        // Handle the case where no matching year is found in the musim table
+    if (!$musim) {
+        
         abort(404, 'Year not found');
     }
 
-    // Fetch totals based on the selected season
+    $musimList = DB::table('musim')->get();
+
     $totalNetto = DB::table('rekap_2024')
-        ->where('id_musim', $musimdashboard->id)
+        ->where('id_musim', $musim->id) 
         ->sum('netto');
 
     $totalHarga = DB::table('rekap_2024')
-        ->where('id_musim', $musimdashboard->id)
+        ->where('id_musim', $musim->id)
         ->sum(DB::raw('netto * harga'));
 
     $jualLuar = DB::table('rekap_2024')
-        ->where('id_musim', $musimdashboard->id)
+        ->where('id_musim', $musim->id)
         ->sum('jual_luar');
 
-    $jumlahPetani = DB::table('rekap_2024')
-        ->where('id_musim', $musimdashboard->id)
-        ->distinct('id_petani')
-        ->count('id_petani');
+    $jumlahPetani = DB::table('users')
+        ->where('role', 'petani') 
+        ->count('id'); // Pastikan menggunakan id_petani dari rekap_2024
+    
 
     $biayaParam = DB::table('parameter_2024')
+        ->where('id_musim',$musim->id)
         ->sum('biaya_jual');
 
-    // Fetch data from the dynamically named table for display
+    // Ambil data untuk ditampilkan berdasarkan id_musim
     $data = DB::table('rekap_2024')
         ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
         ->select('rekap_2024.*', 'users.name')
-        ->where('rekap_2024.id_musim', $musimdashboard->id)
+        ->where('rekap_2024.id_musim', $musim->id)
         ->get();
 
-    // Return the view with the necessary data
-    return view('dashboard-admin', compact('data', 'musimdashboard', 'musim', 'totalNetto', 'totalHarga', 'jualLuar', 'jumlahPetani', 'biayaParam', 'selectedYear'));
+    // Kembalikan view dengan data yang diperlukan
+    return view('dashboard-admin', [
+        'data' => $data,
+        'selectedYear' => $year,
+        'musim' => $musimList,
+        'id_musim' => $musim->id,
+        'totalNetto' => $totalNetto,
+        'totalHarga' => $totalHarga,
+        'jualLuar' => $jualLuar,
+        'jumlahPetani' => $jumlahPetani,
+        'biayaParam' => $biayaParam,
+    ]);
 }
-
 
     
 

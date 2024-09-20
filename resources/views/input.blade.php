@@ -26,7 +26,7 @@
                             class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ url('/owner?id=&id_musim=' . $selectedYear) }}" class="nav-link">Home</a>
+                    <a href="{{ url('/owner?id=&id_musim=' . $selectedYears) }}" class="nav-link">Home</a>
                 </li>
                 
             </ul>
@@ -34,7 +34,7 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
                         <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
-                            {{ $selectedYear }}
+                            {{ $selectedYears }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             @foreach($musim as $season)
@@ -80,7 +80,7 @@
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/owner?id_musim=' . $selectedYear) }}" class="nav-link">
+                            <a href="{{ url('/owner?tahun=' . $selectedYears) }}" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -172,7 +172,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Data Nota {{ $selectedYear }}</h1>
+                            <h1>Data Nota {{ $selectedYears }}</h1>
                         </div>
                     </div>
                 </div><!-- /.container-fluid -->
