@@ -49,7 +49,8 @@ Route::middleware('auth')->group(function () {
             return view('datapetani');
         })->name('datapetani');
 
-        Route::get('/parameter', [SesiController::class, 'parameter']);
+
+        Route::get('/parameter', [SesiController::class, 'parameter'])->name('parameter');
 
         Route::get('/hapuspetani', function (){
             return view ('hapus-petani');

@@ -106,6 +106,9 @@ class SesiController extends Controller
     }
     public function updateParameter(Request $request)
     {
+        // Set the year, or default to the current year if not provided
+        $year = $request->input('tahun', date('Y'));
+
         // Validate input data
         $validatedData = $request->validate([
             'biaya_jual' => 'required|numeric',
@@ -120,11 +123,13 @@ class SesiController extends Controller
                 'naik_turun' => $request->input('naik_turun'),
             ]);
 
-        // Redirect back with success message
+        // Redirect back with success message, using a query parameter for 'tahun'
         return redirect()
-            ->route('parameter', ['tahun' => $request->input('tahun')])
-            ->with('success', 'Parameter berhasil diubah!');
+            ->route('parameter')
+            ->with(['success' => 'Parameter berhasil diubah!'])
+            ->withInput(['tahun' => $year]);
     }
+
 
     public function input(Request $request)
     {
