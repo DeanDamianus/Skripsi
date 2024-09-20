@@ -148,7 +148,7 @@
                             </ul>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/parameter') }}" class="nav-link">
+                            <a href="{{ url('/parameter?tahun=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     <strong>PARAMETER</strong>
@@ -196,7 +196,7 @@
                             <div class="icon">
                                 <i class="fas fa-weight-hanging"></i> 
                             </div>
-                            <a href="{{ url('/input') }}" class="small-box-footer">
+                            <a href="{{ url('/input?year=' . $selectedYear) }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -213,7 +213,7 @@
                             <div class="icon">
                                 <i class="fas fa-coins"></i> <!-- Ikon koin -->
                             </div>
-                            <a href="#" class="small-box-footer">
+                            <a href="{{ url('/input?year=' . $selectedYear) }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -274,7 +274,7 @@
                 </div>
                 <!-- /.container-fluid -->
             </div>
-            <div class="content">
+            {{-- <div class="content">
                 <div class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
@@ -332,7 +332,7 @@
                         </span>
                         <span class="text-muted">Since last month</span>
                       </p> --}}
-                                    </div>
+                                    {{-- </div>
                                     <!-- /.d-flex -->
 
                                     <div class="position-relative mb-4">
@@ -356,7 +356,7 @@
                     </div>
                     <!--Last-->
                 </div>
-            </div>
+            </div> --}} 
             <!-- /.row -->
         </div>
         <!-- /.container-fluid -->

@@ -18,8 +18,7 @@ Route::get('/error', function() {
 // Register routes
 Route::get('/register', [SesiController::class, 'register'])->name('register.form');
 Route::post('/register', [SesiController::class, 'create'])->name('register.store');
-Route::post('/parameter', [SesiController::class, 'parameter']);
-Route::post('/parameter2025', [SesiController::class, 'parameter2025']);
+Route::post('/parameter', [SesiController::class, 'updateParameter'])->name('updateParameter');
 Route::post('/inputPetani', [SesiController::class, 'input'])->name('inputPetani.store');
 Route::post('/hapuspetani', [PetaniController::class, 'delete'])->name('hapus-petani');
 Route::post('/editInput', [SesiController::class, 'update'])->name('editInput.update');
@@ -50,13 +49,7 @@ Route::middleware('auth')->group(function () {
             return view('datapetani');
         })->name('datapetani');
 
-        Route::get('/parameter', function (){
-            return view ('parameter');
-        })->name('parameter');
-
-        Route::get('/parameter2025', function (){
-            return view ('parameter-2025');
-        })->name('parameter_2');
+        Route::get('/parameter', [SesiController::class, 'parameter']);
 
         Route::get('/hapuspetani', function (){
             return view ('hapus-petani');

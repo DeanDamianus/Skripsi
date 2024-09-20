@@ -145,7 +145,7 @@
                             </ul>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/parameter') }}" class="nav-link">
+                            <a href="{{ url('/parameter?tahun=' . $selectedYears) }}" class="nav-link">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     <strong>PARAMETER</strong>

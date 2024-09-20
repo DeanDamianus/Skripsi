@@ -1,43 +1,3 @@
-<?php
-// Connect to the database
-$con = mysqli_connect('localhost', 'root', '', 'simbako_app');
-
-// Check connection
-if (!$con) {
-    die('Connection failed: ' . mysqli_connect_error());
-}
-
-// Fetch the record with ID 1
-$id = 1;
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Update the record
-    $biaya_jual = $_POST['biaya_jual'];
-    $naik_turun = $_POST['naik_turun'];
-
-    $sql_update = 'UPDATE parameter_2024 SET biaya_jual = ?, naik_turun = ? WHERE id = ?';
-    $stmt_update = $con->prepare($sql_update);
-    $stmt_update->bind_param('ddi', $biaya_jual, $naik_turun, $id);
-    $stmt_update->execute();
-    $stmt_update->close();
-
-    // Redirect with success flag
-    header('Location: parameter.php?success=true');
-    exit();
-} else {
-    $sql = 'SELECT * FROM parameter_2024 WHERE id = ?';
-    $stmt = $con->prepare($sql);
-    $stmt->bind_param('i', $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $stmt->close();
-}
-
-// Close connection
-mysqli_close($con);
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -72,13 +32,16 @@ mysqli_close($con);
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
                         <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
-                            2024
+                            {{$selectedYear}}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            @foreach($musim as $season)
                             <div class="dropdown-divider"></div>
-                            <a href="{{ url('/owner2025') }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> 2025
+                            <a href="{{ url('/parameter?tahun=' . $season->tahun) }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
                             </a>
+                            
+                            @endforeach
                         </div>
                     </div>
 
@@ -118,7 +81,7 @@ mysqli_close($con);
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/owner') }}" class="nav-link">
+                            <a href="{{ url('/owner?tahun=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -127,7 +90,7 @@ mysqli_close($con);
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/input') }}" class="nav-link">
+                            <a href="{{ url('/input?year=' . $selectedYear) }}"  class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -183,7 +146,7 @@ mysqli_close($con);
                             </ul>
                         </li>
                         <li class="nav-item menu-open">
-                            <a href="{{ url('/parameter') }}" class="nav-link active">
+                            <a href="" class="nav-link active">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     <strong>PARAMETER</strong>
@@ -207,7 +170,7 @@ mysqli_close($con);
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Input Parameter 2024</h1>
+                            <h1>Input Parameter {{$selectedYear}}</h1>
                         </div>
                     </div>
                 </div>
@@ -220,40 +183,35 @@ mysqli_close($con);
                             <div class="col-md-12">
                                 <div class="card card-primary">
                                     <div class="card-body">
-                                        <!-- Display message if available -->
-                                        <?php if (isset($message)): ?>
-                                        <div class="alert alert-info"><?= htmlspecialchars($message) ?></div>
-                                        <?php endif; ?>
+                                        <!-- Show success message if parameter is updated -->
+                                        @if (session('success'))
+                                            <div class="alert alert-success">{{ session('success') }}</div>
+                                        @endif
 
                                         <!-- Form for Editing Parameter -->
-                                        <form method="POST" href="{{ url('/parameter') }}">
+                                        <form method="POST" action="{{ route('updateParameter') }}">
                                             @csrf
-                                            <input type="hidden" name="id"
-                                                value="<?= htmlspecialchars($row['id']) ?>">
+                                            <input type="hidden" name="id" value="{{ $parameter->id }}">
+                                            <input type="hidden" name="tahun" value="{{ $selectedYear }}">
 
                                             <div class="form-group">
                                                 <label for="biaya_jual">Biaya Jual</label>
                                                 <input type="number" name="biaya_jual" class="form-control"
-                                                    id="biaya_jual"
-                                                    value="<?= htmlspecialchars($row['biaya_jual']) ?>" step="0.01"
+                                                    id="biaya_jual" value="{{ $parameter->biaya_jual }}" step="0.01"
                                                     required>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="naik_turun">Naik Turun</label>
                                                 <input type="number" name="naik_turun" class="form-control"
-                                                    id="naik_turun"
-                                                    value="<?= htmlspecialchars($row['naik_turun']) ?>" step="0.01"
+                                                    id="naik_turun" value="{{ $parameter->naik_turun }}" step="0.01"
                                                     required>
                                             </div>
 
                                             <div class="form-group mb-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" name="terms"
-                                                        class="custom-control-input" id="exampleCheck1" required>
-                                                    <label class="custom-control-label" for="exampleCheck1">Saya
-                                                        Setuju akan <a href="#">pergantian Parameter
-                                                            Berikut</a>.</label>
+                                                    <input type="checkbox" name="terms" class="custom-control-input" id="termsCheck" required>
+                                                    <label class="custom-control-label" for="termsCheck">Saya Setuju akan <a href="#">pergantian Parameter Berikut</a>.</label>
                                                 </div>
                                             </div>
 

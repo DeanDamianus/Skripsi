@@ -13,7 +13,6 @@ class SesiController extends Controller
     {
         return view('login');
     }
-    
 
     public function login(Request $request)
     {
@@ -78,36 +77,62 @@ class SesiController extends Controller
     }
     public function parameter(Request $request)
     {
-        // Validate the input
-        $request->validate([
+        // Get the selected year, default to the current year if not provided
+        $year = $request->input('tahun', date('Y'));
+
+        // Fetch the season (musim) based on the selected year
+        $musim = DB::table('musim')->where('tahun', $year)->first();
+
+        // If no season is found for the selected year, return a 404 error
+        if (!$musim) {
+            abort(404, 'Year not found');
+        }
+
+        // Fetch the list of all available seasons (years) for the dropdown
+        $musimList = DB::table('musim')->get();
+
+        // Fetch the parameters based on the selected year
+        $parameter = DB::table('parameter_2024')
+            ->where('id_musim', $musim->id)
+            ->first();
+
+        // Pass the data to the view
+        return view('parameter', [
+            'selectedYear' => $year,
+            'musim' => $musimList,
+            'parameter' => $parameter, // Pass parameter data
+            'id_musim' => $musim->id,
+        ]);
+    }
+    public function updateParameter(Request $request)
+    {
+        // Validate input data
+        $validatedData = $request->validate([
             'biaya_jual' => 'required|numeric',
             'naik_turun' => 'required|numeric',
         ]);
 
-        // Update the record
-        $id = $request->input('id');
-        $biaya_jual = $request->input('biaya_jual');
-        $naik_turun = $request->input('naik_turun');
-
-        // Perform update
+        // Update the parameter in the database
         DB::table('parameter_2024')
-            ->where('id', $id)
+            ->where('id', $request->input('id'))
             ->update([
-                'biaya_jual' => $biaya_jual,
-                'naik_turun' => $naik_turun,
+                'biaya_jual' => $request->input('biaya_jual'),
+                'naik_turun' => $request->input('naik_turun'),
             ]);
 
-        return redirect()->back()->with('message', 'Record updated successfully!');
+        // Redirect back with success message
+        return redirect()
+            ->route('parameter', ['tahun' => $request->input('tahun')])
+            ->with('success', 'Parameter berhasil diubah!');
     }
 
     public function input(Request $request)
     {
         // Retrieve the year from the request; default to the current year if not provided
         $year = $request->input('year', date('Y'));
-        
+
         // Fetch the year id from the musim table based on the selected year
         $musim = DB::table('musim')->where('tahun', $year)->first();
-
 
         if (!$musim) {
             // Handle the case where no matching year is found in the musim table
@@ -121,8 +146,9 @@ class SesiController extends Controller
         $data = DB::table($tableName)
             ->leftJoin('rekap_2024', 'users.id', '=', 'rekap_2024.id_petani') // Left join to include all users
             ->where('users.role', 'petani') // Filter by role 'petani'
-            ->where(function($query) use ($musim) {
-                $query->where('rekap_2024.id_musim', $musim->id) // Filter by id_musim if there is data
+            ->where(function ($query) use ($musim) {
+                $query
+                    ->where('rekap_2024.id_musim', $musim->id) // Filter by id_musim if there is data
                     ->orWhereNull('rekap_2024.id_musim'); // Include users without matching rekap_2024 data
             })
             ->select('users.*', 'rekap_2024.*') // Select users and rekap_2024 columns
@@ -130,7 +156,6 @@ class SesiController extends Controller
 
         // Fetch seasons for the dropdown menu
         $musimList = DB::table('musim')->get();
-
 
         // Calculate totals
         $total_netto = $data->sum('netto');
@@ -145,71 +170,62 @@ class SesiController extends Controller
             'id_musim' => $musim->id,
             'total_netto' => $total_netto,
             'total_harga' => $total_harga,
-            'total_jual_luar' => $total_jual_luar
+            'total_jual_luar' => $total_jual_luar,
         ]);
     }
 
-
-
     public function dashboard(Request $request)
-{
-    // Ambil tahun yang dipilih dari request
-    $year = $request->input('tahun', date('Y'));
-        
-    // Ambil id musim berdasarkan tahun yang dipilih
-    $musim = DB::table('musim')->where('tahun', $year)->first();
+    {
+        // Ambil tahun yang dipilih dari request
+        $year = $request->input('tahun', date('Y'));
 
-    if (!$musim) {
-        
-        abort(404, 'Year not found');
+        // Ambil id musim berdasarkan tahun yang dipilih
+        $musim = DB::table('musim')->where('tahun', $year)->first();
+
+        if (!$musim) {
+            abort(404, 'Year not found');
+        }
+
+        $musimList = DB::table('musim')->get();
+
+        $totalNetto = DB::table('rekap_2024')
+            ->where('id_musim', $musim->id)
+            ->sum('netto');
+
+        $totalHarga = DB::table('rekap_2024')
+            ->where('id_musim', $musim->id)
+            ->sum(DB::raw('netto * harga'));
+
+        $jualLuar = DB::table('rekap_2024')
+            ->where('id_musim', $musim->id)
+            ->sum('jual_luar');
+
+        $jumlahPetani = DB::table('users')->where('role', 'petani')->count('id'); // Pastikan menggunakan id_petani dari rekap_2024
+
+        $biayaParam = DB::table('parameter_2024')
+            ->where('id_musim', $musim->id)
+            ->sum('biaya_jual');
+
+        // Ambil data untuk ditampilkan berdasarkan id_musim
+        $data = DB::table('rekap_2024')
+            ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
+            ->select('rekap_2024.*', 'users.name')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->get();
+
+        // Kembalikan view dengan data yang diperlukan
+        return view('dashboard-admin', [
+            'data' => $data,
+            'selectedYear' => $year,
+            'musim' => $musimList,
+            'id_musim' => $musim->id,
+            'totalNetto' => $totalNetto,
+            'totalHarga' => $totalHarga,
+            'jualLuar' => $jualLuar,
+            'jumlahPetani' => $jumlahPetani,
+            'biayaParam' => $biayaParam,
+        ]);
     }
-
-    $musimList = DB::table('musim')->get();
-
-    $totalNetto = DB::table('rekap_2024')
-        ->where('id_musim', $musim->id) 
-        ->sum('netto');
-
-    $totalHarga = DB::table('rekap_2024')
-        ->where('id_musim', $musim->id)
-        ->sum(DB::raw('netto * harga'));
-
-    $jualLuar = DB::table('rekap_2024')
-        ->where('id_musim', $musim->id)
-        ->sum('jual_luar');
-
-    $jumlahPetani = DB::table('users')
-        ->where('role', 'petani') 
-        ->count('id'); // Pastikan menggunakan id_petani dari rekap_2024
-    
-
-    $biayaParam = DB::table('parameter_2024')
-        ->where('id_musim',$musim->id)
-        ->sum('biaya_jual');
-
-    // Ambil data untuk ditampilkan berdasarkan id_musim
-    $data = DB::table('rekap_2024')
-        ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
-        ->select('rekap_2024.*', 'users.name')
-        ->where('rekap_2024.id_musim', $musim->id)
-        ->get();
-
-    // Kembalikan view dengan data yang diperlukan
-    return view('dashboard-admin', [
-        'data' => $data,
-        'selectedYear' => $year,
-        'musim' => $musimList,
-        'id_musim' => $musim->id,
-        'totalNetto' => $totalNetto,
-        'totalHarga' => $totalHarga,
-        'jualLuar' => $jualLuar,
-        'jumlahPetani' => $jumlahPetani,
-        'biayaParam' => $biayaParam,
-    ]);
-}
-
-    
-
 
     public function update(Request $request)
     {
@@ -266,13 +282,10 @@ class SesiController extends Controller
             'cicilan' => 'required|numeric',
             'tanggal_lunas' => 'nullable|date',
         ]);
-    
+
         // Check if there is an existing record with the same id_petani and a non-null tanggal_lunas
-        $existingRecord = DB::table('hutang_2024')
-            ->where('id_petani', $request->input('id_petani'))
-            ->whereNotNull('tanggal_lunas')
-            ->first();
-    
+        $existingRecord = DB::table('hutang_2024')->where('id_petani', $request->input('id_petani'))->whereNotNull('tanggal_lunas')->first();
+
         if ($existingRecord) {
             // Create a new entry if the existing record has a tanggal_lunas
             DB::table('hutang_2024')->insert([
@@ -283,7 +296,7 @@ class SesiController extends Controller
                 'cicilan' => $request->input('cicilan'),
                 'tanggal_lunas' => $request->input('tanggal_lunas'),
             ]);
-    
+
             return redirect()->back()->with('success', 'Data added successfully!');
         } else {
             // Update the existing record if no tanggal_lunas
@@ -295,7 +308,7 @@ class SesiController extends Controller
                     'cicilan' => $request->input('cicilan'),
                     'tanggal_lunas' => $request->input('tanggal_lunas'),
                 ]);
-    
+
             return redirect()->back()->with('success', 'Data updated successfully!');
         }
     }
