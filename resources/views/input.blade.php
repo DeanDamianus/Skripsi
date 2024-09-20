@@ -200,7 +200,7 @@
                                     <tbody>
                                         @foreach ($data as $item)
                                         <tr>
-                                            <td>{{ $item->id_petani }}</td>
+                                            <td>{{ $item->id }}</td>
                                             <td>{{ $item->name }}</td>
                                             <td>{{ number_format($item->netto, 0, ',', '.') . ' kg' }}</td>
                                             <td>{{ 'Rp. ' . number_format($item->harga, 0, ',', '.') }}</td>

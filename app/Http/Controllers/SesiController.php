@@ -114,14 +114,18 @@ class SesiController extends Controller
         }
 
         // Build the table name based on the retrieved id_year
-        $tableName = 'rekap_2024';
+        $tableName = 'users';
 
         // Fetch data from the dynamically named table
         $data = DB::table($tableName)
-                ->join('users', $tableName . '.id_petani', '=', 'users.id')
-                ->where('id_musim', $musim->id) 
-                ->select($tableName . '.*', 'users.name')
-                ->get();
+            ->leftJoin('rekap_2024', 'users.id', '=', 'rekap_2024.id_petani') // Left join to include all users
+            ->where('users.role', 'petani') // Filter by role 'petani'
+            ->where(function($query) use ($musim) {
+                $query->where('rekap_2024.id_musim', $musim->id) // Filter by id_musim if there is data
+                    ->orWhereNull('rekap_2024.id_musim'); // Include users without matching rekap_2024 data
+            })
+            ->select('users.*', 'rekap_2024.*') // Select users and rekap_2024 columns
+            ->get();
 
         // Fetch seasons for the dropdown menu
         $musimList = DB::table('musim')->get();
