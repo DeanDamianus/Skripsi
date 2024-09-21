@@ -104,16 +104,49 @@ class SesiController extends Controller
             'id_musim' => $musim->id,
         ]);
     }
+
+    public function rekap(Request $request)
+    {
+        // Get the selected year, default to the current year if not provided
+        $year = $request->input('tahun', date('Y'));
+        $userId = $request->input('id');
+
+        // Fetch the season (musim) based on the selected year
+        $musim = DB::table('musim')->where('tahun', $year)->first();
+        $id = DB::table('rekap_2024')->where('id_musim', $year)->first();
+
+        $username = DB::table('users')
+        ->where('id', $userId) // Use the user ID from the URL
+        ->pluck('name') // Fetch the name
+        ->first();
+
+        $data = DB::table('rekap_2024')->where('id_petani', $userId)->get();
+
+        $musimList = DB::table('musim')->get();
+ // Get the first result (if you expect a single name)
+        // If no season is found for the selected year, return a 404 error
+        if (!$musim) {
+            abort(404, 'Year not found');
+        }
+
+        // Pass the data to the view
+        return view('input_data', [
+            'id'=>$id,
+            'data' => $data,
+            'username'=> $username,
+            'selectedYear' => $year,
+            'id_musim' => $musim->id,
+            'musim' => $musimList,
+
+        ]);
+    }
+
+
     public function updateParameter(Request $request)
     {
         // Set the year, or default to the current year if not provided
         $year = $request->input('tahun', date('Y'));
 
-        // Validate input data
-        $validatedData = $request->validate([
-            'biaya_jual' => 'required|numeric',
-            'naik_turun' => 'required|numeric',
-        ]);
 
         // Update the parameter in the database
         DB::table('parameter_2024')

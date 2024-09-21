@@ -67,9 +67,8 @@ Route::middleware('auth')->group(function () {
             return view ('input_petani');
         })->name('input_petani'); // input petani merupakan halaman form input untuk rekap
 
-        Route::get('/dataInput', function (){
-            return view ('input_data');
-        })->name('input_data');   //data input ini untuk melihat data rekap dari tiap petani
+        
+        Route::get('/dataInput', [SesiController::class, 'rekap']);//data input ini untuk melihat data rekap dari tiap petani
 
         
         Route::get('/dataInput2025', function (){
