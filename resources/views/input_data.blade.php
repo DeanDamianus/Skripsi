@@ -154,7 +154,7 @@
                                             <td>{{ 'Rp. ' . number_format($harga, 0, ',', '.') }}</td>
                                             <td>{{ 'Rp. ' . number_format($item ->jumlah, 0, ',', '.') }}</td>
                                             <td>{{ 'Rp. ' . number_format($item->kj, 0, ',', '.') }}</td>
-                                            <td>Jumlah Kotor</td>
+                                            <td>{{ 'Rp. ' . number_format($item->jumlahkotor, 0, ',', '.') }}</td>
                                             <td>Komisi</td>
                                             <td>Jumlah Bersih</td>
                                             <td>Gudang</td>

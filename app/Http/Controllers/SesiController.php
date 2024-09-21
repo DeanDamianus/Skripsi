@@ -123,9 +123,14 @@ class SesiController extends Controller
             ->first();
 
         // fetch data untuk table rekap.
-        $data = DB::table('rekap_2024')->where('id_petani', $userId)->get();
+        $data = DB::table('rekap_2024')
+            ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
+            ->where('rekap_2024.id_petani', $userId)
+            ->select('rekap_2024.*', 'parameter_2024.*') // Select all columns from both tables
+            ->get();
+
         //fetch data untuk tabel parameteer.
-        $parameter = DB::table('parameter_2024')->where('id_musim',$year)->get();
+        $parameter = DB::table('parameter_2024')->where('id', $year)->first();
         //mengambil neetto dan harga
         $netto = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('netto')->first();
         $harga = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('harga')->first();
@@ -151,14 +156,14 @@ class SesiController extends Controller
             } else {
                 $rekap->kj = 6000 * $rekap->netto;
             }
-        }  
+        }   
 
-        foreach($data as $rekap){
-            $rekap->jumlahkotor = $rekap->jumlah - $rekap->kj;
+        //mengkalkulasi data jumlah kotor dengan mengambil data dari join rekap + parameter
+        foreach ($data as $rekap) {
+            $rekap->jumlahkotor = $rekap->jumlah - $rekap->kj - $rekap->biaya_jual - $rekap->naik_turun ; // secara dinamis mennghitung jumlahnya.
         }
 
 
-        
 
         $musimList = DB::table('musim')->get();
         // Get the first result (if you expect a single name)
@@ -171,6 +176,7 @@ class SesiController extends Controller
         return view('input_data', [
             'id' => $id,
             'harga' => $harga,
+            'parameter' => $parameter,
             'data' => $data,
             'netto' => $netto,
             'username' => $username,
