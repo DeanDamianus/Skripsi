@@ -40,7 +40,6 @@
                             <a href="{{ url('/parameter?tahun=' . $season->tahun) }}" class="dropdown-item">
                                 <i class="fas fa-calendar"></i> {{ $season->tahun }}
                             </a>
-                            
                             @endforeach
                         </div>
                     </div>

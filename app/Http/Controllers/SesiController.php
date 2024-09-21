@@ -123,11 +123,9 @@ class SesiController extends Controller
                 'naik_turun' => $request->input('naik_turun'),
             ]);
 
-        // Redirect back with success message, using a query parameter for 'tahun'
         return redirect()
-            ->route('parameter')
-            ->with(['success' => 'Parameter berhasil diubah!'])
-            ->withInput(['tahun' => $year]);
+        ->route('parameter', ['tahun' => $year])
+        ->with('success', 'Parameter berhasil diubah!');
     }
 
 
