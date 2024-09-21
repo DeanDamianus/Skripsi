@@ -162,6 +162,27 @@ class SesiController extends Controller
         foreach ($data as $rekap) {
             $rekap->jumlahkotor = $rekap->jumlah - $rekap->kj - $rekap->biaya_jual - $rekap->naik_turun ; // secara dinamis mennghitung jumlahnya.
         }
+        //komisi
+        foreach ($data as $rekap) {
+            $rekap->komisi = $rekap->jumlahkotor * $rekap->kepala_petani ; // secara dinamis mennghitung jumlahnya.
+        }
+        //jumlah bersih
+        foreach ($data as $rekap) {
+            $rekap->bersih = $rekap->jumlahkotor - $rekap->komisi ; // secara dinamis mennghitung jumlahnya.
+        }
+
+        // foreach ($data as $rekap) { // secara dinamis mennghitung jumlahnya.
+        //     if ($rekap->jual_luar == 1) {
+        //         $hasil_bersih = $jumlahKotor; // Set hasil_bersih to jumlahKotor
+        //         $indicator = '<span class="badge badge-warning">Jual Luar</span>'; // Visual indicator
+        //     } else {
+        //         $hasil_bersih = $jumlahKotor - $komisi;
+        //         $indicator = ''; // No indicator
+        //     }
+        
+        // }
+
+        
 
 
 

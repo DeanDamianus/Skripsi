@@ -52,19 +52,6 @@
                 <!-- Right navbar links -->
                 <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
                     <li class="nav-item d-none d-sm-inline-block">
-                        <div class="dropdown">
-                            <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
-                                {{ $selectedYear }}
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                                @foreach($musim as $season)
-                                    <div class="dropdown-divider"></div>
-                                    <a href="{{ url('/input?year='.$season->tahun) }}" class="dropdown-item">
-                                        <i class="fas fa-calendar"></i> {{ $season->tahun }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
@@ -155,10 +142,10 @@
                                             <td>{{ 'Rp. ' . number_format($item ->jumlah, 0, ',', '.') }}</td>
                                             <td>{{ 'Rp. ' . number_format($item->kj, 0, ',', '.') }}</td>
                                             <td>{{ 'Rp. ' . number_format($item->jumlahkotor, 0, ',', '.') }}</td>
-                                            <td>Komisi</td>
-                                            <td>Jumlah Bersih</td>
-                                            <td>Gudang</td>
-                                            <td>grade</td>
+                                            <td>{{ 'Rp. ' . number_format($item->komisi, 0, ',', '.') }}</td>
+                                            <td>{{ 'Rp. ' . number_format($item->bersih, 0, ',', '.') }}</td>
+                                            <td>{{ $item->berat_gudang }}</td>
+                                            <td>{{ $item->grade }}</td>
                                             <td>info</td>
                                             <td>{{ $item->jual_luar != 0 ? $item->jual_luar : '-' }}</td>
                                             <td>
