@@ -113,17 +113,55 @@ class SesiController extends Controller
 
         // Fetch the season (musim) based on the selected year
         $musim = DB::table('musim')->where('tahun', $year)->first();
+
         $id = DB::table('rekap_2024')->where('id_musim', $year)->first();
 
+        //mengambil nama dari petani, based on the userId yang di fetch
         $username = DB::table('users')
-        ->where('id', $userId) // Use the user ID from the URL
-        ->pluck('name') // Fetch the name
-        ->first();
+            ->where('id', $userId) // Use the user ID from the URL
+            ->pluck('name') // Fetch the name
+            ->first();
 
+        // fetch data untuk table rekap.
         $data = DB::table('rekap_2024')->where('id_petani', $userId)->get();
+        //fetch data untuk tabel parameteer.
+        $parameter = DB::table('parameter_2024')->where('id_musim',$year)->get();
+        //mengambil neetto dan harga
+        $netto = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('netto')->first();
+        $harga = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('harga')->first();
+
+        //mengambil jumlah
+        foreach ($data as $rekap) {
+            $rekap->jumlah = $rekap->netto * $rekap->harga; // secara dinamis mennghitung jumlahnya.
+        }
+
+        //mengambil pajak KJ
+        foreach ($data as $rekap) {
+            $rekap->kj = 0;
+            if ($rekap->harga <= 50000) {
+                $rekap->kj = 1000 * $rekap->netto;
+            } elseif ($harga <= 75000) {
+                $rekap->kj = 2000 * $rekap->netto;
+            } elseif ($harga <= 100000) {
+                $rekap->kj = 3000 * $rekap->netto;
+            } elseif ($harga <= 125000) {
+                $rekap->kj = 4000 * $rekap->netto;
+            } elseif ($harga <= 150000) {
+                $rekap->kj = 5000 * $rekap->netto;
+            } else {
+                $rekap->kj = 6000 * $rekap->netto;
+            }
+        }  
+
+        foreach($data as $rekap){
+            $rekap->jumlahkotor = $rekap->jumlah - $rekap->kj;
+        }
+
+
+        
 
         $musimList = DB::table('musim')->get();
- // Get the first result (if you expect a single name)
+        // Get the first result (if you expect a single name)
         // If no season is found for the selected year, return a 404 error
         if (!$musim) {
             abort(404, 'Year not found');
@@ -131,22 +169,21 @@ class SesiController extends Controller
 
         // Pass the data to the view
         return view('input_data', [
-            'id'=>$id,
+            'id' => $id,
+            'harga' => $harga,
             'data' => $data,
-            'username'=> $username,
+            'netto' => $netto,
+            'username' => $username,
             'selectedYear' => $year,
             'id_musim' => $musim->id,
             'musim' => $musimList,
-
         ]);
     }
-
 
     public function updateParameter(Request $request)
     {
         // Set the year, or default to the current year if not provided
         $year = $request->input('tahun', date('Y'));
-
 
         // Update the parameter in the database
         DB::table('parameter_2024')
@@ -157,10 +194,9 @@ class SesiController extends Controller
             ]);
 
         return redirect()
-        ->route('parameter', ['tahun' => $year])
-        ->with('success', 'Parameter berhasil diubah!');
+            ->route('parameter', ['tahun' => $year])
+            ->with('success', 'Parameter berhasil diubah!');
     }
-
 
     public function input(Request $request)
     {

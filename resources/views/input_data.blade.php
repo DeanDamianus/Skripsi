@@ -151,12 +151,15 @@
                                             <td>{{ $item->id_rekap }}</td>
                                             <td>{{ number_format($item->bruto, 0, ',', '.') . ' kg' }}</td>
                                             <td>{{ number_format($item->netto, 0, ',', '.') . ' kg' }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item->harga, 0, ',', '.') }}</td>
-                                            <td>KJ</td>
+                                            <td>{{ 'Rp. ' . number_format($harga, 0, ',', '.') }}</td>
+                                            <td>{{ 'Rp. ' . number_format($item ->jumlah, 0, ',', '.') }}</td>
+                                            <td>{{ 'Rp. ' . number_format($item->kj, 0, ',', '.') }}</td>
                                             <td>Jumlah Kotor</td>
                                             <td>Komisi</td>
                                             <td>Jumlah Bersih</td>
                                             <td>Gudang</td>
+                                            <td>grade</td>
+                                            <td>info</td>
                                             <td>{{ $item->jual_luar != 0 ? $item->jual_luar : '-' }}</td>
                                             <td>
                                                 <button
