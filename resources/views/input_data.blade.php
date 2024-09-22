@@ -110,53 +110,7 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {{-- <tr>
-                                            <td><?php echo htmlspecialchars($id_rekap); ?></td>
-                                            <td><?php echo number_format($bruto, 0, ',', '.') . ' kg'; ?></td>
-                                            <td><?php echo number_format($netto, 0, ',', '.') . ' kg'; ?></td>
-                                            <td><?php echo $hargaFormatted; ?></td>
-                                            <td><?php echo htmlspecialchars($jumlahFormatted); ?></td>
-                                            <td><?php echo htmlspecialchars($pajakKJFormatted); ?></td>
-                                            <td><?php echo $jumlahkotorFormatted; ?></td>
-                                            <td><?php echo htmlspecialchars($komisiFormatted); ?></td>
-                                            <td><?php echo $hasilBersihFormatted; ?></td>
-                                            <td><?php echo number_format($beratgg, 0, ',', '.') . ' kg'; ?></td>
-                                            <td><?php echo htmlspecialchars($grade); ?></td>
-                                            <td><?php echo $indicator; ?></td>
-                                            <td><?php echo $cek != 0 ? $cek: '-'; ?></td>   
-                                            
-                                            {{-- <td>
-                                                <button
-                                                    onclick="window.location.href='/editInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
-                                                    class="btn btn-block btn-success">
-                                                    <a><i class="fas fa-edit"></i></a>
-                                                </button>
-                                            </td> --}}
-                                        {{-- @foreach ($data as $item)
-                                        <tr>
-                                            <td>{{ $item->id_rekap }}</td>
-                                            <td>{{ number_format($item->bruto, 0, ',', '.') . ' kg' }}</td>
-                                            <td>{{ number_format($item->netto, 0, ',', '.') . ' kg' }}</td>
-                                            <td>{{ 'Rp. ' . number_format($harga, 0, ',', '.') }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item ->jumlah, 0, ',', '.') }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item->kj, 0, ',', '.') }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item->jumlahkotor, 0, ',', '.') }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item->komisi, 0, ',', '.') }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item->bersih, 0, ',', '.') }}</td>
-                                            <td>{{ $item->berat_gudang }}</td>
-                                            <td>{{ $item->grade }}</td>
-                                            <td>info</td>
-                                            <td>{{ $item->jual_luar != 0 ? $item->jual_luar : '-' }}</td>
-                                            <td>
-                                                <button
-                                                    {{-- onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'" --}}
-                                                    {{-- class="btn btn-block btn-danger">
-                                                    <a><i class="fas fa-trash"></i></a>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        @endforeach --}}
+                                    <tbody> 
                                         @foreach ($data as $item)
                                         <tr>
                                             <td>{{ $item->id_rekap }}</td>
@@ -170,8 +124,8 @@
                                             <td>{{ 'Rp. ' . number_format($item->bersih, 0, ',', '.') }}</td>
                                             <td>{{ $item->berat_gudang }}</td>
                                             <td>{{ $item->grade }}</td>
-                                            <td>info</td>
-                                            <td>{{ $item->jual_luar != 0 ? $item->jual_luar : '-' }}</td>
+                                            <td>{!! $item->indicator !!}</td>
+                                            <td>{{ $item->cek}}</td>
                                             <td>
                                                 <button
                                                     {{-- onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'" --}}
@@ -182,24 +136,24 @@
                                         </tr>
                                         @endforeach
                                     </tbody>
-                                    {{-- <tfoot>
+                                    <tfoot>
                                         <tr>
                                             <th></th>
-                                            <th><?php echo number_format($total_bruto, 0, ',', '.') . ' kg'; ?></th>   
-                                            <th><?php echo number_format($total_netto, 0, ',', '.') . ' kg'; ?></th>   
+                                            <th>{{ number_format($totalbruto, 0, ',', '.') . ' kg' }}</th>
+                                            <th>{{ number_format($totalnetto, 0, ',', '.') . ' kg' }}</th>
                                             <th></th>
-                                            <th>Total: <?php echo 'Rp. ' . number_format($total_harga, 0, ',', '.'); ?></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th>Total: <?php echo number_format($subtotal_bersih, 0, ',', '.'); ?></th>
+                                            <th>{{ 'Rp. ' . number_format($totaljumlahharga, 0, ',', '.') }}</th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
+                                            <th>{{ 'Rp. ' . number_format($totaljumlahbersih, 0, ',', '.') }}</th>
                                             <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>{{ $cektotal }}</th>
                                             <th></th>
                                         </tr>
-                                    </tfoot> --}}
+                                    </tfoot>
                                 </table>
                         </div>
                         <!-- /.card-body -->

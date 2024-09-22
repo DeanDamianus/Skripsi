@@ -140,7 +140,6 @@ class SesiController extends Controller
     // Get netting and pricing information
     $netto = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('netto')->first();
     $harga = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('harga')->first();
-
     $petani = DB::table('users')->where('role', 'petani')->get();
 
     // Calculate KJ and other fields dynamically
@@ -160,6 +159,21 @@ class SesiController extends Controller
 
     // Get the list of musim
     $musimList = DB::table('musim')->get();
+    foreach ($data as $rekap) {
+        $rekap->indicator = $rekap->jual_luar == 1 ? '<span class="badge badge-warning">Jual Luar</span>' : '';
+    }
+
+    foreach ($data as $rekap) {
+        $rekap->cek = $rekap->bruto - $rekap->berat_gudang;
+    }
+
+    //calculate all total
+    $totalnetto = $data->sum('netto');
+    $totalbruto = $data->sum('bruto');
+    $totaljumlahharga = $data->sum('jumlah');
+    $totaljumlahbersih = $data->sum('bersih');
+    $cektotal = $data->sum('cek');
+
 
     // Pass the data to the view
     return view('input_data', [
@@ -167,8 +181,13 @@ class SesiController extends Controller
         'petani' => $petani,
         'harga' => $harga,
         'parameter' => $parameter,
+        'totaljumlahharga' => $totaljumlahharga,
+        'totaljumlahbersih' => $totaljumlahbersih,
         'data' => $data,
         'netto' => $netto,
+        'cektotal' => $cektotal,
+        'totalnetto' => $totalnetto,
+        'totalbruto' => $totalbruto,
         'username' => $username,
         'selectedYear' => $year,
         'id_musim' => $musim->id,
@@ -176,11 +195,7 @@ class SesiController extends Controller
     ]);
 }
 
-
-
-    public function updateParameter(Request $request)
-    {
-        // Set the year, or default to the current year if not provided
+    public function updateParameter(Request $request){
         $year = $request->input('tahun', date('Y'));
 
         // Update the parameter in the database
