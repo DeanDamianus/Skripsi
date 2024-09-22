@@ -98,14 +98,16 @@ if (!$result) {
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
-                        <button class="nav-link" type="button" data-toggle="dropdown" style=" border: black;">
-                            2024
+                        <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
+                            {{ $selectedYear }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <div class="dropdown-divider"></div>
-                            <a href="{{ url('/owner2025') }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> 2025
-                            </a>
+                            @foreach($currentMusim as $season)
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ url('/hutang-admin?year=' . $season->tahun) }}" class="dropdown-item">
+                                    <i class="fas fa-calendar"></i> {{ $season->tahun }}
+                                </a>
+                            @endforeach
                         </div>
                     </div>
                 </li>
@@ -148,7 +150,7 @@ if (!$result) {
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/owner') }}" class="nav-link">
+                            <a href="{{ url('/owner?tahun=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -157,7 +159,7 @@ if (!$result) {
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/input') }}" class="nav-link">
+                            <a href="{{ url('/input?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -213,7 +215,7 @@ if (!$result) {
                             </ul>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/parameter') }}" class="nav-link">
+                            <a href="{{ url('/parameter?tahun=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     <strong>PARAMETER</strong>

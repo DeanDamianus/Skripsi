@@ -430,6 +430,7 @@ class SesiController extends Controller
 
     public function hutang(Request $request)
     {
+
         // Validate the incoming request data
         $request->validate([
             'id_petani' => 'required|exists:users,id', // Assuming the 'petani' table is 'users'
@@ -467,6 +468,20 @@ class SesiController extends Controller
         }
 
         return redirect()->route('hutang-admin')->with('success', 'Hutang berhasil ditambahkan atau diperbarui!');
+    }
+
+    public function hutangdashboard(Request $request){
+        $year = $request->input('year', date('Y'));
+
+
+        $musim = DB::table('musim')->where('tahun', $year)->first();
+        $musimList = DB::table('musim')->get();
+        return view('hutang_admin', [
+            'selectedYear' => $year,
+            'musim' => $musim,
+            'currentMusim' => $musimList,
+
+        ]);
     }
 
     public function pelunasan(Request $request)

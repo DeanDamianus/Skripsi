@@ -98,7 +98,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/hutang-admin') }}" class="nav-link">
+                            <a href="{{ url('/hutang-admin?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-hand-holding-usd"></i>
                                 <p>
                                     <strong>HUTANG</strong>

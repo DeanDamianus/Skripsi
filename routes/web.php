@@ -41,9 +41,7 @@ Route::middleware('auth')->group(function () {
             return view('hutang_admin');
         })->name('hutang-admin');
 
-        Route::get('/hutang-admin2', function() {
-            return view('hutang_admin2');
-        })->name('hutang_admin2');
+        Route::get('/hutang-admin', [SesiController::class, 'hutangdashboard']);
 
         Route::get('/datapetani', function() {
             return view('datapetani');
