@@ -197,10 +197,10 @@
                                             <td>{{ $item->id }}</td>
                                             <td>{{ $item->name }}</td>
                                             <td>{{ number_format($item->netto, 0, ',', '.') . ' kg' }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item->harga, 0, ',', '.') }}</td>
+                                            <td>{{ 'Rp. ' . number_format($item->jumlahtotal, 0, ',', '.') }}</td>
                                             <td>{{ $item->jual_luar != 0 ? $item->jual_luar : '-' }}</td>
                                             <td>
-                                                <a href="{{ url('/dataInput?id=' . $item->id_petani . '&id_musim=' . $id_musim) }}" class="btn btn-block btn-success">
+                                                <a href="{{ url('/dataInput?id=' . $item->id . '&id_musim=' . $id_musim) }}" class="btn btn-block btn-success">
                                                     <i class="nav-icon fas fa-edit"></i>
                                                 </a>
                                             </td>
@@ -211,7 +211,7 @@
                                                 <th></th>
                                                 <th></th>
                                                 <th>{{ number_format($total_netto, 0, ',', '.') . ' kg' }}</th>
-                                                <th>{{ 'Rp. ' . number_format($total_harga, 0, ',', '.') }}</th>
+                                                <th>{{'Rp. ' . number_format($totaljumlahharga, 0, ',', '.') }}</th>
                                                 <th>{{ $total_jual_luar != 0 ? $total_jual_luar : '-' }}</th>
                                                 <th></th>
                                             </tr>

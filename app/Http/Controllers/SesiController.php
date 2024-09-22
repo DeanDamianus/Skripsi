@@ -135,6 +135,10 @@ class SesiController extends Controller
         $netto = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('netto')->first();
         $harga = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('harga')->first();
 
+        $petani = DB::table('users')
+            ->where('role', 'petani')
+            ->get();
+
         //mengambil jumlah
         foreach ($data as $rekap) {
             $rekap->jumlah = $rekap->netto * $rekap->harga; // secara dinamis mennghitung jumlahnya.
@@ -182,9 +186,7 @@ class SesiController extends Controller
         
         // }
 
-        
-
-
+    
 
         $musimList = DB::table('musim')->get();
         // Get the first result (if you expect a single name)
@@ -196,6 +198,7 @@ class SesiController extends Controller
         // Pass the data to the view
         return view('input_data', [
             'id' => $id,
+            'petani' => $petani,
             'harga' => $harga,
             'parameter' => $parameter,
             'data' => $data,
@@ -238,21 +241,26 @@ class SesiController extends Controller
             abort(404, 'Year not found');
         }
 
-        // Build the table name based on the retrieved id_year
-        $tableName = 'users';
 
         // Fetch data from the dynamically named table
-        $data = DB::table($tableName)
-            ->leftJoin('rekap_2024', 'users.id', '=', 'rekap_2024.id_petani') // Left join to include all users
-            ->where('users.role', 'petani') // Filter by role 'petani'
-            ->where(function ($query) use ($musim) {
-                $query
-                    ->where('rekap_2024.id_musim', $musim->id) // Filter by id_musim if there is data
-                    ->orWhereNull('rekap_2024.id_musim'); // Include users without matching rekap_2024 data
+        $data = DB::table('users')
+            ->leftJoin('rekap_2024', function($join) use ($musim) {
+                $join->on('users.id', '=', 'rekap_2024.id_petani')
+                    ->where('rekap_2024.id_musim', $musim->id); // Filter by id_musim in the join
             })
-            ->select('users.*', 'rekap_2024.*') // Select users and rekap_2024 columns
+            ->where('users.role', 'petani') // Filter users by role 'petani'
+            ->select('users.id', 'users.name', 
+                DB::raw('SUM(rekap_2024.netto) as netto'), 
+                DB::raw('MAX(rekap_2024.harga) as harga'), 
+                DB::raw('SUM(rekap_2024.jual_luar) as jual_luar')
+            )
+            ->groupBy('users.id', 'users.name') // Group by user ID and name to avoid duplicates
             ->get();
-
+        
+        
+        $nama = DB::table('users')
+            ->where('role', 'petani')
+            ->get();
         // Fetch seasons for the dropdown menu
         $musimList = DB::table('musim')->get();
 
@@ -261,13 +269,25 @@ class SesiController extends Controller
         $total_harga = $data->sum('harga');
         $total_jual_luar = $data->sum('jual_luar');
 
+        foreach ($data as $rekap) {
+            $rekap->jumlahtotal = $rekap->harga * $rekap->netto; // secara dinamis mennghitung jumlahnya.
+        }
+
+        foreach ($data as $rekap) {
+            $rekap->jumlahtotal = $rekap->harga * $rekap->netto; // secara dinamis mennghitung jumlahnya.
+        }
+        
+        $totaljumlahharga = $data->sum('jumlahtotal');
+
         // Return the view with the necessary data
         return view('input', [
             'data' => $data,
             'musim' => $musimList,
+            'petani' => $nama,
             'selectedYears' => $year,
             'id_musim' => $musim->id,
             'total_netto' => $total_netto,
+            'totaljumlahharga' => $totaljumlahharga,
             'total_harga' => $total_harga,
             'total_jual_luar' => $total_jual_luar,
         ]);

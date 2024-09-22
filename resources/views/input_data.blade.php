@@ -133,6 +133,30 @@
                                                     <a><i class="fas fa-edit"></i></a>
                                                 </button>
                                             </td> --}}
+                                        {{-- @foreach ($data as $item)
+                                        <tr>
+                                            <td>{{ $item->id_rekap }}</td>
+                                            <td>{{ number_format($item->bruto, 0, ',', '.') . ' kg' }}</td>
+                                            <td>{{ number_format($item->netto, 0, ',', '.') . ' kg' }}</td>
+                                            <td>{{ 'Rp. ' . number_format($harga, 0, ',', '.') }}</td>
+                                            <td>{{ 'Rp. ' . number_format($item ->jumlah, 0, ',', '.') }}</td>
+                                            <td>{{ 'Rp. ' . number_format($item->kj, 0, ',', '.') }}</td>
+                                            <td>{{ 'Rp. ' . number_format($item->jumlahkotor, 0, ',', '.') }}</td>
+                                            <td>{{ 'Rp. ' . number_format($item->komisi, 0, ',', '.') }}</td>
+                                            <td>{{ 'Rp. ' . number_format($item->bersih, 0, ',', '.') }}</td>
+                                            <td>{{ $item->berat_gudang }}</td>
+                                            <td>{{ $item->grade }}</td>
+                                            <td>info</td>
+                                            <td>{{ $item->jual_luar != 0 ? $item->jual_luar : '-' }}</td>
+                                            <td>
+                                                <button
+                                                    {{-- onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'" --}}
+                                                    {{-- class="btn btn-block btn-danger">
+                                                    <a><i class="fas fa-trash"></i></a>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        @endforeach --}}
                                         @foreach ($data as $item)
                                         <tr>
                                             <td>{{ $item->id_rekap }}</td>
