@@ -106,109 +106,77 @@ class SesiController extends Controller
     }
 
     public function rekap(Request $request)
-    {
-        // Get the selected year, default to the current year if not provided
-        $year = $request->input('tahun', date('Y'));
-        $userId = $request->input('id');
+{
+    // Get the selected year, default to the current year if not provided
+    $year = $request->input('year', date('Y')); // Ensure 'tahun' is being set correctly
+    $userId = $request->input('id');
+    $idMusim = $request->input('id_musim');
 
-        // Fetch the season (musim) based on the selected year
-        $musim = DB::table('musim')->where('tahun', $year)->first();
+    // Fetch the season (musim) based on the selected year
+    $musim = DB::table('musim')->where('tahun', $year)->first();
 
-        $id = DB::table('rekap_2024')->where('id_musim', $year)->first();
-
-        //mengambil nama dari petani, based on the userId yang di fetch
-        $username = DB::table('users')
-            ->where('id', $userId) // Use the user ID from the URL
-            ->pluck('name') // Fetch the name
-            ->first();
-
-        // fetch data untuk table rekap.
-        $data = DB::table('rekap_2024')
-            ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
-            ->where('rekap_2024.id_petani', $userId)
-            ->select('rekap_2024.*', 'parameter_2024.*') // Select all columns from both tables
-            ->get();
-
-        //fetch data untuk tabel parameteer.
-        $parameter = DB::table('parameter_2024')->where('id', $year)->first();
-        //mengambil neetto dan harga
-        $netto = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('netto')->first();
-        $harga = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('harga')->first();
-
-        $petani = DB::table('users')
-            ->where('role', 'petani')
-            ->get();
-
-        //mengambil jumlah
-        foreach ($data as $rekap) {
-            $rekap->jumlah = $rekap->netto * $rekap->harga; // secara dinamis mennghitung jumlahnya.
-        }
-
-        //mengambil pajak KJ
-        foreach ($data as $rekap) {
-            $rekap->kj = 0;
-            if ($rekap->harga <= 50000) {
-                $rekap->kj = 1000 * $rekap->netto;
-            } elseif ($harga <= 75000) {
-                $rekap->kj = 2000 * $rekap->netto;
-            } elseif ($harga <= 100000) {
-                $rekap->kj = 3000 * $rekap->netto;
-            } elseif ($harga <= 125000) {
-                $rekap->kj = 4000 * $rekap->netto;
-            } elseif ($harga <= 150000) {
-                $rekap->kj = 5000 * $rekap->netto;
-            } else {
-                $rekap->kj = 6000 * $rekap->netto;
-            }
-        }   
-
-        //mengkalkulasi data jumlah kotor dengan mengambil data dari join rekap + parameter
-        foreach ($data as $rekap) {
-            $rekap->jumlahkotor = $rekap->jumlah - $rekap->kj - $rekap->biaya_jual - $rekap->naik_turun ; // secara dinamis mennghitung jumlahnya.
-        }
-        //komisi
-        foreach ($data as $rekap) {
-            $rekap->komisi = $rekap->jumlahkotor * $rekap->kepala_petani ; // secara dinamis mennghitung jumlahnya.
-        }
-        //jumlah bersih
-        foreach ($data as $rekap) {
-            $rekap->bersih = $rekap->jumlahkotor - $rekap->komisi ; // secara dinamis mennghitung jumlahnya.
-        }
-
-        // foreach ($data as $rekap) { // secara dinamis mennghitung jumlahnya.
-        //     if ($rekap->jual_luar == 1) {
-        //         $hasil_bersih = $jumlahKotor; // Set hasil_bersih to jumlahKotor
-        //         $indicator = '<span class="badge badge-warning">Jual Luar</span>'; // Visual indicator
-        //     } else {
-        //         $hasil_bersih = $jumlahKotor - $komisi;
-        //         $indicator = ''; // No indicator
-        //     }
-        
-        // }
-
-    
-
-        $musimList = DB::table('musim')->get();
-        // Get the first result (if you expect a single name)
-        // If no season is found for the selected year, return a 404 error
-        if (!$musim) {
-            abort(404, 'Year not found');
-        }
-
-        // Pass the data to the view
-        return view('input_data', [
-            'id' => $id,
-            'petani' => $petani,
-            'harga' => $harga,
-            'parameter' => $parameter,
-            'data' => $data,
-            'netto' => $netto,
-            'username' => $username,
-            'selectedYear' => $year,
-            'id_musim' => $musim->id,
-            'musim' => $musimList,
-        ]);
+    // If no season is found for the selected year, return a 404 error
+    if (!$musim) {
+        abort(404, 'Year not found');
     }
+
+    // Get the username based on user ID
+    $username = DB::table('users')
+        ->where('id', $userId)
+        ->pluck('name')
+        ->first();
+
+    // Fetch data for rekap based on the current id_musim and selected year
+    $data = DB::table('rekap_2024')
+        ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
+        ->where('rekap_2024.id_petani', $userId)
+        ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim from the request
+        ->select('rekap_2024.*', 'parameter_2024.*')
+        ->get();
+
+    // Fetch parameter data
+    $parameter = DB::table('parameter_2024')->where('id', $year)->first();
+
+    // Get netting and pricing information
+    $netto = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('netto')->first();
+    $harga = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('harga')->first();
+
+    $petani = DB::table('users')->where('role', 'petani')->get();
+
+    // Calculate KJ and other fields dynamically
+    foreach ($data as $rekap) {
+        $rekap->kj = ($rekap->harga <= 50000) ? 1000 * $rekap->netto : 
+                      (($rekap->harga <= 75000) ? 2000 * $rekap->netto :
+                      (($rekap->harga <= 100000) ? 3000 * $rekap->netto :
+                      (($rekap->harga <= 125000) ? 4000 * $rekap->netto :
+                      (($rekap->harga <= 150000) ? 5000 * $rekap->netto : 
+                      6000 * $rekap->netto))));
+                      
+        $rekap->jumlah = $rekap->netto * $rekap->harga;
+        $rekap->jumlahkotor = $rekap->jumlah - $rekap->kj - $rekap->biaya_jual - $rekap->naik_turun;
+        $rekap->komisi = $rekap->jumlahkotor * $rekap->kepala_petani;
+        $rekap->bersih = $rekap->jumlahkotor - $rekap->komisi;
+    }
+
+    // Get the list of musim
+    $musimList = DB::table('musim')->get();
+
+    // Pass the data to the view
+    return view('input_data', [
+        'id' => $musim->id,
+        'petani' => $petani,
+        'harga' => $harga,
+        'parameter' => $parameter,
+        'data' => $data,
+        'netto' => $netto,
+        'username' => $username,
+        'selectedYear' => $year,
+        'id_musim' => $musim->id,
+        'musim' => $musimList,
+    ]);
+}
+
+
 
     public function updateParameter(Request $request)
     {

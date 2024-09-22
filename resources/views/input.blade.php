@@ -200,7 +200,7 @@
                                             <td>{{ 'Rp. ' . number_format($item->jumlahtotal, 0, ',', '.') }}</td>
                                             <td>{{ $item->jual_luar != 0 ? $item->jual_luar : '-' }}</td>
                                             <td>
-                                                <a href="{{ url('/dataInput?id=' . $item->id . '&id_musim=' . $id_musim) }}" class="btn btn-block btn-success">
+                                                <a href="{{ url('/dataInput?id=' . $item->id . '&id_musim=' . $id_musim.'&year='.$selectedYears) }}" class="btn btn-block btn-success">
                                                     <i class="nav-icon fas fa-edit"></i>
                                                 </a>
                                             </td>

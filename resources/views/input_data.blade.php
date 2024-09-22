@@ -67,9 +67,9 @@
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <a href="{{ url('/input') }}"class="btn btn-outline-dark float-right" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding: 0; border: 2px solid black; background-color: transparent;">
+                    <a href="{{ url('/input?year=' . $selectedYear) }}" class="btn btn-outline-dark float-right" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding: 0; border: 2px solid black; background-color: transparent;">
                         <i class="fas fa-arrow-left" style="font-size: 20px; color: black;"></i>
-                    </a>         
+                    </a>       
                     <div class="col-sm-6">
                         <h1>List Rekap <label> {{ $username}} </label></h1>
                     </div>
