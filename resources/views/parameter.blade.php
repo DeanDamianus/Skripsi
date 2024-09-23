@@ -21,8 +21,7 @@
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ url('/owner') }}" class="nav-link">Home</a>
@@ -67,9 +66,9 @@
                     </div>
                     <div class="info">
                         @if (Auth::check())
-                            <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                         @else
-                            <a href="#" class="d-block">Guest</a>
+                        <a href="#" class="d-block">Guest</a>
                         @endif
                     </div>
                 </div>
@@ -89,7 +88,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/input?year=' . $selectedYear) }}"  class="nav-link">
+                            <a href="{{ url('/input?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -107,7 +106,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-">
-                            <a href="{{ url('/distribusi') }}" class="nav-link">
+                            <a href="{{ url('/distribusi?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-truck"></i>
                                 <p>
                                     <strong>DISTRIBUSI</strong>
@@ -184,7 +183,7 @@
                                     <div class="card-body">
                                         <!-- Show success message if parameter is updated -->
                                         @if (session('success'))
-                                            <div class="alert alert-success">{{ session('success') }}</div>
+                                        <div class="alert alert-success">{{ session('success') }}</div>
                                         @endif
 
                                         <!-- Form for Editing Parameter -->
@@ -209,8 +208,10 @@
 
                                             <div class="form-group mb-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" name="terms" class="custom-control-input" id="termsCheck" required>
-                                                    <label class="custom-control-label" for="termsCheck">Saya Setuju akan <a href="#">pergantian Parameter Berikut</a>.</label>
+                                                    <input type="checkbox" name="terms" class="custom-control-input"
+                                                        id="termsCheck" required>
+                                                    <label class="custom-control-label" for="termsCheck">Saya Setuju
+                                                        akan <a href="#">pergantian Parameter Berikut</a>.</label>
                                                 </div>
                                             </div>
 

@@ -1,26 +1,3 @@
-<?php
-// Establish the connection
-$con = mysqli_connect('localhost', 'root', '', 'simbako_app');
-
-// Check connection
-if (!$con) {
-    die('Koneksi Error: ' . mysqli_connect_error());
-}
-
-// Query to get all petani
-$nama = "SELECT rekap_2024.*, distribusi_2024.*
-            FROM rekap_2024
-            JOIN distribusi_2024 ON rekap_2024.id_rekap = distribusi_2024.id_krj;
-            ";
-$result = mysqli_query($con, $nama);
-
-$totalditerima = 0;
-
-
-if (!$result) {
-    die('Error fetching petani data: ' . mysqli_error($con));
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,14 +46,16 @@ if (!$result) {
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
-                        <button class="nav-link" type="button" data-toggle="dropdown" style=" border: black;">
-                            2024
+                        <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
+                            {{ $selectedYear }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <div class="dropdown-divider"></div>
-                            <a href="{{ url('/owner2025') }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> 2025
-                            </a>
+                            @foreach($musim as $season)
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ url('/distribusi?year='.$season->tahun) }}" class="dropdown-item">
+                                    <i class="fas fa-calendar"></i> {{ $season->tahun }}
+                                </a>
+                            @endforeach
                         </div>
                     </div>
                 </li>
@@ -119,7 +98,7 @@ if (!$result) {
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/owner') }}"  class="nav-link">
+                            <a href="{{ url('/owner?tahun=' . $selectedYear) }}"  class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -128,7 +107,7 @@ if (!$result) {
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/input') }}" class="nav-link">
+                            <a href="{{ url('/input?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -137,7 +116,7 @@ if (!$result) {
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/hutang-admin') }}" class="nav-link">
+                            <a href="{{ url('/hutang-admin?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-hand-holding-usd"></i>
                                 <p>
                                     <strong>HUTANG</strong>
@@ -146,7 +125,7 @@ if (!$result) {
                             </a>
                         </li>
                         <li class="nav-item menu-open">
-                            <a href"" class="nav-link active">
+                            <a href="{{ url('/distribusi?year=' . $selectedYear) }}" class="nav-link active">
                                 <i class="nav-icon fas fa-truck"></i>
                                 <p>
                                     <strong>DISTRIBUSI</strong>
@@ -178,7 +157,7 @@ if (!$result) {
                             </ul>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/parameter') }}" class="nav-link">
+                            <a href="{{ url('/parameter?tahun=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     <strong>PARAMETER</strong>
@@ -207,7 +186,7 @@ if (!$result) {
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1 class="m-0">Distribusi 2024</h1>
+                                <h1 class="m-0">Distribusi {{ $selectedYear }}</h1>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                             </div><!-- /.col -->
@@ -217,77 +196,58 @@ if (!$result) {
                 <div class="row">
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
-                        <div class="small-box bg-info">
+                        <div class="small-box bg-success">
                             <div class="inner">
-                                {{-- <h3><?php echo number_format($totalNetto, 0, ',', '.'); ?><sup style="font-size: 20px"> Kg</sup></h3> --}}
-                                <p>Distribusi Visual 0</p>
+                                <h3>{{ $diterima }}</sup></h3>
+                                <p>Diterima</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-weight-hanging"></i> <!-- Ikon timbangan menggantung -->
+                                <i class="fas fa-check-circle"></i> <!-- Ikon timbangan menggantung -->
                             </div>
-                            <a href="{{ url('/input') }}" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
                         </div>
 
                     </div>
                     <!--NETO-->
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
-                        <div class="small-box bg-success">
+                        <div class="small-box bg-yellow">
                             <div class="inner">
-                                {{-- <h3><sup style="font-size: 20px">Rp.</sup><?php echo number_format($total_harga, 0, ',', '.'); ?></h3> --}}
-                                <p>Distribusi Visual 1</p>
+                                <h3>{{ $dikirim }}</sup></h3>
+                                <p>Diproses</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-coins"></i> <!-- Ikon koin -->
+                                <i class="fas fa-truck"></i> </i> <!-- Ikon koin -->
                             </div>
-                            <a href="#" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
                         </div>
                     </div>
                     <!-- Jumlah Kotor-->
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
-                        <div class="small-box bg-yellow">
-                            <div class="inner">
-                                {{-- <h3><?php echo $jual_luar; ?><sup style="font-size: 20px"> Keranjang</sup></h3> --}}
-                                <p>Distribusi Visual 2</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-exchange-alt"></i> <!-- Ikon pertukaran -->
-                            </div>
-                            <a href="{{ url('/input') }}"class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Jumlah Bersih -->
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                {{-- <h3><?php echo $jumlah_petani; ?></h3> --}}
-                                <p>Distribusi Visual 3</p>
+                                <h3>{{ $ditolak }}</sup></h3>
+                                <p>Ditolak</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-user"></i> <!-- Ikon orang -->
+                                <i class="fas fa-times"></i> <!-- Ikon pertukaran -->
                             </div>
-                            <a href="{{ url('/datapetani') }}" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
                         </div>
                     </div>
-                    <!-- Jumlah Petani -->
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>10</sup></h3>
+                                <p>Belum Dikirim</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-hourglass-half"></i> <!-- Ikon pertukaran -->
+                            </div>
+                        </div>
+                    </div>
                     <!-- Jumlah Jual Lua -->
                 </div>
                 <div class="card">
-                    <div class="card-footer clearfix">
-                        <a href="/inputdistribusi" class="btn btn-sm btn-info float-left">Input Distribusi Baru</a>
-                        {{-- <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Orders</a> --}}
-                      </div>
                     <!-- /.card-header -->
                     <div class="card-body p-0">
                       <div class="table-responsive">
@@ -298,57 +258,32 @@ if (!$result) {
                             <th>Periode</th>
                             <th>Status</th>
                             <th>Pengeluaran</th>
-                            <th></th>
                             <th>Action</th>
                           </tr>
                           </thead>
                           <tbody>
-                            <?php 
-                                while ($row = mysqli_fetch_assoc($result)) { 
-                                    // Get data for each rekap row
-                                    $id_krj = $row['id_krj'];
-                                    $periode = $row['periode'];
-                                    $n_gudang = $row['n_gudang'];
-                                    $mobilberangkat = $row['mobil_berangkat'];
-                                    $mobilpulang = $row['mobil_pulang'];
-                                    $nt_pabrik = $row['nt_pabrik'];
-                                    $kasut = $row['kasut'];
-                                    $transport_gudang = $row['transport_gudang'];
-                                    $status = $row['status'];
-                        
-                                    // Calculate the total expenditure
-                                    $pengeluaran = $n_gudang + $mobilberangkat + $mobilpulang + $nt_pabrik + $kasut + $transport_gudang;
-                                    $pengeluaranFormatted = 'Rp. ' . number_format($pengeluaran, 0, ',', '.');
-                        
-                                    // Set color based on the status value
-                                    if ($status == 'Diterima') {
-                                        $sparkbarColor = "badge badge-success";
-                                    }
-                                    elseif ($status == 'Dikirim') {
-                                        $sparkbarColor = "badge badge-warning";
-                                    }
-                                     else {
-                                        $sparkbarColor = "badge badge-danger";
-                                    }
-
-                                ?>      
-                                    <tr>
-                                        <td><a href="#"><?php echo htmlspecialchars($id_krj); ?></a></td>
-                                        <td><?php echo htmlspecialchars($periode); ?></td>
-                                        <td>
-                                            <div class="<?php echo ($sparkbarColor); ?>" data-height="20"><?php echo htmlspecialchars($status); ?></div>
-                                        </td>
-                                        <td><?php echo htmlspecialchars($pengeluaranFormatted); ?></td>
-                                        <td>
-                                            <a href="#" type="button" class="btn btn-block btn-success"><i class="nav-icon fas fa-edit"></i></a>
-                                        </td>
-                                        <td>
-                                            <a href="#" type="button" class="btn btn-block btn-danger"><i class="nav-icon fas fa-trash"></i></a>
-                                        </td>
-                                    </tr>
-                            <?php } ?>
+                            @foreach($data as $rekap)
+                                <tr>
+                                    <td><a href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim ) }}">{{ $rekap->id_rekap }}</a></td>
+                                    <td>{{ $rekap->periode }}</td>
+                                    <td>{!! $rekap->status !!}</td>
+                                    <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
+                                    <td>
+                                        <a href=""
+                                            class="btn btn-block btn-success">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
-                        
+                        <tfoot>
+                            <th></th>
+                            <th></th>    
+                            <th></th>    
+                            <th>{{ 'Rp. ' . number_format($totalpengeluaran, 0, ',', '.') }}</th>   
+                            <th></th>    
+                        </tfoot>            
                         </table>
                       </div>
                       <!-- /.table-responsive -->

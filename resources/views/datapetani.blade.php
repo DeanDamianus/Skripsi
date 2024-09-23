@@ -41,8 +41,7 @@ $total_netto = 0; // Initialize total netto
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ url('/owner') }}" class="nav-link">Home</a>
@@ -91,9 +90,9 @@ $total_netto = 0; // Initialize total netto
                     </div>
                     <div class="info">
                         @if (Auth::check())
-                            <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                         @else
-                            <a href="#" class="d-block">Guest</a>
+                        <a href="#" class="d-block">Guest</a>
                         @endif
                     </div>
                 </div>
@@ -132,7 +131,7 @@ $total_netto = 0; // Initialize total netto
                             </a>
                         </li>
                         <li class="nav-item menu-closed">
-                            <a href="{{ url('/distribusi') }}" class="nav-link">
+                            <a href="{{ url('/distribusi?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-truck"></i>
                                 <p>
                                     <strong>DISTRIBUSI</strong>
@@ -248,9 +247,15 @@ $total_netto = 0; // Initialize total netto
                                             $total_harga += $total_harga_per_petani;
                                             ?>
                                         <tr>
-                                            <td><?php echo $row['id']; ?></td>
-                                            <td><?php echo $row['name']; ?></td>
-                                            <td><?php echo $row['created_at']; ?></td>
+                                            <td>
+                                                <?php echo $row['id']; ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $row['name']; ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $row['created_at']; ?>
+                                            </td>
                                         </tr>
                                         <?php 
                   }

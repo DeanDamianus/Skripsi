@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,13 +21,12 @@
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ url('/owner?id=&id_musim=' . $selectedYears) }}" class="nav-link">Home</a>
                 </li>
-                
+
             </ul>
             <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
                 <li class="nav-item d-none d-sm-inline-block">
@@ -38,10 +36,10 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             @foreach($musim as $season)
-                                <div class="dropdown-divider"></div>
-                                <a href="{{ url('/input?year='.$season->tahun) }}" class="dropdown-item">
-                                    <i class="fas fa-calendar"></i> {{ $season->tahun }}
-                                </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url('/input?year='.$season->tahun) }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
+                            </a>
                             @endforeach
                         </div>
                     </div>
@@ -52,7 +50,7 @@
                     </a>
                 </li>
             </ul>
-            
+
         </nav>
 
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -68,9 +66,9 @@
                     </div>
                     <div class="info">
                         @if (Auth::check())
-                            <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                         @else
-                            <a href="#" class="d-block">Guest</a>
+                        <a href="#" class="d-block">Guest</a>
                         @endif
                     </div>
                 </div>
@@ -107,7 +105,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-closed">
-                            <a href="{{ url('/distribusi') }}" class="nav-link">
+                            <a href="{{ url('/distribusi?year=' . $selectedYears) }}" class="nav-link">
                                 <i class="nav-icon fas fa-truck"></i>
                                 <p>
                                     <strong>DISTRIBUSI</strong>
@@ -180,7 +178,7 @@
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0">
                                 <table class="table table-hover text-nowrap">
-                                    <thead> 
+                                    <thead>
                                         <tr>
                                             <th>ID Petani</th>
                                             <th>Nama Petani</th>
@@ -200,22 +198,23 @@
                                             <td>{{ 'Rp. ' . number_format($item->jumlahtotal, 0, ',', '.') }}</td>
                                             <td>{{ $item->jual_luar != 0 ? $item->jual_luar : '-' }}</td>
                                             <td>
-                                                <a href="{{ url('/dataInput?id=' . $item->id . '&id_musim=' . $id_musim.'&year='.$selectedYears) }}" class="btn btn-block btn-success">
+                                                <a href="{{ url('/dataInput?id=' . $item->id . '&id_musim=' . $id_musim.'&year='.$selectedYears) }}"
+                                                    class="btn btn-block btn-success">
                                                     <i class="nav-icon fas fa-edit"></i>
                                                 </a>
                                             </td>
                                         </tr>
                                         @endforeach
-                                        <tfoot>
-                                            <tr>
-                                                <th></th>
-                                                <th></th>
-                                                <th>{{ number_format($total_netto, 0, ',', '.') . ' kg' }}</th>
-                                                <th>{{'Rp. ' . number_format($totaljumlahharga, 0, ',', '.') }}</th>
-                                                <th>{{ $total_jual_luar != 0 ? $total_jual_luar : '-' }}</th>
-                                                <th></th>
-                                            </tr>
-                                        </tfoot>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th>{{ number_format($total_netto, 0, ',', '.') . ' kg' }}</th>
+                                            <th>{{'Rp. ' . number_format($totaljumlahharga, 0, ',', '.') }}</th>
+                                            <th>{{ $total_jual_luar != 0 ? $total_jual_luar : '-' }}</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
                                     </tbody>
                                 </table>
                             </div>

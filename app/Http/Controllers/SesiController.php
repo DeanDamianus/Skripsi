@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\ElseIf_;
 
 class SesiController extends Controller
 {
@@ -106,96 +107,88 @@ class SesiController extends Controller
     }
 
     public function rekap(Request $request)
-{
-    // Get the selected year, default to the current year if not provided
-    $year = $request->input('year', date('Y')); // Ensure 'tahun' is being set correctly
-    $userId = $request->input('id');
-    $idMusim = $request->input('id_musim');
+    {
+        // Get the selected year, default to the current year if not provided
+        $year = $request->input('year', date('Y')); // Ensure 'tahun' is being set correctly
+        $userId = $request->input('id');
+        $idMusim = $request->input('id_musim');
 
-    // Fetch the season (musim) based on the selected year
-    $musim = DB::table('musim')->where('tahun', $year)->first();
+        // Fetch the season (musim) based on the selected year
+        $musim = DB::table('musim')->where('tahun', $year)->first();
 
-    // If no season is found for the selected year, return a 404 error
-    if (!$musim) {
-        abort(404, 'Year not found');
+        // If no season is found for the selected year, return a 404 error
+        if (!$musim) {
+            abort(404, 'Year not found');
+        }
+
+        // Get the username based on user ID
+        $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
+
+        // Fetch data for rekap based on the current id_musim and selected year
+        $data = DB::table('rekap_2024')
+            ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
+            ->where('rekap_2024.id_petani', $userId)
+            ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim from the request
+            ->select('rekap_2024.*', 'parameter_2024.*')
+            ->get();
+
+        // Fetch parameter data
+        $parameter = DB::table('parameter_2024')->where('id', $year)->first();
+
+        // Get netting and pricing information
+        $netto = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('netto')->first();
+        $harga = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('harga')->first();
+        $petani = DB::table('users')->where('role', 'petani')->get();
+
+        // Calculate KJ and other fields dynamically
+        foreach ($data as $rekap) {
+            $rekap->kj = $rekap->harga <= 50000 ? 1000 * $rekap->netto : ($rekap->harga <= 75000 ? 2000 * $rekap->netto : ($rekap->harga <= 100000 ? 3000 * $rekap->netto : ($rekap->harga <= 125000 ? 4000 * $rekap->netto : ($rekap->harga <= 150000 ? 5000 * $rekap->netto : 6000 * $rekap->netto))));
+
+            $rekap->jumlah = $rekap->netto * $rekap->harga;
+            $rekap->jumlahkotor = $rekap->jumlah - $rekap->kj - $rekap->biaya_jual - $rekap->naik_turun;
+            $rekap->komisi = $rekap->jumlahkotor * $rekap->kepala_petani;
+            $rekap->bersih = $rekap->jumlahkotor - $rekap->komisi;
+        }
+
+        // Get the list of musim
+        $musimList = DB::table('musim')->get();
+        foreach ($data as $rekap) {
+            $rekap->indicator = $rekap->jual_luar == 1 ? '<span class="badge badge-warning">Jual Luar</span>' : '';
+        }
+
+        foreach ($data as $rekap) {
+            $rekap->cek = $rekap->bruto - $rekap->berat_gudang;
+        }
+
+        //calculate all total
+        $totalnetto = $data->sum('netto');
+        $totalbruto = $data->sum('bruto');
+        $totaljumlahharga = $data->sum('jumlah');
+        $totaljumlahbersih = $data->sum('bersih');
+        $cektotal = $data->sum('cek');
+
+        // Pass the data to the view
+        return view('input_data', [
+            'id' => $musim->id,
+            'petani' => $petani,
+            'harga' => $harga,
+            'parameter' => $parameter,
+            'totaljumlahharga' => $totaljumlahharga,
+            'totaljumlahbersih' => $totaljumlahbersih,
+            'data' => $data,
+            'netto' => $netto,
+            'cektotal' => $cektotal,
+            'totalnetto' => $totalnetto,
+            'totalbruto' => $totalbruto,
+            'username' => $username,
+            'selectedYear' => $year,
+            'id_musim' => $musim->id,
+            'musim' => $musimList,
+        ]);
     }
 
-    // Get the username based on user ID
-    $username = DB::table('users')
-        ->where('id', $userId)
-        ->pluck('name')
-        ->first();
-
-    // Fetch data for rekap based on the current id_musim and selected year
-    $data = DB::table('rekap_2024')
-        ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
-        ->where('rekap_2024.id_petani', $userId)
-        ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim from the request
-        ->select('rekap_2024.*', 'parameter_2024.*')
-        ->get();
-
-    // Fetch parameter data
-    $parameter = DB::table('parameter_2024')->where('id', $year)->first();
-
-    // Get netting and pricing information
-    $netto = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('netto')->first();
-    $harga = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('harga')->first();
-    $petani = DB::table('users')->where('role', 'petani')->get();
-
-    // Calculate KJ and other fields dynamically
-    foreach ($data as $rekap) {
-        $rekap->kj = ($rekap->harga <= 50000) ? 1000 * $rekap->netto : 
-                      (($rekap->harga <= 75000) ? 2000 * $rekap->netto :
-                      (($rekap->harga <= 100000) ? 3000 * $rekap->netto :
-                      (($rekap->harga <= 125000) ? 4000 * $rekap->netto :
-                      (($rekap->harga <= 150000) ? 5000 * $rekap->netto : 
-                      6000 * $rekap->netto))));
-                      
-        $rekap->jumlah = $rekap->netto * $rekap->harga;
-        $rekap->jumlahkotor = $rekap->jumlah - $rekap->kj - $rekap->biaya_jual - $rekap->naik_turun;
-        $rekap->komisi = $rekap->jumlahkotor * $rekap->kepala_petani;
-        $rekap->bersih = $rekap->jumlahkotor - $rekap->komisi;
-    }
-
-    // Get the list of musim
-    $musimList = DB::table('musim')->get();
-    foreach ($data as $rekap) {
-        $rekap->indicator = $rekap->jual_luar == 1 ? '<span class="badge badge-warning">Jual Luar</span>' : '';
-    }
-
-    foreach ($data as $rekap) {
-        $rekap->cek = $rekap->bruto - $rekap->berat_gudang;
-    }
-
-    //calculate all total
-    $totalnetto = $data->sum('netto');
-    $totalbruto = $data->sum('bruto');
-    $totaljumlahharga = $data->sum('jumlah');
-    $totaljumlahbersih = $data->sum('bersih');
-    $cektotal = $data->sum('cek');
-
-
-    // Pass the data to the view
-    return view('input_data', [
-        'id' => $musim->id,
-        'petani' => $petani,
-        'harga' => $harga,
-        'parameter' => $parameter,
-        'totaljumlahharga' => $totaljumlahharga,
-        'totaljumlahbersih' => $totaljumlahbersih,
-        'data' => $data,
-        'netto' => $netto,
-        'cektotal' => $cektotal,
-        'totalnetto' => $totalnetto,
-        'totalbruto' => $totalbruto,
-        'username' => $username,
-        'selectedYear' => $year,
-        'id_musim' => $musim->id,
-        'musim' => $musimList,
-    ]);
-}
-
-    public function updateParameter(Request $request){
+    public function updateParameter(Request $request)
+    {
         $year = $request->input('tahun', date('Y'));
 
         // Update the parameter in the database
@@ -224,26 +217,17 @@ class SesiController extends Controller
             abort(404, 'Year not found');
         }
 
-
         // Fetch data from the dynamically named table
         $data = DB::table('users')
-            ->leftJoin('rekap_2024', function($join) use ($musim) {
-                $join->on('users.id', '=', 'rekap_2024.id_petani')
-                    ->where('rekap_2024.id_musim', $musim->id); // Filter by id_musim in the join
+            ->leftJoin('rekap_2024', function ($join) use ($musim) {
+                $join->on('users.id', '=', 'rekap_2024.id_petani')->where('rekap_2024.id_musim', $musim->id); // Filter by id_musim in the join
             })
             ->where('users.role', 'petani') // Filter users by role 'petani'
-            ->select('users.id', 'users.name', 
-                DB::raw('SUM(rekap_2024.netto) as netto'), 
-                DB::raw('MAX(rekap_2024.harga) as harga'), 
-                DB::raw('SUM(rekap_2024.jual_luar) as jual_luar')
-            )
+            ->select('users.id', 'users.name', DB::raw('SUM(rekap_2024.netto) as netto'), DB::raw('MAX(rekap_2024.harga) as harga'), DB::raw('SUM(rekap_2024.jual_luar) as jual_luar'))
             ->groupBy('users.id', 'users.name') // Group by user ID and name to avoid duplicates
             ->get();
-        
-        
-        $nama = DB::table('users')
-            ->where('role', 'petani')
-            ->get();
+
+        $nama = DB::table('users')->where('role', 'petani')->get();
         // Fetch seasons for the dropdown menu
         $musimList = DB::table('musim')->get();
 
@@ -259,7 +243,7 @@ class SesiController extends Controller
         foreach ($data as $rekap) {
             $rekap->jumlahtotal = $rekap->harga * $rekap->netto; // secara dinamis mennghitung jumlahnya.
         }
-        
+
         $totaljumlahharga = $data->sum('jumlahtotal');
 
         // Return the view with the necessary data
@@ -430,7 +414,6 @@ class SesiController extends Controller
 
     public function hutang(Request $request)
     {
-
         // Validate the incoming request data
         $request->validate([
             'id_petani' => 'required|exists:users,id', // Assuming the 'petani' table is 'users'
@@ -470,9 +453,9 @@ class SesiController extends Controller
         return redirect()->route('hutang-admin')->with('success', 'Hutang berhasil ditambahkan atau diperbarui!');
     }
 
-    public function hutangdashboard(Request $request){
+    public function hutangdashboard(Request $request)
+    {
         $year = $request->input('year', date('Y'));
-
 
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
@@ -480,7 +463,54 @@ class SesiController extends Controller
             'selectedYear' => $year,
             'musim' => $musim,
             'currentMusim' => $musimList,
+        ]);
+    }
 
+    public function distribusidashboard(Request $request)
+    {
+        $year = $request->input('year', date('Y'));
+        $musim = DB::table('musim')->where('tahun', $year)->first();
+        $musimList = DB::table('musim')->get();
+
+        $data = DB::table('distribusi_2024')
+        ->join('rekap_2024', 'distribusi_2024.id_rekap', '=', 'rekap_2024.id_rekap') // Join distribusi_2024 with rekap_2024 using id_rekap
+        ->where('distribusi_2024.id_musim', $musim->id) // Ensure you're filtering by id_musim from rekap_2024
+        ->select('distribusi_2024.*', 'rekap_2024.*') // Optionally select columns from both tables
+        ->get();
+
+        foreach($data as $rekap){
+            $rekap->pengeluaran = $rekap->n_gudang + $rekap->mobil_berangkat + $rekap->mobil_pulang + $rekap->nt_pabrik
+            + $rekap->kasut + $rekap->transport_gudang;
+        }
+
+        $totalpengeluaran = $data->sum('pengeluaran');
+        
+
+        foreach ($data as $rekap) {
+            if ($rekap->status == 'Diterima') {
+                $rekap->status = '<span class="badge badge-success">Diterima</span>'; 
+            } elseif ($rekap->status == 'Diproses') {
+                $rekap->status = '<span class="badge badge-warning">Diproses</span>'; 
+            } elseif ($rekap->status == 'Ditolak') {
+                $rekap->status = '<span class="badge badge-danger">Ditolak</span>'; 
+            }
+        }
+ 
+
+        $diterima = $data->count('Diterima');
+        $terkirim = $data->count('Diproses');
+        $ditolak = $data->count('Ditolak');
+        
+
+        return view('distribusi', [
+            'data' => $data,
+            'diterima' => $diterima,
+            'dikirim' => $terkirim,
+            'ditolak' => $ditolak,
+            'totalpengeluaran' => $totalpengeluaran,
+            'selectedYear' => $year,
+            'musim' => $musimList,
+            'currentMusim' => $musim,
         ]);
     }
 

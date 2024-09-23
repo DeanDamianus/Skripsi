@@ -77,6 +77,8 @@ Route::middleware('auth')->group(function () {
             return view ('distribusi');
         })->name('distribusi');
 
+        Route::get('/distribusi', [SesiController::class, 'distribusidashboard']);
+
         Route::get('/editInput', function (){
             return view ('edit_petani');
         })->name('edit_petani');

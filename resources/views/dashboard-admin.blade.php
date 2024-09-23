@@ -23,8 +23,7 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="" class="nav-link">Home</a>
@@ -45,7 +44,7 @@
                             <a href="{{ url('/owner?tahun=' . $season->tahun) }}" class="dropdown-item">
                                 <i class="fas fa-calendar"></i> {{ $season->tahun }}
                             </a>
-                            
+
                             @endforeach
                         </div>
                     </div>
@@ -56,8 +55,8 @@
                     </a>
                 </li>
             </ul>
-            
-            
+
+
         </nav>
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -76,9 +75,9 @@
                     </div>
                     <div class="info">
                         @if (Auth::check())
-                            <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                         @else
-                            <a href="#" class="d-block">Guest</a>
+                        <a href="#" class="d-block">Guest</a>
                         @endif
                     </div>
                 </div>
@@ -116,7 +115,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/distribusi') }}" class="nav-link">
+                            <a href="{{ url('/distribusi?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-truck"></i>
                                 <p>
                                     <strong>DISTRIBUSI</strong>
@@ -194,7 +193,7 @@
                                 <p>Total Netto Keranjang</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-weight-hanging"></i> 
+                                <i class="fas fa-weight-hanging"></i>
                             </div>
                             <a href="{{ url('/input?year=' . $selectedYear) }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
@@ -207,7 +206,8 @@
                         <!-- small card -->
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <h3><sup style="font-size: 20px">Rp.</sup>{{ number_format($totalHarga, 0, ',', '.') }}</h3>
+                                <h3><sup style="font-size: 20px">Rp.</sup>{{ number_format($totalHarga, 0, ',', '.') }}
+                                </h3>
                                 <p>Total Harga Keranjang</p>
                             </div>
                             <div class="icon">
@@ -229,7 +229,7 @@
                             <div class="icon">
                                 <i class="fas fa-exchange-alt"></i> <!-- Ikon pertukaran -->
                             </div>
-                            <a href="{{ url('/input') }}"class="small-box-footer">
+                            <a href="{{ url('/input') }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -258,7 +258,8 @@
                     <div class="col-lg-3 col-6">
                         <div class="small-box bg-dark">
                             <div class="inner">
-                                <h3><sup style="font-size: 20px">Rp. </sup>{{ number_format($biayaParam, 0, ',', '.') }}</h3>
+                                <h3><sup style="font-size: 20px">Rp. </sup>{{ number_format($biayaParam, 0, ',', '.') }}
+                                </h3>
                                 <p>Biaya Jual</p>
                             </div>
                             <div class="icon">
@@ -269,7 +270,7 @@
                             </a>
                         </div>
                     </div>
-                    
+
                     <!-- Jumlah Jual Lua -->
                 </div>
                 <!-- /.container-fluid -->
@@ -327,12 +328,12 @@
                                 <div class="card-body">
                                     <div class="d-flex">
                                         {{-- <p class="ml-auto d-flex flex-column text-right">
-                        <span class="text-success">
-                          <i class="fas fa-arrow-up"></i> 33.1%
-                        </span>
-                        <span class="text-muted">Since last month</span>
-                      </p> --}}
-                                    {{-- </div>
+                                            <span class="text-success">
+                                                <i class="fas fa-arrow-up"></i> 33.1%
+                                            </span>
+                                            <span class="text-muted">Since last month</span>
+                                        </p> --}}
+                                        {{-- </div>
                                     <!-- /.d-flex -->
 
                                     <div class="position-relative mb-4">
@@ -356,7 +357,7 @@
                     </div>
                     <!--Last-->
                 </div>
-            </div> --}} 
+            </div> --}}
             <!-- /.row -->
         </div>
         <!-- /.container-fluid -->

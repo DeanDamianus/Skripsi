@@ -177,7 +177,7 @@ if (!$result) {
                             </a>
                         </li>
                         <li class="nav-item menu-closed">
-                            <a href="{{ url('/distribusi') }}" class="nav-link">
+                            <a href="{{ url('/distribusi?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-truck"></i>
                                 <p>
                                     <strong>DISTRIBUSI</strong>
