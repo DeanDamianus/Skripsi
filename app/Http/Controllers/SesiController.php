@@ -485,6 +485,17 @@ class SesiController extends Controller
 
         $totalpengeluaran = $data->sum('pengeluaran');
         
+        $diterima = $data->filter(function($rekap) {
+            return $rekap->status == 'Diterima';
+        })->count();
+        
+        $diproses = $data->filter(function($rekap) {
+            return $rekap->status == 'Diproses';
+        })->count();
+        
+        $ditolak = $data->filter(function($rekap) {
+            return $rekap->status == 'Ditolak';
+        })->count();
 
         foreach ($data as $rekap) {
             if ($rekap->status == 'Diterima') {
@@ -496,16 +507,12 @@ class SesiController extends Controller
             }
         }
  
-
-        $diterima = $data->count('Diterima');
-        $terkirim = $data->count('Diproses');
-        $ditolak = $data->count('Ditolak');
         
 
         return view('distribusi', [
             'data' => $data,
             'diterima' => $diterima,
-            'dikirim' => $terkirim,
+            'diproses' => $diproses,
             'ditolak' => $ditolak,
             'totalpengeluaran' => $totalpengeluaran,
             'selectedYear' => $year,

@@ -193,12 +193,66 @@
                         </div><!-- /.row -->
                     </div><!-- /.container-fluid -->
                 </div>
+                {{-- <div class="row">
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box">
+                        <span class="info-box-icon bg-success"><i class="fas fa-check-circle"></i></span>
+          
+                        <div class="info-box-content">
+                          <span class="info-box-text">Diterima</span>
+                          <span class="info-box-number">{{ $diterima }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                      </div>
+                      <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box">
+                        <span class="info-box-icon bg-yellow"><i class="fas fa-truck""></i></span>
+          
+                        <div class="info-box-content">
+                          <span class="info-box-text">Diproses</span>
+                          <span class="info-box-number">{{ $diproses }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                      </div>
+                      <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box">
+                        <span class="info-box-icon bg-danger"><i class="fas fa-times"></i></span>
+          
+                        <div class="info-box-content">
+                          <span class="info-box-text">Ditolak</span>
+                          <span class="info-box-number">{{ $ditolak }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                      </div>
+                      <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box">
+                        <span class="info-box-icon bg-info"><i class="fas fa-hourglass-half"></i></span>
+          
+                        <div class="info-box-content">
+                          <span class="info-box-text">Belum Dikirim</span>
+                          <span class="info-box-number">0</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                      </div>
+                      <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                  </div> --}}
                 <div class="row">
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <h3>{{ $diterima }}</sup></h3>
+                                <h3>{{ $diterima }}</h3>
                                 <p>Diterima</p>
                             </div>
                             <div class="icon">
@@ -212,7 +266,7 @@
                         <!-- small card -->
                         <div class="small-box bg-yellow">
                             <div class="inner">
-                                <h3>{{ $dikirim }}</sup></h3>
+                                <h3>{{ $diproses }}</sup></h3>
                                 <p>Diproses</p>
                             </div>
                             <div class="icon">
@@ -237,7 +291,7 @@
                         <!-- small card -->
                         <div class="small-box bg-info">
                             <div class="inner">
-                                <h3>10</sup></h3>
+                                <h3>0</sup></h3>
                                 <p>Belum Dikirim</p>
                             </div>
                             <div class="icon">
