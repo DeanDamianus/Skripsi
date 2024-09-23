@@ -1,21 +1,3 @@
-<?php
-
-// Establish the connection
-$con = mysqli_connect('localhost', 'root', '', 'simbako_app');
-
-// Check connection
-if (!$con) {
-    die('Koneksi Error: ' . mysqli_connect_error());
-}
-
-// Query nama
-$nama = "SELECT * FROM users WHERE role = 'petani'";
-$result = mysqli_query($con, $nama);
-
-$total_harga = 0;
-$total_netto = 0; // Initialize total netto
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,14 +35,16 @@ $total_netto = 0; // Initialize total netto
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
-                        <button class="nav-link" type="button" data-toggle="dropdown" style=" border: black;">
-                            2024
+                        <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
+                            {{ $selectedYear }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            @foreach($currentMusim as $season)
                             <div class="dropdown-divider"></div>
-                            <a href="{{ url('/owner2025') }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> 2025
+                            <a href="{{ url('/datapetani?year='.$season->tahun) }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
                             </a>
+                            @endforeach
                         </div>
                     </div>
                 </li>
@@ -104,7 +88,7 @@ $total_netto = 0; // Initialize total netto
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/owner') }}" class="nav-link">
+                            <a href="{{ url('/owner?tahun=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -113,7 +97,7 @@ $total_netto = 0; // Initialize total netto
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/input') }}" class="nav-link">
+                            <a href="{{ url('/input?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -122,7 +106,7 @@ $total_netto = 0; // Initialize total netto
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/hutang-admin') }}" class="nav-link">
+                            <a href="{{ url('/hutang-admin?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-hand-holding-usd"></i>
                                 <p>
                                     <strong>HUTANG</strong>
@@ -149,13 +133,13 @@ $total_netto = 0; // Initialize total netto
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('/datapetani') }}" class="nav-link active">
+                                    <a href="{{ url('/datapetani?year=' . $selectedYear) }}" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Petani</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a a href="{{ url('/register') }}" class="nav-link">
+                                    <a a href="{{ url('/register?year=' . $selectedYear) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Tambah Akun</p>
                                     </a>
@@ -169,7 +153,7 @@ $total_netto = 0; // Initialize total netto
                             </ul>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/parameter') }}" class="nav-link">
+                            <a href="{{ url('/parameter?tahun=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     <strong>PARAMETER</strong>
@@ -220,46 +204,20 @@ $total_netto = 0; // Initialize total netto
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                                     
-                                        while ($row = mysqli_fetch_assoc($result)) {
-                                            $id_petani = $row['id'];
-
-                                            // Query to get the total netto for each petani
-                                            $query_bruto = "SELECT SUM(netto) AS total_bruto FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                                            $bruto_result = mysqli_query($con, $query_bruto);
-                                            $bruto_data = mysqli_fetch_assoc($bruto_result);
-                                            
-                                            $total_bruto = isset($bruto_data['total_bruto']) ? $bruto_data['total_bruto'] : 0;
-                                            
-                                            // Query to get the total harga for each petani
-                                            $query_harga = "SELECT SUM(netto * harga) AS total_harga FROM rekap_2024 WHERE id_petani = '$id_petani'";
-                                            $harga_result = mysqli_query($con, $query_harga);
-                                            $harga_data = mysqli_fetch_assoc($harga_result);
-                                            
-                                            $total_harga_per_petani = isset($harga_data['total_harga']) ? $harga_data['total_harga'] : 0;
-                                            
-                                            // Format harga
-                                            $hargaFormatted = 'Rp. ' . number_format($total_harga_per_petani, 0, ',', '.');
-                                            
-                                            // Accumulate totals
-                                            $total_netto += $total_bruto;
-                                            $total_harga += $total_harga_per_petani;
-                                            ?>
+                                        @foreach($data as $users)
                                         <tr>
                                             <td>
-                                                <?php echo $row['id']; ?>
+                                                {{ $users->id }}
                                             </td>
                                             <td>
-                                                <?php echo $row['name']; ?>
+                                                {{ $users->name }}
                                             </td>
                                             <td>
-                                                <?php echo $row['created_at']; ?>
+                                                {{ $users->created_at }}
                                             </td>
                                         </tr>
-                                        <?php 
-                  }
-                  ?>
+
+                                        @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>

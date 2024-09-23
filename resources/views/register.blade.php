@@ -35,13 +35,15 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
                         <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
-                            2024
+                            {{ $selectedYear }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            @foreach($currentMusim as $season)
                             <div class="dropdown-divider"></div>
-                            <a href="{{ url('/owner2025') }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> 2025
+                            <a href="{{ url('/register?year='.$season->tahun) }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
                             </a>
+                            @endforeach
                         </div>
                     </div>
                 </li>
@@ -82,7 +84,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/owner') }}" class="nav-link">
+                            <a href="{{ url('/owner?tahun=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -91,7 +93,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/input') }}" class="nav-link">
+                            <a href="{{ url('/input?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>
@@ -100,7 +102,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/hutang-admin') }}" class="nav-link">
+                            <a href="{{ url('/hutang-admin?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-hand-holding-usd"></i>
                                 <p>
                                     <strong>HUTANG</strong>
@@ -127,13 +129,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('/datapetani') }}" class="nav-link">
+                                    <a href="{{ url('/datapetani?year=' . $selectedYear) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Petani</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ url('/register') }}" class="nav-link active">
+                                    <a href="{{ url('/register?year=' . $selectedYear) }}" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Tambah Akun</p>
                                     </a>
@@ -147,7 +149,7 @@
                             </ul>
                         </li>
                         <li class="nav-item menu-active">
-                            <a href="{{ url('/parameter') }}" class="nav-link open">
+                            <a href="{{ url('/parameter?tahun=' . $selectedYear) }}" class="nav-link open">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     <strong>PARAMETER</strong>

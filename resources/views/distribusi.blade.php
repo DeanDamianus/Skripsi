@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,8 +32,7 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="../../index3.html" class="nav-link">Home</a>
@@ -51,10 +49,10 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             @foreach($musim as $season)
-                                <div class="dropdown-divider"></div>
-                                <a href="{{ url('/distribusi?year='.$season->tahun) }}" class="dropdown-item">
-                                    <i class="fas fa-calendar"></i> {{ $season->tahun }}
-                                </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url('/distribusi?year='.$season->tahun) }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
+                            </a>
                             @endforeach
                         </div>
                     </div>
@@ -83,9 +81,9 @@
                     </div>
                     <div class="info">
                         @if (Auth::check())
-                            <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                         @else
-                            <a href="#" class="d-block">Guest</a>
+                        <a href="#" class="d-block">Guest</a>
                         @endif
                     </div>
                 </div>
@@ -98,7 +96,7 @@
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/owner?tahun=' . $selectedYear) }}"  class="nav-link">
+                            <a href="{{ url('/owner?tahun=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -143,13 +141,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('/datapetani') }}" class="nav-link">
+                                    <a href="{{ url('/datapetani?year=' . $selectedYear) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Petani</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a a href="{{ url('/register') }}" class="nav-link">
+                                    <a a href="{{ url('/register?year=' . $selectedYear) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Tambah Akun</p>
                                     </a>
@@ -195,160 +193,161 @@
                 </div>
                 {{-- <div class="row">
                     <div class="col-md-3 col-sm-6 col-12">
-                      <div class="info-box">
-                        <span class="info-box-icon bg-success"><i class="fas fa-check-circle"></i></span>
-          
-                        <div class="info-box-content">
-                          <span class="info-box-text">Diterima</span>
-                          <span class="info-box-number">{{ $diterima }}</span>
-                        </div>
-                        <!-- /.info-box-content -->
-                      </div>
-                      <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-3 col-sm-6 col-12">
-                      <div class="info-box">
-                        <span class="info-box-icon bg-yellow"><i class="fas fa-truck""></i></span>
-          
-                        <div class="info-box-content">
-                          <span class="info-box-text">Diproses</span>
-                          <span class="info-box-number">{{ $diproses }}</span>
-                        </div>
-                        <!-- /.info-box-content -->
-                      </div>
-                      <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-3 col-sm-6 col-12">
-                      <div class="info-box">
-                        <span class="info-box-icon bg-danger"><i class="fas fa-times"></i></span>
-          
-                        <div class="info-box-content">
-                          <span class="info-box-text">Ditolak</span>
-                          <span class="info-box-number">{{ $ditolak }}</span>
-                        </div>
-                        <!-- /.info-box-content -->
-                      </div>
-                      <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-md-3 col-sm-6 col-12">
-                      <div class="info-box">
-                        <span class="info-box-icon bg-info"><i class="fas fa-hourglass-half"></i></span>
-          
-                        <div class="info-box-content">
-                          <span class="info-box-text">Belum Dikirim</span>
-                          <span class="info-box-number">0</span>
-                        </div>
-                        <!-- /.info-box-content -->
-                      </div>
-                      <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
-                  </div> --}}
-                <div class="row">
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-success">
-                            <div class="inner">
-                                <h3>{{ $diterima }}</h3>
-                                <p>Diterima</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-check-circle"></i> <!-- Ikon timbangan menggantung -->
-                            </div>
-                        </div>
+                        <div class="info-box">
+                            <span class="info-box-icon bg-success"><i class="fas fa-check-circle"></i></span>
 
-                    </div>
-                    <!--NETO-->
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-yellow">
-                            <div class="inner">
-                                <h3>{{ $diproses }}</sup></h3>
-                                <p>Diproses</p>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Diterima</span>
+                                <span class="info-box-number">{{ $diterima }}</span>
                             </div>
-                            <div class="icon">
-                                <i class="fas fa-truck"></i> </i> <!-- Ikon koin -->
-                            </div>
+                            <!-- /.info-box-content -->
                         </div>
+                        <!-- /.info-box -->
                     </div>
-                    <!-- Jumlah Kotor-->
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-danger">
-                            <div class="inner">
-                                <h3>{{ $ditolak }}</sup></h3>
-                                <p>Ditolak</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-times"></i> <!-- Ikon pertukaran -->
-                            </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-yellow"><i class="fas fa-truck""></i></span>
+          
+                        <div class=" info-box-content">
+                                    <span class="info-box-text">Diproses</span>
+                                    <span class="info-box-number">{{ $diproses }}</span>
                         </div>
+                        <!-- /.info-box-content -->
                     </div>
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-info">
-                            <div class="inner">
-                                <h3>0</sup></h3>
-                                <p>Belum Dikirim</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-hourglass-half"></i> <!-- Ikon pertukaran -->
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Jumlah Jual Lua -->
+                    <!-- /.info-box -->
                 </div>
-                <div class="card">
-                    <!-- /.card-header -->
-                    <div class="card-body p-0">
-                      <div class="table-responsive">
+                <!-- /.col -->
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-danger"><i class="fas fa-times"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Ditolak</span>
+                            <span class="info-box-number">{{ $ditolak }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-info"><i class="fas fa-hourglass-half"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Belum Dikirim</span>
+                            <span class="info-box-number">0</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+            </div> --}}
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>{{ $diterima }}</h3>
+                            <p>Diterima</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-check-circle"></i> <!-- Ikon timbangan menggantung -->
+                        </div>
+                    </div>
+
+                </div>
+                <!--NETO-->
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>{{ $diproses }}</sup></h3>
+                            <p>Diproses</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-truck"></i> </i> <!-- Ikon koin -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Jumlah Kotor-->
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>{{ $ditolak }}</sup></h3>
+                            <p>Ditolak</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-times"></i> <!-- Ikon pertukaran -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>0</sup></h3>
+                            <p>Belum Dikirim</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-hourglass-half"></i> <!-- Ikon pertukaran -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Jumlah Jual Lua -->
+            </div>
+            <div class="card">
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                    <div class="table-responsive">
                         <table class="table m-0">
-                          <thead>
-                          <tr>
-                            <th>ID Keranjang</th>
-                            <th>Periode</th>
-                            <th>Status</th>
-                            <th>Pengeluaran</th>
-                            <th>Action</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                            @foreach($data as $rekap)
+                            <thead>
                                 <tr>
-                                    <td><a href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim ) }}">{{ $rekap->id_rekap }}</a></td>
+                                    <th>ID Keranjang</th>
+                                    <th>Periode</th>
+                                    <th>Status</th>
+                                    <th>Pengeluaran</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($data as $rekap)
+                                <tr>
+                                    <td><a
+                                            href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim ) }}">{{
+                                            $rekap->id_rekap }}</a></td>
                                     <td>{{ $rekap->periode }}</td>
                                     <td>{!! $rekap->status !!}</td>
                                     <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
                                     <td>
-                                        <a href=""
-                                            class="btn btn-block btn-success">
+                                        <a href="" class="btn btn-block btn-success">
                                             <i class="nav-icon fas fa-edit"></i>
                                         </a>
                                     </td>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <th></th>
-                            <th></th>    
-                            <th></th>    
-                            <th>{{ 'Rp. ' . number_format($totalpengeluaran, 0, ',', '.') }}</th>   
-                            <th></th>    
-                        </tfoot>            
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>{{ 'Rp. ' . number_format($totalpengeluaran, 0, ',', '.') }}</th>
+                                <th></th>
+                            </tfoot>
                         </table>
-                      </div>
-                      <!-- /.table-responsive -->
                     </div>
-                    <!-- /.card-footer -->
-                  </div>
-                <!-- /.container-fluid -->
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.card-footer -->
             </div>
-            <!-- /.row -->
+            <!-- /.container-fluid -->
         </div>
-        <!-- /.container-fluid -->
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
     </div>
     <!-- /.content -->
     </div>
@@ -391,7 +390,7 @@
     <script src="dist/js/pages/dashboard3.js"></script>
     <script src="dist/js/pages/dashboard2.js"></script>
     <script src="plugins/chart.js/Chart.min.js"></script>
-    
+
     <script>
         $(function() {
             /*

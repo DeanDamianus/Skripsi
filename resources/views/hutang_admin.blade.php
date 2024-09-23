@@ -85,8 +85,7 @@ if (!$result) {
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ url('/owner') }}" class="nav-link">Home</a>
@@ -103,10 +102,10 @@ if (!$result) {
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             @foreach($currentMusim as $season)
-                                <div class="dropdown-divider"></div>
-                                <a href="{{ url('/hutang-admin?year=' . $season->tahun) }}" class="dropdown-item">
-                                    <i class="fas fa-calendar"></i> {{ $season->tahun }}
-                                </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url('/hutang-admin?year=' . $season->tahun) }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
+                            </a>
                             @endforeach
                         </div>
                     </div>
@@ -137,9 +136,9 @@ if (!$result) {
                     </div>
                     <div class="info">
                         @if (Auth::check())
-                            <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                         @else
-                            <a href="#" class="d-block">Guest</a>
+                        <a href="#" class="d-block">Guest</a>
                         @endif
                     </div>
                 </div>
@@ -195,13 +194,13 @@ if (!$result) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('/datapetani') }}" class="nav-link">
+                                    <a href="{{ url('/datapetani?year=' . $selectedYear) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Petani</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a a href="{{ url('/register') }}" class="nav-link">
+                                    <a a href="{{ url('/register?year=' . $selectedYear) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Tambah Akun</p>
                                     </a>
@@ -306,7 +305,7 @@ if (!$result) {
                                             }
                                             ?>
                                         </tbody>
-                                        
+
 
                                     </table>
                                 </div>
@@ -327,12 +326,15 @@ if (!$result) {
                                                     <label>Nomor ID Petani:</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="far fa-user"></i></span>
+                                                            <span class="input-group-text"><i
+                                                                    class="far fa-user"></i></span>
                                                         </div>
                                                         <select name="id_petani" class="form-control" required>
                                                             <option value="" selected disabled>Pilih Petani</option>
                                                             <?php foreach ($allPetani as $user) : ?>
-                                                                <option value="<?= $user['id'] ?>"><?= $user['id'] . ' - ' . $user['name'] ?></option>
+                                                            <option value="<?= $user['id'] ?>">
+                                                                <?= $user['id'] . ' - ' . $user['name'] ?>
+                                                            </option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
@@ -341,30 +343,35 @@ if (!$result) {
                                                     <label>Tanggal Hutang:</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                                            <span class="input-group-text"><i
+                                                                    class="far fa-calendar-alt"></i></span>
                                                         </div>
-                                                        <input type="date" name="tanggal_hutang" class="form-control" required>
+                                                        <input type="date" name="tanggal_hutang" class="form-control"
+                                                            required>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Bon</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
+                                                            <span class="input-group-text"><i
+                                                                    class="nav-icon fas fa-hand-holding-usd"></i></span>
                                                         </div>
-                                                        <input type="number" name="bon" class="form-control" id='bon-input' required>
+                                                        <input type="number" name="bon" class="form-control"
+                                                            id='bon-input' required>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="width: 100%; justify-content: center;">
                                                     <div class="col-12">
-                                                        <button type="submit" class="btn btn-danger btn-block">Simpan</button>
+                                                        <button type="submit"
+                                                            class="btn btn-danger btn-block">Simpan</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
-                        
+
                                 <!-- Form for payment -->
                                 <div class="col-md-6">
                                     <div class="card card-green">
@@ -378,12 +385,15 @@ if (!$result) {
                                                     <label>Nomor ID Petani:</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="far fa-user"></i></span>
+                                                            <span class="input-group-text"><i
+                                                                    class="far fa-user"></i></span>
                                                         </div>
                                                         <select name="id_petani" class="form-control" required>
                                                             <option value="" selected disabled>Pilih Petani</option>
                                                             <?php foreach ($petaniInHutang as $user) : ?>
-                                                                <option value="<?= $user['id'] ?>"><?= $user['id'] . ' - ' . $user['name'] ?></option>
+                                                            <option value="<?= $user['id'] ?>">
+                                                                <?= $user['id'] . ' - ' . $user['name'] ?>
+                                                            </option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
@@ -392,14 +402,17 @@ if (!$result) {
                                                     <label>Jumlah Bayar</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
+                                                            <span class="input-group-text"><i
+                                                                    class="nav-icon fas fa-hand-holding-usd"></i></span>
                                                         </div>
-                                                        <input type="number" name="jumlah_bayar" class="form-control" required>
+                                                        <input type="number" name="jumlah_bayar" class="form-control"
+                                                            required>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="width: 100%; justify-content: center;">
                                                     <div class="col-12">
-                                                        <button type="submit" class="btn btn-success btn-block">Selesai</button>
+                                                        <button type="submit"
+                                                            class="btn btn-success btn-block">Selesai</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -468,16 +481,16 @@ if (!$result) {
     <div class="alert alert-success">
         {{ session('success') }}
     </div>
-@endif
+    @endif
 
-@if(session('error'))
+    @if(session('error'))
     <div class="alert alert-danger">
         {{ session('error') }}
     </div>
-@endif
+    @endif
 
-<script>
-    $(function () {
+    <script>
+        $(function () {
       $("#example1").DataTable({
         "responsive": true, "lengthChange": false, "autoWidth": false,
         "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
@@ -492,10 +505,8 @@ if (!$result) {
         "responsive": true,
       });
     });
-  </script>
+    </script>
 </body>
 
 </html>
 </body>
-
-

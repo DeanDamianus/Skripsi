@@ -37,16 +37,9 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/owner', [SesiController::class, 'dashboard']);
 
-        Route::get('/hutang-admin', function() {
-            return view('hutang_admin');
-        })->name('hutang-admin');
-
         Route::get('/hutang-admin', [SesiController::class, 'hutangdashboard']);
 
-        Route::get('/datapetani', function() {
-            return view('datapetani');
-        })->name('datapetani');
-
+        Route::get('/datapetani', [SesiController::class, 'datapetani']);
 
         Route::get('/parameter', [SesiController::class, 'parameter'])->name('parameter');
 
@@ -58,24 +51,11 @@ Route::middleware('auth')->group(function () {
             return view ('register');
         })->name('register');
 
+        Route::get('/register', [SesiController::class, 'register']);
+
         Route::get('/input', [SesiController::class, 'input']);
-
-
-        Route::get('/inputPetani', function (){
-            return view ('input_petani');
-        })->name('input_petani'); // input petani merupakan halaman form input untuk rekap
-
-        
+   
         Route::get('/dataInput', [SesiController::class, 'rekap']);//data input ini untuk melihat data rekap dari tiap petani
-
-        
-        Route::get('/dataInput2025', function (){
-            return view ('input_data2025');
-        })->name('input_data2025');
-
-        Route::get('/distribusi', function (){
-            return view ('distribusi');
-        })->name('distribusi');
 
         Route::get('/distribusi', [SesiController::class, 'distribusidashboard']);
 

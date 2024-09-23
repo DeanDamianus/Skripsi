@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,7 +30,7 @@
                 </a>
                 <ul class="navbar-nav">
                     <li class="nav-item d-none d-sm-inline-block">
-                      <a href="{{url('/input')}}" class="nav-link">Home</a>
+                        <a href="{{url('/input')}}" class="nav-link">Home</a>
                     </li>
                 </ul>
                 <button class="navbar-toggler order-1" type="button" data-toggle="collapse"
@@ -67,9 +66,10 @@
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <a href="{{ url('/input?year=' . $selectedYear) }}" class="btn btn-outline-dark float-right" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding: 0; border: 2px solid black; background-color: transparent;">
+                    <a href="{{ url('/input?year=' . $selectedYear) }}" class="btn btn-outline-dark float-right"
+                        style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding: 0; border: 2px solid black; background-color: transparent;">
                         <i class="fas fa-arrow-left" style="font-size: 20px; color: black;"></i>
-                    </a>       
+                    </a>
                     <div class="col-sm-6">
                         <h1>List Rekap <label> {{ $username}} </label></h1>
                     </div>
@@ -110,7 +110,7 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody> 
+                                    <tbody>
                                         @foreach ($data as $item)
                                         <tr>
                                             <td>{{ $item->id_rekap }}</td>
@@ -127,9 +127,9 @@
                                             <td>{!! $item->indicator !!}</td>
                                             <td>{{ $item->cek}}</td>
                                             <td>
-                                                <button
-                                                    {{-- onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'" --}}
-                                                    class="btn btn-block btn-danger">
+                                                <button {{--
+                                                    onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
+                                                    --}} class="btn btn-block btn-danger">
                                                     <a><i class="fas fa-trash"></i></a>
                                                 </button>
                                             </td>
@@ -155,22 +155,22 @@
                                         </tr>
                                     </tfoot>
                                 </table>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
-                        <!-- /.card-body -->
+                        <!-- /.card -->
                     </div>
-                    <!-- /.card -->
                 </div>
+                <!-- /.row -->
             </div>
-            <!-- /.row -->
         </div>
-    </div>
-    <!-- /.content-wrapper -->
+        <!-- /.content-wrapper -->
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
     </div>
     <!-- ./wrapper -->
 

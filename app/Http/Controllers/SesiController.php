@@ -54,9 +54,16 @@ class SesiController extends Controller
         return redirect('/');
     }
 
-    public function register()
+    public function register(Request $request)
     {
-        return view('register');
+        $year = $request->input('year', date('Y'));
+        $musim = DB::table('musim')->where('tahun', $year)->first();
+        $musimList = DB::table('musim')->get();
+        return view('register', [
+            'selectedYear' => $year,
+            'musim' => $musim,
+            'currentMusim' => $musimList,
+        ]);
     }
 
     public function create(Request $request)
@@ -464,6 +471,24 @@ class SesiController extends Controller
             'musim' => $musim,
             'currentMusim' => $musimList,
         ]);
+    }
+
+    public function datapetani(Request $request){
+
+        $year = $request->input('year', date('Y'));
+
+        $musim = DB::table('musim')->where('tahun', $year)->first();
+        $musimList = DB::table('musim')->get();
+
+        $data = DB::table('users')->where('role','petani')->get();
+
+        return view('datapetani', [
+            'selectedYear' => $year,
+            'data'=>$data,
+            'musim' => $musim,
+            'currentMusim' => $musimList,
+        ]);
+
     }
 
     public function distribusidashboard(Request $request)

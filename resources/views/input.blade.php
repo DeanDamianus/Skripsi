@@ -123,13 +123,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('/datapetani') }}" class="nav-link">
+                                    <a href="{{ url('/datapetani?year=' . $selectedYears) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Data Petani</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a a href="{{ url('/register') }}" class="nav-link">
+                                    <a a href="{{ url('/register?year=' . $selectedYears) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Tambah Akun</p>
                                     </a>
