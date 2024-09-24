@@ -524,11 +524,32 @@ class SesiController extends Controller
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
 
-        $data = DB::table('distribusi_2024')
-        ->join('rekap_2024', 'distribusi_2024.id_rekap', '=', 'rekap_2024.id_rekap') // Join distribusi_2024 with rekap_2024 using id_rekap
-        ->where('distribusi_2024.id_musim', $musim->id) // Ensure you're filtering by id_musim from rekap_2024
-        ->select('distribusi_2024.*', 'rekap_2024.*') // Optionally select columns from both tables
+        // $data = DB::table('distribusi_2024')
+        // ->join('rekap_2024', 'distribusi_2024.id_rekap', '=', 'rekap_2024.id_rekap') // Join distribusi_2024 with rekap_2024 using id_rekap
+        // ->where('distribusi_2024.id_musim', $musim->id) // Ensure you're filtering by id_musim from rekap_2024
+        // ->select('distribusi_2024.*', 'rekap_2024.*') // Optionally select columns from both tables
+        // ->get();
+
+        $data = DB::table('rekap_2024')
+        ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap') 
+        ->where('rekap_2024.id_musim', $musim->id)// Join distribusi_2024 with rekap_2024
+        ->select(
+            'rekap_2024.id_rekap', 
+            'rekap_2024.periode', 
+            'distribusi_2024.status',
+            'distribusi_2024.n_gudang',
+            'distribusi_2024.mobil_berangkat',
+            'distribusi_2024.mobil_pulang',
+            'distribusi_2024.nt_pabrik',
+            'distribusi_2024.kasut',
+            'distribusi_2024.transport_gudang',
+            'rekap_2024.id_petani', 
+            'rekap_2024.id_musim'
+        ) 
         ->get();
+
+
+
 
         foreach($data as $rekap){
             $rekap->pengeluaran = $rekap->n_gudang + $rekap->mobil_berangkat + $rekap->mobil_pulang + $rekap->nt_pabrik
@@ -549,6 +570,10 @@ class SesiController extends Controller
             return $rekap->status == 'Ditolak';
         })->count();
 
+        $dikirim = $data->filter(function($rekap) {
+            return $rekap->status == '';
+        })->count();
+
         foreach ($data as $rekap) {
             if ($rekap->status == 'Diterima') {
                 $rekap->status = '<span class="badge badge-success">Diterima</span>'; 
@@ -556,6 +581,8 @@ class SesiController extends Controller
                 $rekap->status = '<span class="badge badge-warning">Diproses</span>'; 
             } elseif ($rekap->status == 'Ditolak') {
                 $rekap->status = '<span class="badge badge-danger">Ditolak</span>'; 
+            } elseif ($rekap->status == '') {
+                $rekap->status = '<span class="badge badge-info">Belum Dikirim</span>'; 
             }
         }
  
@@ -563,6 +590,7 @@ class SesiController extends Controller
 
         return view('distribusi', [
             'data' => $data,
+            'dikirim' =>$dikirim,
             'diterima' => $diterima,
             'diproses' => $diproses,
             'ditolak' => $ditolak,

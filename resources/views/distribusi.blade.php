@@ -289,7 +289,7 @@
                     <!-- small card -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>0</sup></h3>
+                            <h3>{{ $dikirim }}</sup></h3>
                             <p>Belum Dikirim</p>
                         </div>
                         <div class="icon">
@@ -316,9 +316,7 @@
                             <tbody>
                                 @foreach($data as $rekap)
                                 <tr>
-                                    <td><a
-                                            href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim ) }}">{{
-                                            $rekap->id_rekap }}</a></td>
+                                    <td><a href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim ) }}">{{ $rekap->id_rekap }}</a></td>
                                     <td>{{ $rekap->periode }}</td>
                                     <td>{!! $rekap->status !!}</td>
                                     <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
@@ -330,6 +328,7 @@
                                 </tr>
                                 @endforeach
                             </tbody>
+                            
                             <tfoot>
                                 <th></th>
                                 <th></th>
