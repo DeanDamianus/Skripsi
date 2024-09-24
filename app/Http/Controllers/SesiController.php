@@ -620,4 +620,13 @@ class SesiController extends Controller
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Data berhasil dihapus!');
     }
+    public function destroyrekap($id)
+{
+    // Find the record by ID and delete it
+    DB::table('rekap_2024')->where('id_rekap', $id)->delete();
+
+    // Optionally, add a flash message for success
+    return redirect()->back()->with('success', 'Record deleted successfully!');
+}
+
 }

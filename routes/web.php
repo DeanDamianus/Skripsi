@@ -27,6 +27,8 @@ Route::post('/pelunasan', [SesiController::class, 'pelunasan'])->name('pelunasan
 
 // rout menghapus data hutang
 Route::delete('/deletehutang/{id}', [SesiController::class, 'destroy'])->name('hutang.delete');
+Route::delete('/inputPetani/{id}', [SesiController::class, 'destroyrekap'])->name('inputPetani.destroy');
+
 
 
 

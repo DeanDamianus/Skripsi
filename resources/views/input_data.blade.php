@@ -126,11 +126,13 @@
                                             <td>{!! $item->indicator !!}</td>
                                             <td>{{ $item->cek}}</td>
                                             <td>
-                                                <button {{--
-                                                    onclick="if(confirm('Are you sure you want to delete this record?')) window.location.href='/dataInput?id=<?php echo htmlspecialchars($id); ?>&id_rekap=<?php echo htmlspecialchars($row['id_rekap']); ?>'"
-                                                    --}} class="btn btn-block btn-danger">
-                                                    <a><i class="fas fa-trash"></i></a>
-                                                </button>
+                                                <form action="{{ route('inputPetani.destroy', $item->id_rekap) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-block btn-danger" onclick="return confirm('Are you sure you want to delete this record?');">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                         @endforeach
