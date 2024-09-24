@@ -1,55 +1,3 @@
-{{-- <?php
-// Establish the connection
-$con = mysqli_connect('localhost', 'root', '', 'simbako_app');
-
-// Check connection
-if (!$con) {
-    die('Koneksi Error: ' . mysqli_connect_error());
-}
-
-// Check if the form has been submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Collect data from the form
-    $netto = $_POST['netto'];
-    $bruto = $_POST['bruto'];
-    $harga = $_POST['harga'];
-    $jual_luar = $_POST['jual_luar']; 
-    $berat_gudang = $_POST['berat_gudang'];
-    $grade = $_POST['grade'];
-    $id_petani = $_POST['id_petani'];
-    $periode = $_POST['periode'];
-    $seri = $_POST['seri'];
-    $no_gg = $_POST['no_gg'];
-
-    // Insert the data into the rekap_2024 table
-    $insert_query = "INSERT INTO rekap_2024 (id_petani, netto, bruto, jual_luar, harga, berat_gudang, grade, periode, seri, no_gg) 
-                    VALUES ('$id_petani', '$netto','$bruto', '$jual_luar', '$harga', '$berat_gudang', '$grade', '$periode', '$seri', '$no_gg')";
-
-    if (mysqli_query($con, $insert_query)) {
-        echo "Data berhasil ditambahkan!";
-    } else {
-        echo "Error: " . $insert_query . "<br>" . mysqli_error($con);
-    }
-}
-
-// Fetch the user's data from the database
-$id = isset($_GET['id']) ? $_GET['id'] : null;
-if ($id === null) {
-    die('Error: ID parameter is missing.');
-}
-
-$nama_query = "SELECT * FROM users WHERE id = $id";
-$result = mysqli_query($con, $nama_query);
-
-if ($user_data = mysqli_fetch_assoc($result)) {
-    $user_name = $user_data['name'];
-} else {
-    $user_name = 'Unknown'; // Default value if user not found
-}
-
-$total_harga = 0;
-?> --}}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -121,7 +69,7 @@ $total_harga = 0;
                         <i class="fas fa-arrow-left" style="font-size: 20px; color: black;"></i>
                     </a>
                     <div class="col-sm-6">
-                        <h1>Input Nota <label>
+                        <h1>Input Nota {{ $username }}<label>
                             
                             </label></h1>
                     </div>
@@ -139,8 +87,8 @@ $total_harga = 0;
                         <form method="POST" action="{{ route('inputPetani.store') }}">
                             @csrf
                             <input type="hidden" name="jual_luar_value" id="jual_luar_value" value="0">
-                            <input type="hidden" name="id_petani" value={{ $userId }}>
-                            <input type="hidden" name="id_petani" value="{{ $idMusim }}">
+                            <input type="hidden" name="id_petani" value="{{ $userId }}">
+                            <input type="hidden" name="id_musim" value="{{ $idMusim }}">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -216,7 +164,6 @@ $total_harga = 0;
                                             <label for="jual_luar_checkbox"> <span class="badge badge-warning">Jual
                                                     Luar</span></label>
                                         </div>
-
                                         <!-- /.form-group -->
                                     </div>
                                     <!-- /.col -->

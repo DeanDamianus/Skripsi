@@ -273,7 +273,10 @@ class SesiController extends Controller
         $userId = $request->input('id');
         $idMusim = $request->input('id_musim');
         $idrekap = $request->input('id_rekap');
+        $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
 
+
+        
         $data = DB::table('rekap_2024')
             ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
             ->where('rekap_2024.id_petani', $userId)
@@ -283,6 +286,7 @@ class SesiController extends Controller
         
         return view('input_petani',[
             'data' => $data,
+            'username' => $username,
             'selectedYear' => $year,
             'userId' => $userId,
             'idMusim' => $idMusim
@@ -342,50 +346,52 @@ class SesiController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function inputpetani(Request $request)
     {
         // Validate the data
+        
         $request->validate([
-            'netto' => 'required|numeric',
-            'jual_luar' => 'nullable|in:0,1',
-            'harga' => 'required|numeric',
             'berat_gudang' => 'required|numeric',
-            'grade' => 'required|string',
-            'periode' => 'required|string',
+            'harga' => 'required|numeric',
             'seri' => 'required|string',
-            'no_gg' => 'required|numeric',
+            'grade' => 'required|string',
+            'bruto' => 'required|numeric',  // Include bruto in validation
+            'netto' => 'required|numeric',
+            'periode' => 'required|string',
+            'no_gg' => 'required|string',
+            'jual_luar_value' => 'required|boolean',
             'id_petani' => 'required|integer',
+            'id_musim' => 'required|integer',
         ]);
-
-        // Fetch the current id_rekap from the request
-        $id_rekap = $request->input('id_rekap');
+    
+        // Retrieve necessary data from the request
+        $idMusim = $request->input('id_musim');
+        $year = $request->input('tahun', date('Y'));
         $id_petani = $request->input('id_petani');
-        $jual_luar = $request->input('jual_luar_value') === '1';
+        
+        
+        // Insert a new record in the rekap_2024 table
+        DB::table('rekap_2024')->insert([
+            'id_petani' => $id_petani,
+            'id_musim' => $idMusim,
+            'netto' => $request->input('netto'),
+            'jual_luar' => $request->input('jual_luar_value', 0),
+            'harga' => $request->input('harga'),
+            'berat_gudang' => $request->input('berat_gudang'),
+            'grade' => $request->input('grade'),
+            'periode' => $request->input('periode'),
+            'seri' => $request->input('seri'),
+            'no_gg' => $request->input('no_gg'),
+            'bruto' => $request->input('bruto'),  
+        ]);
+    
+        // Redirect after successful insertion
+        return redirect()->to(url('/dataInput?id=' . $id_petani . '&id_musim=' . $idMusim . '&year=' . $year))
+        ->with('success', 'Data successfully created!');
 
-        // Find the existing rekap_2024 entry by id_rekap
-        $rekap = DB::table('rekap_2024')->where('id_rekap', $id_rekap)->first();
-
-        if (!$rekap) {
-            return redirect()->back()->with('error', 'Data not found.');
-        }
-
-        // Update the rekap_2024 entry
-        DB::table('rekap_2024')
-            ->where('id_rekap', $id_rekap)
-            ->update([
-                'netto' => $request->input('netto'),
-                'jual_luar' => $jual_luar,
-                'harga' => $request->input('harga'),
-                'berat_gudang' => $request->input('berat_gudang'),
-                'grade' => $request->input('grade'),
-                'periode' => $request->input('periode'),
-                'seri' => $request->input('seri'),
-                'no_gg' => $request->input('no_gg'),
-            ]);
-        return redirect()
-            ->to('http://127.0.0.1:8000/dataInput?id=' . urlencode($id_petani))
-            ->with('success', 'Data successfully updated!');
     }
+    
+
 
     public function hutangLunas(Request $request)
     {

@@ -84,7 +84,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button onclick="window.location.href='{{ url('/inputform?id=' . $idPetani . '&id_musim=' . $id ) }}'" class="btn btn-primary">
+                                <button onclick="window.location.href='{{ url('/inputform?id=' . $idPetani . '&id_musim=' . $id . '&year=' . $selectedYear ) }}'" class="btn btn-primary">
                                     <i class="nav-icon fas fa-plus"></i>
                                 </button>                                
                             </div>
