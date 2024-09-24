@@ -84,10 +84,9 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button onclick="window.location.href='/inputPetani?id=<?php echo $id; ?>'"
-                                    class="btn btn-primary">
+                                <button onclick="window.location.href='{{ url('/inputform?id=' . $idPetani . '&id_musim=' . $id ) }}'" class="btn btn-primary">
                                     <i class="nav-icon fas fa-plus"></i>
-                                </button>
+                                </button>                                
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0">

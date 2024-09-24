@@ -1,4 +1,4 @@
-<?php
+{{-- <?php
 // Establish the connection
 $con = mysqli_connect('localhost', 'root', '', 'simbako_app');
 
@@ -48,7 +48,7 @@ if ($user_data = mysqli_fetch_assoc($result)) {
 }
 
 $total_harga = 0;
-?>
+?> --}}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -101,17 +101,6 @@ $total_harga = 0;
                 <!-- Right navbar links -->
                 <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
                     <li class="nav-item d-none d-sm-inline-block">
-                        <div class="dropdown">
-                            <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
-                                2024
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                                <div class="dropdown-divider"></div>
-                                <a href="{{ url('/owner2025') }}" class="dropdown-item">
-                                    <i class="fas fa-calendar"></i> 2025
-                                </a>
-                            </div>
-                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
@@ -127,13 +116,13 @@ $total_harga = 0;
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <a href="{{ url('/input?year=' . $selectedYear) }}" class="btn btn-outline-dark float-right"
+                    <a href="{{ url('/dataInput?id=' . $userId . '&id_musim='. $idMusim. '&year='. $selectedYear) }}" class="btn btn-outline-dark float-right"
                         style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding: 0; border: 2px solid black; background-color: transparent;">
                         <i class="fas fa-arrow-left" style="font-size: 20px; color: black;"></i>
                     </a>
                     <div class="col-sm-6">
                         <h1>Input Nota <label>
-                                <?php echo htmlspecialchars($user_name); ?>
+                            
                             </label></h1>
                     </div>
                 </div>
@@ -150,7 +139,8 @@ $total_harga = 0;
                         <form method="POST" action="{{ route('inputPetani.store') }}">
                             @csrf
                             <input type="hidden" name="jual_luar_value" id="jual_luar_value" value="0">
-                            <input type="hidden" name="id_petani" value="<?php echo htmlspecialchars($id); ?>">
+                            <input type="hidden" name="id_petani" value={{ $userId }}>
+                            <input type="hidden" name="id_petani" value="{{ $idMusim }}">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">

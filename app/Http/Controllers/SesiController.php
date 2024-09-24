@@ -177,6 +177,7 @@ class SesiController extends Controller
         // Pass the data to the view
         return view('input_data', [
             'id' => $musim->id,
+            'idPetani' => $userId,
             'petani' => $petani,
             'harga' => $harga,
             'parameter' => $parameter,
@@ -189,7 +190,6 @@ class SesiController extends Controller
             'totalbruto' => $totalbruto,
             'username' => $username,
             'selectedYear' => $year,
-            'id_musim' => $musim->id,
             'musim' => $musimList,
         ]);
     }
@@ -264,6 +264,28 @@ class SesiController extends Controller
             'totaljumlahharga' => $totaljumlahharga,
             'total_harga' => $total_harga,
             'total_jual_luar' => $total_jual_luar,
+        ]);
+    }
+
+    Public function inputform (Request $request){
+
+        $year = $request->input('year', date('Y')); // Ensure 'tahun' is being set correctly
+        $userId = $request->input('id');
+        $idMusim = $request->input('id_musim');
+        $idrekap = $request->input('id_rekap');
+
+        $data = DB::table('rekap_2024')
+            ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
+            ->where('rekap_2024.id_petani', $userId)
+            ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim from the request
+            ->select('rekap_2024.*', 'parameter_2024.*')
+            ->get();
+        
+        return view('input_petani',[
+            'data' => $data,
+            'selectedYear' => $year,
+            'userId' => $userId,
+            'idMusim' => $idMusim
         ]);
     }
 

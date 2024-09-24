@@ -19,7 +19,7 @@ Route::get('/error', function() {
 Route::get('/register', [SesiController::class, 'register'])->name('register.form');
 Route::post('/register', [SesiController::class, 'create'])->name('register.store');
 Route::post('/parameter', [SesiController::class, 'updateParameter'])->name('updateParameter');
-Route::post('/inputPetani', [SesiController::class, 'input'])->name('inputPetani.store');
+Route::post('/inputPetani', [SesiController::class, 'update'])->name('inputPetani.store');
 Route::post('/hapuspetani', [PetaniController::class, 'delete'])->name('hapus-petani');
 Route::post('/editInput', [SesiController::class, 'update'])->name('editInput.update');
 Route::post('/hutang', [SesiController::class, 'hutang'])->name('hutang.store');
@@ -56,6 +56,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/input', [SesiController::class, 'input']);
    
         Route::get('/dataInput', [SesiController::class, 'rekap']);//data input ini untuk melihat data rekap dari tiap petani
+
+        Route::get('/inputform', [SesiController::class, 'inputform']);
 
         Route::get('/distribusi', [SesiController::class, 'distribusidashboard']);
 
