@@ -353,13 +353,12 @@ class SesiController extends Controller
         $request->validate([
             'berat_gudang' => 'required|numeric',
             'harga' => 'required|numeric',
-            'seri' => 'required|string',
-            'grade' => 'required|string',
+            'seri' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
+            'grade' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
             'bruto' => 'required|numeric',  // Include bruto in validation
             'netto' => 'required|numeric',
-            'periode' => 'required|string',
-            'no_gg' => 'required|string',
-            'jual_luar_value' => 'required|boolean',
+            'periode' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
+            'no_gg' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
             'id_petani' => 'required|integer',
             'id_musim' => 'required|integer',
         ]);
