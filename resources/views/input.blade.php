@@ -131,7 +131,7 @@
                                 <li class="nav-item">
                                     <a a href="{{ url('/register?year=' . $selectedYears) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Tambah Akun</p>
+                                        <p>Tambah Petani</p>
                                     </a>
                                 </li>
                             </ul>

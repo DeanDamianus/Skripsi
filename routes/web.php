@@ -37,13 +37,13 @@ Route::delete('/inputPetani/{id}', [SesiController::class, 'destroyrekap'])->nam
 Route::middleware('auth')->group(function () {
     Route::middleware(AdminMiddleware::class)->group(function () {
 
-        Route::get('/owner', [SesiController::class, 'dashboard']);
+        Route::get('/owner', [SesiController::class, 'dashboard']);//dashboard utama
 
-        Route::get('/hutang-admin', [SesiController::class, 'hutangdashboard']);
+        Route::get('/hutang-admin', [SesiController::class, 'hutangdashboard']); //halman hutang 
 
-        Route::get('/datapetani', [SesiController::class, 'datapetani']);
+        Route::get('/datapetani', [SesiController::class, 'datapetani']); //halaman list data petani
 
-        Route::get('/parameter', [SesiController::class, 'parameter'])->name('parameter');
+        Route::get('/parameter', [SesiController::class, 'parameter'])->name('parameter'); //halaman menambah parameter
 
         Route::get('/hapuspetani', function (){
             return view ('hapus-petani');
@@ -53,15 +53,17 @@ Route::middleware('auth')->group(function () {
             return view ('register');
         })->name('register');
 
-        Route::get('/register', [SesiController::class, 'register']);
+        Route::get('/register', [SesiController::class, 'register']);//halaman penambah user
 
-        Route::get('/input', [SesiController::class, 'input']);
+        Route::get('/input', [SesiController::class, 'input']);//halam utama dari innput rekap
    
-        Route::get('/dataInput', [SesiController::class, 'rekap']);//data input ini untuk melihat data rekap dari tiap petani
+        Route::get('/dataInput', [SesiController::class, 'rekap']);//halaman kedua data input ini untuk melihat data rekap dari tiap petani
 
-        Route::get('/inputform', [SesiController::class, 'inputform']);
+        Route::get('/inputform', [SesiController::class, 'inputform']);//halaman input form untuk rekap
 
-        Route::get('/distribusi', [SesiController::class, 'distribusidashboard']);
+        Route::get('/distribusi', [SesiController::class, 'distribusidashboard']);//dashboard distribusi
+
+        Route::get('/formdistribusi', [SesiController::class, 'formdistribusi']); //formdistribusi
 
         Route::get('/editInput', function (){
             return view ('edit_petani');

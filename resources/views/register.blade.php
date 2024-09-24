@@ -137,7 +137,7 @@
                                 <li class="nav-item">
                                     <a href="{{ url('/register?year=' . $selectedYear) }}" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Tambah Akun</p>
+                                        <p>Tambah Petani</p>
                                     </a>
                                 </li>
                                 {{-- <li class="nav-item">
@@ -177,7 +177,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Tambah User Baru</h1>
+                            <h1>Tambah Petani Baru</h1>
                         </div>
                     </div>
                 </div><!-- /.container-fluid -->

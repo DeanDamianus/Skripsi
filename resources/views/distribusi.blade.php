@@ -149,7 +149,7 @@
                                 <li class="nav-item">
                                     <a a href="{{ url('/register?year=' . $selectedYear) }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Tambah Akun</p>
+                                        <p>Tambah Petani</p>
                                     </a>
                                 </li>
                             </ul>
@@ -316,19 +316,21 @@
                             <tbody>
                                 @foreach($data as $rekap)
                                 <tr>
-                                    <td><a href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim ) }}">{{ $rekap->id_rekap }}</a></td>
+                                    <td><a
+                                            href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim ) }}">{{
+                                            $rekap->id_rekap }}</a></td>
                                     <td>{{ $rekap->periode }}</td>
                                     <td>{!! $rekap->status !!}</td>
                                     <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
                                     <td>
-                                        <a href="" class="btn btn-block btn-success">
+                                        <a href="{{ '/formdistribusi' }}" class="btn btn-block btn-success">
                                             <i class="nav-icon fas fa-edit"></i>
                                         </a>
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
-                            
+
                             <tfoot>
                                 <th></th>
                                 <th></th>

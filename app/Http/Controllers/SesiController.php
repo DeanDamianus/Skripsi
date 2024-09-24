@@ -211,7 +211,7 @@ class SesiController extends Controller
             ->with('success', 'Parameter berhasil diubah!');
     }
 
-    public function input(Request $request)
+    public function  input(Request $request)
     {
         // Retrieve the year from the request; default to the current year if not provided
         $year = $request->input('year', date('Y'));
@@ -267,12 +267,12 @@ class SesiController extends Controller
         ]);
     }
 
-    Public function inputform (Request $request){
+    Public function formdistribusi (Request $request){
 
         $year = $request->input('year', date('Y')); // Ensure 'tahun' is being set correctly
         $userId = $request->input('id');
         $idMusim = $request->input('id_musim');
-        $idrekap = $request->input('id_rekap');
+
         $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
 
 
@@ -284,7 +284,7 @@ class SesiController extends Controller
             ->select('rekap_2024.*', 'parameter_2024.*')
             ->get();
         
-        return view('input_petani',[
+        return view('input_distribusi',[
             'data' => $data,
             'username' => $username,
             'selectedYear' => $year,
@@ -548,9 +548,6 @@ class SesiController extends Controller
         ) 
         ->get();
 
-
-
-
         foreach($data as $rekap){
             $rekap->pengeluaran = $rekap->n_gudang + $rekap->mobil_berangkat + $rekap->mobil_pulang + $rekap->nt_pabrik
             + $rekap->kasut + $rekap->transport_gudang;
@@ -586,8 +583,7 @@ class SesiController extends Controller
             }
         }
  
-        
-
+    
         return view('distribusi', [
             'data' => $data,
             'dikirim' =>$dikirim,

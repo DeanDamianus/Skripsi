@@ -1,82 +1,3 @@
-<?php
-// Establish the connection
-$con = new mysqli('localhost', 'root', '', 'simbako_app');
-
-// Check connection
-if ($con->connect_error) {
-    die('Connection Error: ' . $con->connect_error);
-}
-
-// Get the current `id_rekap` from the URL
-$id_krj = isset($_GET['id_krj']) ? intval($_GET['id_krj']) : 0;
-
-// Fetch the existing data for the selected `id_rekap`
-$fetch_query = $con->prepare('SELECT * FROM distribusi_2024 WHERE id_krj = ?');
-$fetch_query->bind_param('i', $id_krj);
-$fetch_query->execute();
-$result = $fetch_query->get_result();
-
-if ($data = $result->fetch_assoc()) {
-    // Populate form with existing data
-    $id_krj = $data['id_krj'];
-    $periode = $data['periode'];
-    $n_gudang = $data['n_gudang'];
-    $mobil_berangkat = $data['mobil_berangkat'];
-    $mobil_pulang = $data['mobil_pulang'];
-    $nt_pabrik = $data['nt_pabrik'];
-    $kasut = $data['kasut'];
-    $transport_gudang = $data['transport_gudang'];
-    $status = $data['status'];
-} else {
-    die('Data not found!');
-}
-
-// Check if the form has been submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Collect data from the form
-    $netto = $_POST['netto'];
-    $jual_luar = $_POST['jual_luar'];
-    $harga = $_POST['harga'];
-    $berat_gudang = $_POST['berat_gudang'];
-    $grade = $_POST['grade'];
-    $periode = $_POST['periode'];
-    $seri = $_POST['seri'];
-    $no_gg = $_POST['no_gg'];
-
-    // Update the existing data in the rekap_2024 table
-    $update_query = $con->prepare("UPDATE rekap_2024 
-                                SET netto = ?, harga = ?,jual_luar = ?, berat_gudang = ?, grade = ?, periode = ?, seri = ?, no_gg = ?   
-                                WHERE id_rekap = ?");
-    $update_query->bind_param('ddsisssi', $netto, $harga,$jual_luar, $berat_gudang, $grade, $periode, $seri, $no_gg, $id_rekap);
-
-    if ($update_query->execute()) {
-        // Redirect to the desired URL with the current id_rekap
-        $redirect_url = "http://127.0.0.1:8000/dataInput?id=" . urlencode($id_rekap);
-        header("Location: " . $redirect_url);
-        exit; // Ensure no further code is executed after the redirect
-    } else {
-        echo "Error: " . $update_query->error;
-    }
-}
-
-// Fetch the user's data from the `users` table
-$nama_query = $con->prepare('SELECT * FROM users WHERE id = ?');
-$nama_query->bind_param('i', $id_petani);
-$nama_query->execute();
-$result = $nama_query->get_result();
-
-if ($user_data = $result->fetch_assoc()) {
-    $user_name = $user_data['name'];
-} else {
-    $user_name = 'Unknown'; // Default value if user not found
-}
-
-$con->close();
-?>
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -158,7 +79,7 @@ $con->close();
                         <i class="fas fa-arrow-left" style="font-size: 20px; color: black;"></i>
                     </a>   
                     <div class="col-sm-6">
-                        <h1>Edit Nota <?php echo htmlspecialchars($user_name); ?></h1>
+                        <h1>Input Distribusi</h1>
                     </div>
                 </div>
             </div>
@@ -167,70 +88,44 @@ $con->close();
         <form method="POST" action="">
             @csrf
             <input type="hidden" id="jual_luar_value" name="jual_luar_value" value="0">
-            <input type="hidden" name="id_rekap" value="<?php echo htmlspecialchars($id_rekap); ?>">
-            <input type="hidden" name="id_petani" value="<?php echo htmlspecialchars($id_petani); ?>">
+            <input type="hidden" name="id_rekap" value="">
+            <input type="hidden" name="id_petani" value="">
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Berat Gudang <i class="fas fa-warehouse"></i></label>
-                            <input type="number" name="berat_gudang" class="form-control" value="<?php echo htmlspecialchars($berat_gudang); ?>"
+                            <label>Mobil Berangkat <i class="fas fa-road"> </i> <i class="fas fa-arrow-right"></i></label>
+                            <input type="number" name="berat_gudang" class="form-control" value=""
                                 placeholder="Masukkan Berat Gudang (Kg)" required>
                         </div>
                         <!-- /.form-group -->
                         <div class="form-group">
-                            <label>Harga Keranjang <i class="fas fa-dollar-sign"></i></label>
-                        </label>
-                        <input type="number" name="harga" class="form-control" value="<?php echo htmlspecialchars($harga); ?>"
-                        placeholder="Masukkan Harga" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Seri <i class="fas fa-calendar"></i></label>
-                            <input type="text" id="seri" name="seri" class="form-control" value="<?php echo htmlspecialchars($seri); ?>" placeholder="Masukkan Seri (TGL01)" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Tipe </label> <i class="fas fa-exchange-alt"></i><br>
-                            <input type="checkbox" id="jual_luar_checkbox" name="jual_luar_checkbox">
-                            <label for="jual_luar_checkbox"> <span class="badge badge-warning">Jual Luar</span></label>
+                            <label>Status <i class="fas fa-info-circle"></i></i></label>
+                            <br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="gradeA" name="grade" value="A" class="form-check-input" required>
+                                <label class="form-check-label" for="gradeA">Diterima  <i class="fas fa-check-circle"></i></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="gradeB" name="grade" value="B" class="form-check-input"  required>
+                                <label class="form-check-label" for="gradeB">Diproses  <i class="fas fa-truck"></i></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="gradeC" name="grade" value="C" class="form-check-input"  required>
+                                <label class="form-check-label" for="gradeC">Ditolak  <i class="fas fa-times"></i></label>
+                            </div>
                         </div>
                         <!-- /.form-group -->
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Netto <i class="fas fa-weight-hanging"></i></label>
-                            <input type="number" name="netto" class="form-control" value="<?php echo htmlspecialchars($netto); ?>"
+                            <label>Mobil Pulang <i class="fas fa-road"> </i> <i class="fas fa-arrow-left"></i></label>
+                            <input type="number" name="netto" class="form-control" value=""
                                 placeholder="Masukkan Netto" required>
                         </div>
                         <!-- /.form-group -->
-                        <div class="form-group">
-                            <label>Periode <i class="fas fa-clock"></i></label></label>
-                            <input type="text" name="periode" value="<?php echo htmlspecialchars($periode); ?>"class="form-control" placeholder="Masukkan periode (1-A)" required>
-                        </div>
-                        <div class="form-group">
-                            <label>No.GG <i class="fas fa-hashtag"></i></label>
-                            <input type="text" id="no_gg" name="no_gg" class="form-control" placeholder="Masukkan No.GG" value="<?php echo htmlspecialchars($no_gg); ?>" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Grade <i class="fas fa-star-half-alt"></i></i></label>
-                            <br>
-                            <div class="form-check form-check-inline">
-                                <input type="radio" id="gradeA" name="grade" value="A" class="form-check-input" <?php echo ($grade == 'A') ? 'checked' : ''; ?> required>
-                                <label class="form-check-label" for="gradeA">A</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input type="radio" id="gradeB" name="grade" value="B" class="form-check-input" <?php echo ($grade == 'B') ? 'checked' : ''; ?> required>
-                                <label class="form-check-label" for="gradeB">B</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input type="radio" id="gradeC" name="grade" value="C" class="form-check-input" <?php echo ($grade == 'C') ? 'checked' : ''; ?> required>
-                                <label class="form-check-label" for="gradeC">C</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input type="radio" id="gradeD" name="grade" value="D" class="form-check-input" <?php echo ($grade == 'D') ? 'checked' : ''; ?> required>
-                                <label class="form-check-label" for="gradeD">D</label>
-                            </div>
-                        </div>
+                        
                         
                         <!-- /.form-group -->
                     </div>
