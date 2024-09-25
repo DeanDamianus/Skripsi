@@ -290,7 +290,7 @@
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3>{{ $dikirim }}</sup></h3>
-                            <p>Belum Dikirim</p>
+                            <p>Belum Diproses</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-hourglass-half"></i> <!-- Ikon pertukaran -->
@@ -323,7 +323,7 @@
                                     <td>{!! $rekap->status !!}</td>
                                     <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
                                     <td>
-                                        <a href="{{ '/formdistribusi' }}" class="btn btn-block btn-success">
+                                        <a href="{{ url('/formdistribusi?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim ) }}"class="btn btn-block btn-success">
                                             <i class="nav-icon fas fa-edit"></i>
                                         </a>
                                     </td>

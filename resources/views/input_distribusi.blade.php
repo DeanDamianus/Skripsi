@@ -85,48 +85,50 @@
             </div>
         </section>
         <!-- Main content -->
-        <form method="POST" action="">
+        <form method="POST" action="{{ route('inputdistribusi.store') }}">
             @csrf
-            <input type="hidden" id="jual_luar_value" name="jual_luar_value" value="0">
-            <input type="hidden" name="id_rekap" value="">
-            <input type="hidden" name="id_petani" value="">
+            <input type="hidden" name="id_petani" value="{{ $userId }}">
+            <input type="hidden" name="id_musim" value="{{ $idMusim }}">
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Mobil Berangkat <i class="fas fa-road"> </i> <i class="fas fa-arrow-right"></i></label>
-                            <input type="number" name="berat_gudang" class="form-control" value=""
-                                placeholder="Masukkan Berat Gudang (Kg)" required>
+                            <input type="number" name="mobil_berangkat" class="form-control"
+                            required placeholder="{{ $mobil_berangkat ?? 'Masukkan Harga Berangkat' }}">
+
                         </div>
                         <!-- /.form-group -->
                         <div class="form-group">
-                            <label>Status <i class="fas fa-info-circle"></i></i></label>
+                            <label>Status <i class="fas fa-info-circle"></i></label>
                             <br>
                             <div class="form-check form-check-inline">
-                                <input type="radio" id="gradeA" name="grade" value="A" class="form-check-input" required>
-                                <label class="form-check-label" for="gradeA">Diterima  <i class="fas fa-check-circle"></i></label>
+                                <input type="radio" id="Diterima" name="status" value="Diterima" class="form-check-input"
+                                       {{ ($status === 'Diterima') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="Diterima">Diterima <i class="fas fa-check-circle"></i></label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input type="radio" id="gradeB" name="grade" value="B" class="form-check-input"  required>
-                                <label class="form-check-label" for="gradeB">Diproses  <i class="fas fa-truck"></i></label>
+                                <input type="radio" id="Diproses" name="status" value="Diproses" class="form-check-input"
+                                       {{ ($status === 'Diproses') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="Diproses">Diproses <i class="fas fa-truck"></i></label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input type="radio" id="gradeC" name="grade" value="C" class="form-check-input"  required>
-                                <label class="form-check-label" for="gradeC">Ditolak  <i class="fas fa-times"></i></label>
+                                <input type="radio" id="Ditolak" name="status" value="Ditolak" class="form-check-input"
+                                       {{ ($status === 'Ditolak') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="Ditolak">Ditolak <i class="fas fa-times"></i></label>
                             </div>
                         </div>
+                        
                         <!-- /.form-group -->
                     </div>
                     <!-- /.col -->
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Mobil Pulang <i class="fas fa-road"> </i> <i class="fas fa-arrow-left"></i></label>
-                            <input type="number" name="netto" class="form-control" value=""
-                                placeholder="Masukkan Netto" required>
+                            <input type="number" name="mobil_berangkat" class="form-control"
+                                required placeholder="{{ $mobil_berangkat ?? 'Masukkan Harga pulang' }}">
+
                         </div>
-                        <!-- /.form-group -->
-                        
-                        
                         <!-- /.form-group -->
                     </div>
                     <!-- /.col -->
@@ -136,6 +138,8 @@
                 <button type="submit" class="btn btn-primary">Ubah</button>
             </div>
         </form>
+        
+        
         
         <!-- /.content-wrapper -->
 

@@ -211,7 +211,7 @@ class SesiController extends Controller
             ->with('success', 'Parameter berhasil diubah!');
     }
 
-    public function  input(Request $request)
+    public function input(Request $request)
     {
         // Retrieve the year from the request; default to the current year if not provided
         $year = $request->input('year', date('Y'));
@@ -267,29 +267,84 @@ class SesiController extends Controller
         ]);
     }
 
-    Public function formdistribusi (Request $request){
+    public function inputdistribusi(Request $request)
+    {
+        $request->validate([
+            'n_gudang' => 'required|numeric',
+            'mobil_berangkat' => 'required|numeric',
+            'mobil_pulang' => 'required|numeric',
+            'nt_pabrik' => 'required|numeric',
+            'kasut' => 'required|numeric',
+            'transport_gudang' => 'required|numeric',
+            'status' => 'nullable|string',
+            'id_rekap' => 'required|integer',
+            'id_musim' => 'required|integer',
+        ]);
 
+        // Retrieve necessary data from the request
+        $idMusim = $request->input('id_musim');
+        $year = $request->input('tahun', date('Y'));
+        $id = $request->input('id_rekap');
+        $nGudang = $request->input('n_gudang', 0); // Default to 0 if not provided
+        $ntPabrik = $request->input('nt_pabrik', 10000); // Default to 10000 if not provided
+        $kasut = $request->input('kasut', 10000); // Default to 10000 if not provided
+        $transportGudang = $request->input('transport_gudang', 5000);
+
+        // Insert a new record in the rekap_2024 table
+        DB::table('distribusi_2024')->insert([
+            'id_rekap' => $id,
+            'id_musim' => $idMusim,
+            'n_gudang' => $nGudang,
+            'mobil_berangkat' => $request->input('mobil_berangkat'),
+            'mobil_pulang' => $request->input('mobil_pulang'),
+            'nt_pabrik' => $ntPabrik,
+            'kasut' => $kasut,
+            'transport_gudang' => $$transportGudang,
+            'status' => $request->input('status'),
+        ]);
+
+        // Redirect after successful insertion
+        return redirect()
+            ->to(url('/distribusi?year=' . $year))
+            ->with('success', 'Data successfully updated!');
+    }
+
+    //untuk dashboard input distribusi
+    public function formdistribusi(Request $request)
+    {
         $year = $request->input('year', date('Y')); // Ensure 'tahun' is being set correctly
         $userId = $request->input('id');
         $idMusim = $request->input('id_musim');
 
         $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
 
+        // In Controller
+        $data = DB::table('rekap_2024')->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')->where('rekap_2024.id_petani', $userId)->where('rekap_2024.id_musim', $idMusim)->select('rekap_2024.*', 'parameter_2024.*')->first();
 
+        $mobil_berangkat = DB::table('distribusi_2024')
+            ->where('id_rekap', $userId) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
+            ->select('mobil_berangkat')
+            ->first();
+
+        $mobil_pulang = DB::table('distribusi_2024')
+            ->where('id_rekap', $userId) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
+            ->select('mobil_pulang')
+            ->first();
         
-        $data = DB::table('rekap_2024')
-            ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
-            ->where('rekap_2024.id_petani', $userId)
-            ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim from the request
-            ->select('rekap_2024.*', 'parameter_2024.*')
-            ->get();
-        
-        return view('input_distribusi',[
+        $status = DB::table('distribusi_2024')
+            ->where('id_rekap', $userId) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
+            ->select('status')
+            ->first();   // Retrieve the first record
+
+        return view('input_distribusi', [
             'data' => $data,
+            'status' => $status ? $status->status : null,
+            'mobil_pulang' => $mobil_pulang,
+            'mobil_berangkat' => $mobil_berangkat ? $mobil_berangkat->mobil_berangkat : null,
             'username' => $username,
             'selectedYear' => $year,
             'userId' => $userId,
-            'idMusim' => $idMusim
+            'idMusim' => $idMusim,
         ]);
     }
 
@@ -346,29 +401,29 @@ class SesiController extends Controller
         ]);
     }
 
+    //input registrasi petani baru
     public function inputpetani(Request $request)
     {
         // Validate the data
-        
+
         $request->validate([
             'berat_gudang' => 'required|numeric',
             'harga' => 'required|numeric',
             'seri' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
             'grade' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
-            'bruto' => 'required|numeric',  // Include bruto in validation
+            'bruto' => 'required|numeric', // Include bruto in validation
             'netto' => 'required|numeric',
             'periode' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
             'no_gg' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
             'id_petani' => 'required|integer',
             'id_musim' => 'required|integer',
         ]);
-    
+
         // Retrieve necessary data from the request
         $idMusim = $request->input('id_musim');
         $year = $request->input('tahun', date('Y'));
         $id_petani = $request->input('id_petani');
-        
-        
+
         // Insert a new record in the rekap_2024 table
         DB::table('rekap_2024')->insert([
             'id_petani' => $id_petani,
@@ -381,16 +436,14 @@ class SesiController extends Controller
             'periode' => $request->input('periode'),
             'seri' => $request->input('seri'),
             'no_gg' => $request->input('no_gg'),
-            'bruto' => $request->input('bruto'),  
+            'bruto' => $request->input('bruto'),
         ]);
-    
+
         // Redirect after successful insertion
-        return redirect()->to(url('/dataInput?id=' . $id_petani . '&id_musim=' . $idMusim . '&year=' . $year))
-        ->with('success', 'Data successfully created!');
-
+        return redirect()
+            ->to(url('/dataInput?id=' . $id_petani . '&id_musim=' . $idMusim . '&year=' . $year))
+            ->with('success', 'Data successfully created!');
     }
-    
-
 
     public function hutangLunas(Request $request)
     {
@@ -500,93 +553,85 @@ class SesiController extends Controller
         ]);
     }
 
-    public function datapetani(Request $request){
-
+    public function datapetani(Request $request)
+    {
         $year = $request->input('year', date('Y'));
 
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
 
-        $data = DB::table('users')->where('role','petani')->get();
+        $data = DB::table('users')->where('role', 'petani')->get();
 
         return view('datapetani', [
             'selectedYear' => $year,
-            'data'=>$data,
+            'data' => $data,
             'musim' => $musim,
             'currentMusim' => $musimList,
         ]);
-
     }
 
+    public function inputform(Request $request)
+    {
+        return view('input_distribusi', []);
+    }
+    //get untuk dashboard distribusi
     public function distribusidashboard(Request $request)
     {
         $year = $request->input('year', date('Y'));
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
 
-        // $data = DB::table('distribusi_2024')
-        // ->join('rekap_2024', 'distribusi_2024.id_rekap', '=', 'rekap_2024.id_rekap') // Join distribusi_2024 with rekap_2024 using id_rekap
-        // ->where('distribusi_2024.id_musim', $musim->id) // Ensure you're filtering by id_musim from rekap_2024
-        // ->select('distribusi_2024.*', 'rekap_2024.*') // Optionally select columns from both tables
-        // ->get();
-
         $data = DB::table('rekap_2024')
-        ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap') 
-        ->where('rekap_2024.id_musim', $musim->id)// Join distribusi_2024 with rekap_2024
-        ->select(
-            'rekap_2024.id_rekap', 
-            'rekap_2024.periode', 
-            'distribusi_2024.status',
-            'distribusi_2024.n_gudang',
-            'distribusi_2024.mobil_berangkat',
-            'distribusi_2024.mobil_pulang',
-            'distribusi_2024.nt_pabrik',
-            'distribusi_2024.kasut',
-            'distribusi_2024.transport_gudang',
-            'rekap_2024.id_petani', 
-            'rekap_2024.id_musim'
-        ) 
-        ->get();
+            ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.id_musim', $musim->id) // Join distribusi_2024 with rekap_2024
+            ->select('rekap_2024.id_rekap', 'rekap_2024.periode', 'distribusi_2024.status', 'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 'rekap_2024.id_petani', 'rekap_2024.id_musim')
+            ->get();
 
-        foreach($data as $rekap){
-            $rekap->pengeluaran = $rekap->n_gudang + $rekap->mobil_berangkat + $rekap->mobil_pulang + $rekap->nt_pabrik
-            + $rekap->kasut + $rekap->transport_gudang;
+        foreach ($data as $rekap) {
+            $rekap->pengeluaran = $rekap->n_gudang + $rekap->mobil_berangkat + $rekap->mobil_pulang + $rekap->nt_pabrik + $rekap->kasut + $rekap->transport_gudang;
         }
 
         $totalpengeluaran = $data->sum('pengeluaran');
-        
-        $diterima = $data->filter(function($rekap) {
-            return $rekap->status == 'Diterima';
-        })->count();
-        
-        $diproses = $data->filter(function($rekap) {
-            return $rekap->status == 'Diproses';
-        })->count();
-        
-        $ditolak = $data->filter(function($rekap) {
-            return $rekap->status == 'Ditolak';
-        })->count();
 
-        $dikirim = $data->filter(function($rekap) {
-            return $rekap->status == '';
-        })->count();
+        $diterima = $data
+            ->filter(function ($rekap) {
+                return $rekap->status == 'Diterima';
+            })
+            ->count();
+
+        $diproses = $data
+            ->filter(function ($rekap) {
+                return $rekap->status == 'Diproses';
+            })
+            ->count();
+
+        $ditolak = $data
+            ->filter(function ($rekap) {
+                return $rekap->status == 'Ditolak';
+            })
+            ->count();
+
+        $dikirim = $data
+            ->filter(function ($rekap) {
+                return $rekap->status == '';
+            })
+            ->count();
 
         foreach ($data as $rekap) {
             if ($rekap->status == 'Diterima') {
-                $rekap->status = '<span class="badge badge-success">Diterima</span>'; 
+                $rekap->status = '<span class="badge badge-success">Diterima</span>';
             } elseif ($rekap->status == 'Diproses') {
-                $rekap->status = '<span class="badge badge-warning">Diproses</span>'; 
+                $rekap->status = '<span class="badge badge-warning">Diproses</span>';
             } elseif ($rekap->status == 'Ditolak') {
-                $rekap->status = '<span class="badge badge-danger">Ditolak</span>'; 
+                $rekap->status = '<span class="badge badge-danger">Ditolak</span>';
             } elseif ($rekap->status == '') {
-                $rekap->status = '<span class="badge badge-info">Belum Dikirim</span>'; 
+                $rekap->status = '<span class="badge badge-info">Belum Diproses</span>';
             }
         }
- 
-    
+
         return view('distribusi', [
             'data' => $data,
-            'dikirim' =>$dikirim,
+            'dikirim' => $dikirim,
             'diterima' => $diterima,
             'diproses' => $diproses,
             'ditolak' => $ditolak,
@@ -645,12 +690,11 @@ class SesiController extends Controller
         return redirect()->back()->with('success', 'Data berhasil dihapus!');
     }
     public function destroyrekap($id)
-{
-    // Find the record by ID and delete it
-    DB::table('rekap_2024')->where('id_rekap', $id)->delete();
+    {
+        // Find the record by ID and delete it
+        DB::table('rekap_2024')->where('id_rekap', $id)->delete();
 
-    // Optionally, add a flash message for success
-    return redirect()->back()->with('success', 'Record deleted successfully!');
-}
-
+        // Optionally, add a flash message for success
+        return redirect()->back()->with('success', 'Record deleted successfully!');
+    }
 }
