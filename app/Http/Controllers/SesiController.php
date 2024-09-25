@@ -267,47 +267,37 @@ class SesiController extends Controller
         ]);
     }
 
-    public function inputdistribusi(Request $request)
-    {
-        $request->validate([
-            'n_gudang' => 'required|numeric',
-            'mobil_berangkat' => 'required|numeric',
-            'mobil_pulang' => 'required|numeric',
-            'nt_pabrik' => 'required|numeric',
-            'kasut' => 'required|numeric',
-            'transport_gudang' => 'required|numeric',
-            'status' => 'nullable|string',
-            'id_rekap' => 'required|integer',
-            'id_musim' => 'required|integer',
-        ]);
+    public function inputDistribusi(Request $request)
+{
+    $request->validate([
+        'id_rekap' => 'required|integer',
+        'id_musim' => 'required|integer',
+        'mobil_berangkat' => 'required|integer',
+        'mobil_pulang' => 'required|integer',
+        'status' => 'required|string|max:255',
+    ]);
 
-        // Retrieve necessary data from the request
-        $idMusim = $request->input('id_musim');
-        $year = $request->input('tahun', date('Y'));
-        $id = $request->input('id_rekap');
-        $nGudang = $request->input('n_gudang', 0); // Default to 0 if not provided
-        $ntPabrik = $request->input('nt_pabrik', 10000); // Default to 10000 if not provided
-        $kasut = $request->input('kasut', 10000); // Default to 10000 if not provided
-        $transportGudang = $request->input('transport_gudang', 5000);
+    // Prepare the data for insertion
+    $data = [
+        'id_rekap' => $request->input('id_rekap'),
+        'id_musim' => $request->input('id_musim'),
+        'n_gudang' => $request->input('n_gudang'),
+        'nt_pabrik' => $request->input('nt_pabrik'),
+        'kasut' => $request->input('kasut'),
+        'transport_gudang' => $request->input('transport_gudang'),
+        'mobil_berangkat' => $request->input('mobil_berangkat'),
+        'mobil_pulang' => $request->input('mobil_pulang'),
+        'status' => $request->input('status'),
+    ];
 
-        // Insert a new record in the rekap_2024 table
-        DB::table('distribusi_2024')->insert([
-            'id_rekap' => $id,
-            'id_musim' => $idMusim,
-            'n_gudang' => $nGudang,
-            'mobil_berangkat' => $request->input('mobil_berangkat'),
-            'mobil_pulang' => $request->input('mobil_pulang'),
-            'nt_pabrik' => $ntPabrik,
-            'kasut' => $kasut,
-            'transport_gudang' => $$transportGudang,
-            'status' => $request->input('status'),
-        ]);
+    // Insert into the database
+    DB::table('distribusi_2024')->insert($data);
 
-        // Redirect after successful insertion
-        return redirect()
-            ->to(url('/distribusi?year=' . $year))
-            ->with('success', 'Data successfully updated!');
-    }
+    // Redirect back with success message
+    return redirect()->back()->with('success', 'Data inserted successfully!');
+}
+
+
 
     //untuk dashboard input distribusi
     public function formdistribusi(Request $request)
@@ -315,6 +305,11 @@ class SesiController extends Controller
         $year = $request->input('year', date('Y')); // Ensure 'tahun' is being set correctly
         $userId = $request->input('id');
         $idMusim = $request->input('id_musim');
+        $id_rekap = $request->input('id_rekap');
+        $n_gudang = $request->input('n_gudang');
+        $nt_pabrik= $request->input('nt_pabrik');
+        $kasut = $request->input('kasut');
+        $transport_gudang = $request->input('transport_gudang');
 
         $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
 
@@ -330,21 +325,26 @@ class SesiController extends Controller
             ->where('id_rekap', $userId) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
             ->select('mobil_pulang')
             ->first();
-        
+
         $status = DB::table('distribusi_2024')
             ->where('id_rekap', $userId) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
             ->select('status')
-            ->first();   // Retrieve the first record
+            ->first(); // Retrieve the first record
 
         return view('input_distribusi', [
             'data' => $data,
+            'id_rekap' => $id_rekap,
             'status' => $status ? $status->status : null,
-            'mobil_pulang' => $mobil_pulang,
+            'mobil_pulang' => $mobil_pulang ? $mobil_pulang->mobil_pulang : null,
             'mobil_berangkat' => $mobil_berangkat ? $mobil_berangkat->mobil_berangkat : null,
             'username' => $username,
             'selectedYear' => $year,
             'userId' => $userId,
             'idMusim' => $idMusim,
+            'n_gudang'=>$n_gudang,
+            'nt_pabrik'=>$nt_pabrik,
+            'kasut' => $kasut,
+            'transport_gudang' => $transport_gudang,
         ]);
     }
 
@@ -404,8 +404,6 @@ class SesiController extends Controller
     //input registrasi petani baru
     public function inputpetani(Request $request)
     {
-        // Validate the data
-
         $request->validate([
             'berat_gudang' => 'required|numeric',
             'harga' => 'required|numeric',
