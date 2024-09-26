@@ -67,7 +67,7 @@
                         <i class="fas fa-arrow-left" style="font-size: 20px; color: black;"></i>
                     </a>
                     <div class="col-sm-6">
-                        <h1>Input Distribusi {{ $id_rekap }}</h1>
+                        <h1>Input Distribusi Nomor Rekap {{ $userId }}</h1>
                     </div>
                 </div>
             </div>
@@ -75,12 +75,12 @@
         <!-- Main content -->
         <form method="POST" action="{{ route('inputdistribusi.store') }}">
             @csrf
-            <input type="hidden" name="id_rekap" value="{{ $id_rekap }}">
+            <input type="hidden" name="id_rekap" value="{{ $userId }}">
             <input type="hidden" name="id_musim" value="{{ $idMusim }}">
-            <input type="hidden" name="n_gudang" value="{{ $n_gudang }}">
-            <input type="hidden" name="nt_pabrik" value="{{ $nt_pabrik }}">
-            <input type="hidden" name="kasut" value="{{ $kasut }}">
-            <input type="hidden" name="transport_gudang" value="{{ $transport_gudang }}">
+            <input type="hidden" name="n_gudang" value="5000">
+            <input type="hidden" name="nt_pabrik" value="10000">
+            <input type="hidden" name="kasut" value="10000">
+            <input type="hidden" name="transport_gudang" value="5000">
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
@@ -88,7 +88,7 @@
                             <label>Mobil Berangkat <i class="fas fa-road"> </i> <i
                                     class="fas fa-arrow-right"></i></label>
                             <input type="number" name="mobil_berangkat" class="form-control" required
-                                placeholder="{{ $mobil_berangkat ?? 'Masukkan Harga Berangkat' }}">
+                                placeholder="{{ $mobil_berangkat ?? 'Masukkan Harga Berangkat' }}" value="{{ old('mobil_berangkat', $mobil_berangkat ?? '') }}">
                         </div>
                         <!-- /.form-group -->
                         <div class="form-group">
@@ -121,8 +121,7 @@
                         <div class="form-group">
                             <label>Mobil Pulang <i class="fas fa-road"> </i> <i class="fas fa-arrow-left"></i></label>
                             <input type="number" name="mobil_pulang" class="form-control" required
-                                placeholder="{{ $mobil_pulang ?? 'Masukkan Harga pulang' }}">
-
+                                placeholder="{{ $mobil_pulang ?? 'Masukkan Harga pulang' }}" value="{{ old('mobil_pulang', $mobil_pulang ?? '') }}">
                         </div>
                         <!-- /.form-group -->
                     </div>
