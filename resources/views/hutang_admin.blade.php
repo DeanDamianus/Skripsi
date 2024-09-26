@@ -272,6 +272,7 @@ if (!$result) {
                                                 <th>Cicilan</th>
                                                 <th>Tanggal Lunas</th>
                                                 <th>Action</th>
+                                                <th>History</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -301,12 +302,15 @@ if (!$result) {
                                                             </button>
                                                         </form>
                                                       </td>';
+                                                      echo '<td>
+                                                            <button type="submit" class="btn btn-success btn-sm">
+                                                                <i class="fa fa-history"></i>
+                                                            </button>
+                                                      </td>';
                                                 echo '</tr>';
                                             }
                                             ?>
                                         </tbody>
-
-
                                     </table>
                                 </div>
 
