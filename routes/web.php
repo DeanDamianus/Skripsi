@@ -25,6 +25,7 @@ Route::post('/hapuspetani', [PetaniController::class, 'delete'])->name('hapus-pe
 Route::post('/editInput', [SesiController::class, 'update'])->name('editInput.update');
 Route::post('/hutang', [SesiController::class, 'hutang'])->name('hutang.store');
 Route::post('/pelunasan', [SesiController::class, 'pelunasan'])->name('pelunasan');
+Route::post('/postfoto', [SesiController::class, 'postfoto'])->name('post.foto');
 
 // rout menghapus data hutang
 Route::delete('/deletehutang/{id}', [SesiController::class, 'destroy'])->name('hutang.delete');
@@ -32,9 +33,6 @@ Route::delete('/inputPetani/{id}', [SesiController::class, 'destroyrekap'])->nam
 
 
 
-
-
-// Routes for authenticated users based on roles
 Route::middleware('auth')->group(function () {
     Route::middleware(AdminMiddleware::class)->group(function () {
 
@@ -80,6 +78,8 @@ Route::middleware('auth')->group(function () {
 
        
     });
+
+    Route::get('/error', [SesiController::class, 'error']);
 
 
     Route::middleware(PetaniMiddleware::class)->group(function () {

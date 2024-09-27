@@ -28,7 +28,7 @@
                 </a>
                 <ul class="navbar-nav">
                     <li class="nav-item d-none d-sm-inline-block">
-                        <a href="{{url('/owner')}}" class="nav-link">Home</a>
+                        <a href="{{ url('/owner') }}" class="nav-link">Home</a>
                     </li>
                 </ul>
                 <button class="navbar-toggler order-1" type="button" data-toggle="collapse"
@@ -69,7 +69,7 @@
                         <i class="fas fa-arrow-left" style="font-size: 20px; color: black;"></i>
                     </a>
                     <div class="col-sm-6">
-                        <h3>Ubah Data <strong>{{ $user->name }}</strong></h3>
+                        <h3>Ubah Data Petani</h3>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -82,38 +82,44 @@
                 <div class="col-md-12">
                     <!-- jquery validation -->
                     <div class="card card-primary">
-                        
-                        <form>
-                          <div class="card-body">
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">Nama Petani</label>
-                              <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Masukkan nama petani baru"
-                              value="{{ $user->name }}">
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
                             </div>
-                            <div class="form-group">
-                              <label for="exampleInputFile">Upload Foto Petani</label>
-                              <div class="input-group">
-                                <div class="custom-file">
-                                  <input type="file" name = "image" accept=".jpg .jpeg .png" id="exampleInputFile">
-                                  <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                        @endif
+                        <form action="{{ route('post.foto') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $user->id }}">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Nama Petani</label>
+                                    <input type="text" name="name" class="form-control"
+                                        placeholder="{{ $user->name }}" value="{{ old('name', $user->name) }}">
                                 </div>
-                                <div class="input-group-append">
-                                  <span class="input-group-text">Upload</span>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Upload Foto Petani</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" name="image" accept=".jpg,.jpeg,.png" class="form-control" id="exampleInputFile">
+                                            <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Upload</span>
+                                        </div>
+                                    </div>
                                 </div>
-                              </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                    <label class="form-check-label" for="exampleCheck1">Saya Setuju</label>
+                                </div>
                             </div>
-                            <div class="form-check">
-                              <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                              <label class="form-check-label" for="exampleCheck1">Saya Setuju</label>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
-                          </div>
-                          <!-- /.card-body -->
-          
-                          <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                          </div>
                         </form>
-                      </div>
+                    </div>
                     <!-- /.card -->
                 </div>
                 <!--/.col (left) -->

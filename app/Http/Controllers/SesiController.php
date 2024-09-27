@@ -66,6 +66,36 @@ class SesiController extends Controller
         ]);
     }
 
+    public function postfoto(Request $request)
+    {
+        $userId = $request->input('id');
+        $request->validate([
+            'id' => 'required|integer',
+            'name' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $updateData = [
+            'name' => $request->input('name'),
+        ];
+
+        // Handle the file upload if a new image is provided
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName(); // Generate a unique name for the file
+            $file->move(public_path('uploads'), $filename); // Move the file to the uploads directory
+
+            // Add the new photo filename to the update data
+            $updateData['image'] = $filename;
+        }
+
+        // Update the user's name and photo in the users table
+        DB::table('users')->where('id', $userId)->update($updateData);
+
+        // Redirect with a success message
+        return redirect('/datapetani')->with('success', 'Data berhasil diperbaharui!');
+    }
+
     public function uploadfoto(Request $request)
     {
         $year = $request->input('year', date('Y'));
@@ -74,10 +104,7 @@ class SesiController extends Controller
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
 
-        $data = DB::table('users')
-        ->where('id', $userId)
-        ->first();
-
+        $data = DB::table('users')->where('id', $userId)->first();
 
         return view('upload-foto', [
             'selectedYear' => $year,
@@ -288,71 +315,63 @@ class SesiController extends Controller
         ]);
     }
 
-
     //post controller
     public function inputDistribusi(Request $request)
-{
-    // Validate the incoming request data
-    $request->validate([
-        'id_rekap' => 'required|integer',
-        'id_musim' => 'required|integer',
-        'mobil_berangkat' => 'required|integer',
-        'mobil_pulang' => 'required|integer',
-        'status' => 'required|string|max:255',
-    ]);
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'id_rekap' => 'required|integer',
+            'id_musim' => 'required|integer',
+            'mobil_berangkat' => 'required|integer',
+            'mobil_pulang' => 'required|integer',
+            'status' => 'required|string|max:255',
+        ]);
 
-    // Get the year from the request or default to current year
-    $year = $request->input('year', date('Y'));
+        // Get the year from the request or default to current year
+        $year = $request->input('year', date('Y'));
 
-    // Prepare the data for insertion/update
-    $data = [
-        'id_rekap' => $request->input('id_rekap'),
-        'id_musim' => $request->input('id_musim'),
-        'n_gudang' => $request->input('n_gudang'),
-        'nt_pabrik' => $request->input('nt_pabrik'),
-        'kasut' => $request->input('kasut'),
-        'transport_gudang' => $request->input('transport_gudang'),
-        'mobil_berangkat' => $request->input('mobil_berangkat'),
-        'mobil_pulang' => $request->input('mobil_pulang'),
-        'status' => $request->input('status'),
-    ];
+        // Prepare the data for insertion/update
+        $data = [
+            'id_rekap' => $request->input('id_rekap'),
+            'id_musim' => $request->input('id_musim'),
+            'n_gudang' => $request->input('n_gudang'),
+            'nt_pabrik' => $request->input('nt_pabrik'),
+            'kasut' => $request->input('kasut'),
+            'transport_gudang' => $request->input('transport_gudang'),
+            'mobil_berangkat' => $request->input('mobil_berangkat'),
+            'mobil_pulang' => $request->input('mobil_pulang'),
+            'status' => $request->input('status'),
+        ];
 
-    // Check if the record exists based on id_rekap and id_musim
-    $existingRecord = DB::table('distribusi_2024')
-        ->where('id_rekap', $request->input('id_rekap'))
-        ->where('id_musim', $request->input('id_musim'))
-        ->first();
+        // Check if the record exists based on id_rekap and id_musim
+        $existingRecord = DB::table('distribusi_2024')->where('id_rekap', $request->input('id_rekap'))->where('id_musim', $request->input('id_musim'))->first();
 
-    if ($existingRecord) {
-        // Update the existing record
-        DB::table('distribusi_2024')
-            ->where('id_rekap', $request->input('id_rekap'))
-            ->where('id_musim', $request->input('id_musim'))
-            ->update($data);
+        if ($existingRecord) {
+            // Update the existing record
+            DB::table('distribusi_2024')->where('id_rekap', $request->input('id_rekap'))->where('id_musim', $request->input('id_musim'))->update($data);
 
-        return redirect()->to('http://127.0.0.1:8000/distribusi?year=' . $year)
-                         ->with('success', 'Data updated successfully!');
-    } else {
-        // Insert a new record if it doesn't exist
-        DB::table('distribusi_2024')->insert($data);
+            return redirect()
+                ->to('http://127.0.0.1:8000/distribusi?year=' . $year)
+                ->with('success', 'Data updated successfully!');
+        } else {
+            // Insert a new record if it doesn't exist
+            DB::table('distribusi_2024')->insert($data);
 
-        return redirect()->to('http://127.0.0.1:8000/distribusi?year=' . $year)
-                         ->with('success', 'Data inserted successfully!');
+            return redirect()
+                ->to('http://127.0.0.1:8000/distribusi?year=' . $year)
+                ->with('success', 'Data inserted successfully!');
+        }
     }
-}
-
-
 
     //untuk dashboard input distribusi get
     public function formdistribusi(Request $request)
     {
-        $year = $request->input('year', date('Y')); // Ensure 'tahun' is being set correctly
+        $year = $request->input('year', date('Y'));
         $userId = $request->input('id');
         $idMusim = $request->input('id_musim');
 
         $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
 
-        // In Controller
         $data = DB::table('rekap_2024')->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')->where('rekap_2024.id_petani', $userId)->where('rekap_2024.id_musim', $idMusim)->select('rekap_2024.*', 'parameter_2024.*')->first();
 
         $mobil_berangkat = DB::table('distribusi_2024')
@@ -379,7 +398,6 @@ class SesiController extends Controller
             'selectedYear' => $year,
             'userId' => $userId,
             'idMusim' => $idMusim,
-
         ]);
     }
 
@@ -438,10 +456,9 @@ class SesiController extends Controller
 
     //input registrasi petani baru
     public function inputpetani(Request $request)
-    {   
-
+    {
         //checker
-        // dd($request->all()); 
+        // dd($request->all());
         $request->validate([
             'berat_gudang' => 'required|numeric',
             'harga' => 'required|numeric',
@@ -589,17 +606,17 @@ class SesiController extends Controller
         ]);
     }
 
-    public function search(Request $request) {
+    public function search(Request $request)
+    {
         $search = $request->query('search');
         $data = User::where('name', 'LIKE', "%{$search}%")->get();
         $year = $request->input('year', date('Y'));
 
         return view('datapetani', compact('data'));
     }
-    
+
     public function datapetani(Request $request)
-    {   
-        
+    {
         $year = $request->input('year', date('Y'));
 
         $musim = DB::table('musim')->where('tahun', $year)->first();
@@ -619,15 +636,13 @@ class SesiController extends Controller
         ]);
     }
 
-    Public function inputform (Request $request){
-
+    public function inputform(Request $request)
+    {
         $year = $request->input('year', date('Y')); // Ensure 'tahun' is being set correctly
         $userId = $request->input('id');
         $idMusim = $request->input('id_musim');
         $idrekap = $request->input('id_rekap');
         $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
-
-
 
         $data = DB::table('rekap_2024')
             ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
@@ -636,12 +651,12 @@ class SesiController extends Controller
             ->select('rekap_2024.*', 'parameter_2024.*')
             ->get();
 
-        return view('input_petani',[
+        return view('input_petani', [
             'data' => $data,
             'username' => $username,
             'selectedYear' => $year,
             'userId' => $userId,
-            'idMusim' => $idMusim
+            'idMusim' => $idMusim,
         ]);
     }
     //get untuk dashboard distribusi
@@ -766,5 +781,10 @@ class SesiController extends Controller
 
         // Optionally, add a flash message for success
         return redirect()->back()->with('success', 'Record deleted successfully!');
+    }
+
+    public function error(Request $request)
+    {
+        return view('error');
     }
 }
