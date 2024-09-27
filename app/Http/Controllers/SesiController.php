@@ -115,22 +115,38 @@ class SesiController extends Controller
     }
 
     public function create(Request $request)
-    {
+    {   
         // Validate the input
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'role' => 'required|in:operator,petani',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-
-        // Create a new user
-        User::create([
+    
+        // Prepare user data
+        $userData = [
             'name' => $validated['name'],
             'role' => $validated['role'],
-        ]);
-
+            // We will set the image after moving it
+        ];
+    
+        // Create a new user
+        $user = User::create($userData);
+    
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName(); // Generate a unique name for the file
+            $file->move(public_path('uploads'), $filename); // Move the file to the uploads directory
+    
+            // Update user image
+            $user->update(['image' => $filename]);
+        }
+    
         // Redirect to login with a success message
-        return redirect('/owner')->with('success', 'Registrasi berhasil! Silakan login.');
+        return redirect('/datapetani')->with('success', 'Registrasi berhasil! Silakan login.');
     }
+    
     public function parameter(Request $request)
     {
         // Get the selected year, default to the current year if not provided

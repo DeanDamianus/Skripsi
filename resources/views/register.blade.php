@@ -191,14 +191,15 @@
                         <!-- jquery validation -->
                         <div class="card card-primary">
                             @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $item)
-                                    <li>{{ $item }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            @endif
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
                             <form action="{{ route('register.store') }}" method="POST" id="quickForm">
                                 @csrf
                                 <div class="input-group mb-3">
@@ -217,6 +218,14 @@
                                         <option value="petani" selected>Petani</option>
                                     </select>
                                 </div>
+                                {{-- <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" name="image" accept=".jpg,.jpeg,.png" class="form-control" id="exampleInputFile" onchange="updateFileName()">
+                                            <label class="custom-file-label" for="exampleInputFile">Upload Foto</label>
+                                        </div>
+                                    </div>
+                                </div> --}}
                                 <div class="row" style="width: 100%; justify-content: center;">
                                     <div class="col-12">
                                         <button type="submit" class="btn btn-primary btn-block">Register</button>
@@ -266,6 +275,14 @@
     <script src="dist/js/pages/dashboard3.js"></script>
     <script src="dist/js/pages/dashboard2.js"></script>
     <script src="plugins/chart.js/Chart.min.js"></script>
+    <script>
+        function updateFileName() {
+            const fileInput = document.getElementById('exampleInputFile');
+            const label = fileInput.nextElementSibling; // Get the label next to the input
+            const fileName = fileInput.files[0] ? fileInput.files[0].name : 'Choose file'; // Get the selected file name or default text
+            label.textContent = fileName; // Update the label text
+        }
+    </script>
 </body>
 
 </html>

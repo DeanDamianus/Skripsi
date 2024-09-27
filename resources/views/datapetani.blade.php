@@ -160,7 +160,7 @@
                                         <a href="{{ url('/uploadfoto?id=' . $users->id) }}" style="text-decoration: none;">
                                             <!-- Display user's uploaded image or fallback to a default image -->
                                             <img class="card-img-top"
-                                                src="{{ $users->image ? asset('uploads/' . $users->image) : asset('dist/img/speed.jpg') }}"
+                                                src="{{ $users->image ? asset('uploads/' . $users->image) : asset('dist/img/blank.png') }}"
                                                 alt="Petani image"
                                                 style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.3s;"
                                                 onmouseenter="this.style.transform='scale(1.05)'; this.nextElementSibling.style.display='block';"

@@ -100,23 +100,20 @@
                                     <label for="exampleInputFile">Upload Foto Petani</label>
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="file" name="image" accept=".jpg,.jpeg,.png" class="form-control" id="exampleInputFile">
+                                            <input type="file" name="image" accept=".jpg,.jpeg,.png" class="form-control" id="exampleInputFile" onchange="updateFileName()">
                                             <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                        </div>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">Upload</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-check">
+                                {{-- <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
                                     <label class="form-check-label" for="exampleCheck1">Saya Setuju</label>
-                                </div>
+                                </div> --}}
                             </div>
                             <!-- /.card-body -->
 
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary">Ubah</button>
                             </div>
                         </form>
                     </div>
@@ -148,6 +145,14 @@
     <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../../dist/js/adminlte.min.js"></script>
+    <script>
+        function updateFileName() {
+            const fileInput = document.getElementById('exampleInputFile');
+            const label = fileInput.nextElementSibling; // Get the label next to the input
+            const fileName = fileInput.files[0] ? fileInput.files[0].name : 'Choose file'; // Get the selected file name or default text
+            label.textContent = fileName; // Update the label text
+        }
+    </script>
 </body>
 
 
