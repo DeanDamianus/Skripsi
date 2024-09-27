@@ -66,7 +66,9 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/distribusi', [SesiController::class, 'distribusidashboard']);//dashboard distribusi
 
-        Route::get('/formdistribusi', [SesiController::class, 'formdistribusi']); //formdistribusi
+        Route::get('/formdistribusi', [SesiController::class, 'formdistribusi']);//formdistribusi
+        
+        Route::get('/uploadfoto', [SesiController::class, 'uploadfoto']);//halaman upload foto
 
         Route::get('/editInput', function (){
             return view ('edit_petani');

@@ -66,6 +66,27 @@ class SesiController extends Controller
         ]);
     }
 
+    public function uploadfoto(Request $request)
+    {
+        $year = $request->input('year', date('Y'));
+        $userId = $request->input('id');
+
+        $musim = DB::table('musim')->where('tahun', $year)->first();
+        $musimList = DB::table('musim')->get();
+
+        $data = DB::table('users')
+        ->where('id', $userId)
+        ->first();
+
+
+        return view('upload-foto', [
+            'selectedYear' => $year,
+            'user' => $data,
+            'musim' => $musim,
+            'currentMusim' => $musimList,
+        ]);
+    }
+
     public function create(Request $request)
     {
         // Validate the input
@@ -580,8 +601,6 @@ class SesiController extends Controller
     {   
         
         $year = $request->input('year', date('Y'));
-
-        
 
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();

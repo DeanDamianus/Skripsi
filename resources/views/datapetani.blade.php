@@ -125,7 +125,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Data Petani</h1>
+                            <strong><h1>Data Petani</h1></strong>
                         </div>
                         <div class="col-sm-6 text-right">
                             <form action="{{ url('/datapetani/search') }}" method="GET">
@@ -150,8 +150,8 @@
                         <div class="col-md-3">
                             <div class="card fixed-card">
                                 <div style="position: relative; display: inline-block;">
-                                    <a href="#" style="text-decoration: none;">
-                                        <img class="card-img-top" src="dist/img/farmerphoto.jpg" alt="Card image cap" 
+                                    <a href="{{ url('/uploadfoto?id=' . $users->id) }}" style="text-decoration: none;">
+                                        <img class="card-img-top" src="dist/img/speed.jpg" alt="Card image cap" 
                                             style="transition: transform 0.3s; width: 100%; height: auto;"
                                             onmouseenter="this.style.transform='scale(1.05)'; this.nextElementSibling.style.display='block';"
                                             onmouseleave="this.style.transform='scale(1)'; this.nextElementSibling.style.display='none';">
