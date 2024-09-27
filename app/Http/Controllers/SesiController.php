@@ -568,14 +568,29 @@ class SesiController extends Controller
         ]);
     }
 
-    public function datapetani(Request $request)
-    {
+    public function search(Request $request) {
+        $search = $request->query('search');
+        $data = User::where('name', 'LIKE', "%{$search}%")->get();
         $year = $request->input('year', date('Y'));
+
+        return view('datapetani', compact('data'));
+    }
+    
+    public function datapetani(Request $request)
+    {   
+        
+        $year = $request->input('year', date('Y'));
+
+        
 
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
 
         $data = DB::table('users')->where('role', 'petani')->get();
+
+        foreach ($data as $user) {
+            $user->formatted_created_at = \Carbon\Carbon::parse($user->created_at)->format('d-m-Y');
+        }
 
         return view('datapetani', [
             'selectedYear' => $year,

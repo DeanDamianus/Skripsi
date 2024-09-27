@@ -42,8 +42,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/hutang-admin', [SesiController::class, 'hutangdashboard']); //halman hutang 
 
-        Route::get('/datapetani', [SesiController::class, 'datapetani']); //halaman list data petani
-
+        Route::get('/datapetani', [SesiController::class, 'datapetani']);
+        
+        Route::get('/datapetani/search', [SesiController::class, 'search']);//halaman list data petani
+        
         Route::get('/parameter', [SesiController::class, 'parameter'])->name('parameter'); //halaman menambah parameter
 
         Route::get('/hapuspetani', function (){
