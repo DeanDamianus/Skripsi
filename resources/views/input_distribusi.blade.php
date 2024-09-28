@@ -85,53 +85,44 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Mobil Berangkat <i class="fas fa-road"> </i> <i
-                                    class="fas fa-arrow-right"></i></label>
+                            <label>Mobil Berangkat <i class="fas fa-road"> </i> <i class="fas fa-arrow-right"></i></label>
                             <input type="number" name="mobil_berangkat" class="form-control" required
                                 placeholder="{{ $mobil_berangkat ?? 'Masukkan Harga Berangkat' }}" value="{{ old('mobil_berangkat', $mobil_berangkat ?? '') }}">
                         </div>
-                        <!-- /.form-group -->
                         <div class="form-group">
                             <label>Status <i class="fas fa-info-circle"></i></label>
                             <br>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="Diterima" name="status" value="Diterima"
                                     class="form-check-input" {{ $status === 'Diterima' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="Diterima">Diterima <i
-                                        class="fas fa-check-circle"></i></label>
+                                <label class="form-check-label" for="Diterima">Diterima <i class="fas fa-check-circle"></i></label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="Diproses" name="status" value="Diproses"
                                     class="form-check-input" {{ $status === 'Diproses' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="Diproses">Diproses <i
-                                        class="fas fa-truck"></i></label>
+                                <label class="form-check-label" for="Diproses">Diproses <i class="fas fa-truck"></i></label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="Ditolak" name="status" value="Ditolak"
                                     class="form-check-input" {{ $status === 'Ditolak' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="Ditolak">Ditolak <i
-                                        class="fas fa-times"></i></label>
+                                <label class="form-check-label" for="Ditolak">Ditolak <i class="fas fa-times"></i></label>
                             </div>
                         </div>
-
-                        <!-- /.form-group -->
                     </div>
-                    <!-- /.col -->
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Mobil Pulang <i class="fas fa-road"> </i> <i class="fas fa-arrow-left"></i></label>
                             <input type="number" name="mobil_pulang" class="form-control" required
                                 placeholder="{{ $mobil_pulang ?? 'Masukkan Harga pulang' }}" value="{{ old('mobil_pulang', $mobil_pulang ?? '') }}">
                         </div>
-                        <!-- /.form-group -->
                     </div>
-                    <!-- /.col -->
                 </div>
             </div>
             <div class="card-footer text-center">
                 <button type="submit" class="btn btn-primary">Ubah</button>
             </div>
         </form>
+        
 
 
         <!-- /.content-wrapper -->
@@ -151,6 +142,7 @@
     <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../../dist/js/adminlte.min.js"></script>
+    
 </body>
 
 </html>

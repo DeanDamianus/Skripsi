@@ -269,30 +269,55 @@ if (!$result) {
                                             <tr>
                                                 <th>Id Hutang</th>
                                                 <th>Nama Petani</th>
-                                                <th>Tanggal Hutang</th>
+                                                <th>Hutang</th>
                                                 <th>Bon</th>
+                                                <th>Bunga Hutang</th>
+                                                <th>Total Bon</th>
                                                 <th>Cicilan</th>
-                                                <th>Tanggal Lunas</th>
+                                                <th>Lunas</th>
                                                 <th>Action</th>
                                                 <th>History</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
+                                            use Carbon\Carbon;
+                                        
                                             while ($row = mysqli_fetch_assoc($result)) {
                                                 // Formatting the date
-                                                $tanggal_hutang = date('d-m-Y', strtotime($row['tanggal_hutang']));
-                                                $tanggal_lunas = !empty($row['tanggal_lunas']) ? date('d-m-Y', strtotime($row['tanggal_lunas'])) : 'Belum Lunas'; // Handle null dates for tanggal_lunas
+                                                $tanggal_hutang = Carbon::createFromFormat('Y-m-d', $row['tanggal_hutang']);
+                                                $current_tanggal = Carbon::now(); // tanggal hari ini
+                                                $bunga = 0.25; // 25%
                                         
+                                                // Calculate the difference in years and the interest (bunga hutang)
+                                                $diff_in_years = $tanggal_hutang->diffInDays($current_tanggal) / 365;
+                                                $bunga_hutang = $diff_in_years * $bunga * $row['bon']; // Assuming interest applies to the 'bon' amount
+                                        
+                                                // Calculate bunga hutang as a percentage
+                                                $bunga_hutang_percentage = ($bunga_hutang / $row['bon']) * 100;
+
+                                                // Formatting the dates
+                                                $formatted_tanggal_hutang = $tanggal_hutang->format('d-m-Y');
+                                                $tanggal_lunas = !empty($row['tanggal_lunas']) ? Carbon::createFromFormat('Y-m-d', $row['tanggal_lunas'])->format('d-m-Y') : '-';
+
+                                                // Calculate total bunga (including original 'bon' amount)
+                                                $totalbunga = $row['bon'] + ($row['bon'] * ($bunga_hutang_percentage / 100)); // Convert percentage to decimal for calculation
+
                                                 // Formatting numbers
                                                 $bonFormatted = number_format($row['bon'], 0, ',', '.');
                                                 $cicilanFormatted = number_format($row['cicilan'], 0, ',', '.');
+                                                $totalbungaFormatted = number_format($totalbunga, 0, ',', '.');
+                                                
+                                                // Display bunga hutang percentage without comma and decimal
+                                                $bungaFormatted = ceil($bunga_hutang_percentage);// Convert to integer for whole number
                                         
                                                 echo '<tr>';
                                                 echo '<td>' . $row['id_hutang'] . '</td>';
                                                 echo '<td>' . htmlspecialchars($row['name']) . '</td>';
-                                                echo '<td>' . htmlspecialchars($tanggal_hutang) . '</td>';
+                                                echo '<td>' . htmlspecialchars($formatted_tanggal_hutang) . '</td>';
                                                 echo '<td>Rp. ' . htmlspecialchars($bonFormatted) . '</td>';
+                                                echo '<td>' . htmlspecialchars($bungaFormatted) . ' %</td>'; 
+                                                echo '<td>Rp. ' . htmlspecialchars($totalbungaFormatted) . '</td>';
                                                 echo '<td>Rp. ' . htmlspecialchars($cicilanFormatted) . '</td>';
                                                 echo '<td>' . htmlspecialchars($tanggal_lunas) . '</td>';
                                                 echo '<td>
@@ -304,16 +329,18 @@ if (!$result) {
                                                             </button>
                                                         </form>
                                                       </td>';
-                                                      echo '<td>
-                                                            <button type="submit" class="btn btn-success btn-sm">
-                                                                <i class="fa fa-history"></i>
-                                                            </button>
+                                                echo '<td>
+                                                        <button type="submit" class="btn btn-success btn-sm">
+                                                            <i class="fa fa-history"></i>
+                                                        </button>
                                                       </td>';
                                                 echo '</tr>';
                                             }
                                             ?>
                                         </tbody>
+                                        
                                     </table>
+                                    
                                 </div>
 
                                 <!-- /.card-body -->

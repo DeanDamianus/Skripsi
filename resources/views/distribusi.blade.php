@@ -307,8 +307,10 @@
                             <thead>
                                 <tr>
                                     <th>ID Keranjang</th>
-                                    <th>Periode</th>
                                     <th>Status</th>
+                                    <th>Diterima</th>
+                                    <th>Diproses</th>
+                                    <th>Ditolak</th>
                                     <th>Pengeluaran</th>
                                     <th>Action</th>
                                 </tr>
@@ -319,8 +321,11 @@
                                     <td><a
                                             href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim ) }}">{{
                                             $rekap->id_rekap }}</a></td>
-                                    <td>{{ $rekap->periode }}</td>
                                     <td>{!! $rekap->status !!}</td>
+                                    <td>{{ $rekap->tgl_diterima ? \Carbon\Carbon::parse($rekap->tgl_diterima)->format('d-m-Y') : '' }}</td>
+                                    <td>{{ $rekap->tgl_diproses ? \Carbon\Carbon::parse($rekap->tgl_diproses)->format('d-m-Y') : '' }}</td>
+                                    <td>{{ $rekap->tgl_ditolak ? \Carbon\Carbon::parse($rekap->tgl_ditolak)->format('d-m-Y') : '' }}</td>
+
                                     <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
                                     <td>
                                         <a href="{{ url('/formdistribusi?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim ) }}"class="btn btn-block btn-success">
@@ -334,6 +339,8 @@
                             <tfoot>
                                 <th></th>
                                 <th></th>
+                                <th></th>
+                                <th></th>   
                                 <th></th>
                                 <th>{{ 'Rp. ' . number_format($totalpengeluaran, 0, ',', '.') }}</th>
                                 <th></th>

@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\ElseIf_;
+
 
 class SesiController extends Controller
 {
@@ -198,10 +199,12 @@ class SesiController extends Controller
         // Fetch data for rekap based on the current id_musim and selected year
         $data = DB::table('rekap_2024')
             ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
+            ->join('users', 'rekap_2024.id_petani', '=', 'users.id') // Join with users table
             ->where('rekap_2024.id_petani', $userId)
             ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim from the request
-            ->select('rekap_2024.*', 'parameter_2024.*')
+            ->select('rekap_2024.*', 'parameter_2024.*', 'users.image') // Select the image field from users table
             ->get();
+
 
         // Fetch parameter data
         $parameter = DB::table('parameter_2024')->where('id', $year)->first();
@@ -333,51 +336,73 @@ class SesiController extends Controller
 
     //post controller
     public function inputDistribusi(Request $request)
-    {
-        // Validate the incoming request data
-        $request->validate([
-            'id_rekap' => 'required|integer',
-            'id_musim' => 'required|integer',
-            'mobil_berangkat' => 'required|integer',
-            'mobil_pulang' => 'required|integer',
-            'status' => 'required|string|max:255',
-        ]);
+{
+    // Validate the incoming request
+    $request->validate([
+        'id_rekap' => 'required|integer',
+        'id_musim' => 'required|integer',
+        'mobil_berangkat' => 'required|integer',
+        'mobil_pulang' => 'required|integer',
+        'status' => 'required|string|max:255',
+    ]);
 
-        // Get the year from the request or default to current year
-        $year = $request->input('year', date('Y'));
+    // Get the year from the request or default to current year
+    $year = $request->input('year', date('Y'));
 
-        // Prepare the data for insertion/update
-        $data = [
-            'id_rekap' => $request->input('id_rekap'),
-            'id_musim' => $request->input('id_musim'),
-            'n_gudang' => $request->input('n_gudang'),
-            'nt_pabrik' => $request->input('nt_pabrik'),
-            'kasut' => $request->input('kasut'),
-            'transport_gudang' => $request->input('transport_gudang'),
-            'mobil_berangkat' => $request->input('mobil_berangkat'),
-            'mobil_pulang' => $request->input('mobil_pulang'),
-            'status' => $request->input('status'),
-        ];
+    $tgl_diterima = null;
+    $tgl_diproses = null;
+    $tgl_ditolak = null;
 
-        // Check if the record exists based on id_rekap and id_musim
-        $existingRecord = DB::table('distribusi_2024')->where('id_rekap', $request->input('id_rekap'))->where('id_musim', $request->input('id_musim'))->first();
-
-        if ($existingRecord) {
-            // Update the existing record
-            DB::table('distribusi_2024')->where('id_rekap', $request->input('id_rekap'))->where('id_musim', $request->input('id_musim'))->update($data);
-
-            return redirect()
-                ->to('http://127.0.0.1:8000/distribusi?year=' . $year)
-                ->with('success', 'Data updated successfully!');
-        } else {
-            // Insert a new record if it doesn't exist
-            DB::table('distribusi_2024')->insert($data);
-
-            return redirect()
-                ->to('http://127.0.0.1:8000/distribusi?year=' . $year)
-                ->with('success', 'Data inserted successfully!');
-        }
+    if ($request->input('status') === 'Diterima') {
+        $tgl_diterima = date('Y-m-d');
+    } elseif ($request->input('status') === 'Diproses') {
+        $tgl_diproses = date('Y-m-d');
+    } elseif ($request->input('status') === 'Ditolak') {
+        $tgl_ditolak = date('Y-m-d');
     }
+
+    // Prepare the data for insertion/update
+    $data = [
+        'id_rekap' => $request->input('id_rekap'),
+        'id_musim' => $request->input('id_musim'),
+        'tgl_diterima' => $tgl_diterima,
+        'tgl_diproses' => $tgl_diproses,
+        'tgl_ditolak' => $tgl_ditolak,
+        'n_gudang' => $request->input('n_gudang'),
+        'nt_pabrik' => $request->input('nt_pabrik'),
+        'kasut' => $request->input('kasut'),
+        'transport_gudang' => $request->input('transport_gudang'),
+        'mobil_berangkat' => $request->input('mobil_berangkat'),
+        'mobil_pulang' => $request->input('mobil_pulang'),
+        'status' => $request->input('status'),
+    ];
+
+    // Check if the record exists based on id_rekap and id_musim
+    $existingRecord = DB::table('distribusi_2024')
+        ->where('id_rekap', $request->input('id_rekap'))
+        ->where('id_musim', $request->input('id_musim'))
+        ->first();
+
+    if ($existingRecord) {
+        // Update the existing record
+        DB::table('distribusi_2024')
+            ->where('id_rekap', $request->input('id_rekap'))
+            ->where('id_musim', $request->input('id_musim'))
+            ->update($data);
+
+        return redirect()
+            ->to('http://127.0.0.1:8000/distribusi?year=' . $year)
+            ->with('success', 'Data updated successfully!');
+    } else {
+        // Insert a new record if it doesn't exist
+        DB::table('distribusi_2024')->insert($data);
+
+        return redirect()
+            ->to('http://127.0.0.1:8000/distribusi?year=' . $year)
+            ->with('success', 'Data inserted successfully!');
+    }
+}
+
 
     //untuk dashboard input distribusi get
     public function formdistribusi(Request $request)
@@ -669,7 +694,8 @@ class SesiController extends Controller
         $data = DB::table('rekap_2024')
             ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
             ->where('rekap_2024.id_musim', $musim->id) // Join distribusi_2024 with rekap_2024
-            ->select('rekap_2024.id_rekap', 'rekap_2024.periode', 'distribusi_2024.status', 'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 'rekap_2024.id_petani', 'rekap_2024.id_musim')
+            ->select('rekap_2024.id_rekap', 'rekap_2024.periode', 
+            'distribusi_2024.tgl_diterima', 'distribusi_2024.tgl_diproses', 'distribusi_2024.tgl_ditolak','distribusi_2024.status', 'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 'rekap_2024.id_petani', 'rekap_2024.id_musim')
             ->get();
 
         foreach ($data as $rekap) {
@@ -713,6 +739,8 @@ class SesiController extends Controller
                 $rekap->status = '<span class="badge badge-info">Belum Diproses</span>';
             }
         }
+
+
 
         return view('distribusi', [
             'data' => $data,
