@@ -569,45 +569,29 @@ class SesiController extends Controller
     }
 
     public function hutang(Request $request)
-    {
-        // Validate the incoming request data
-        $request->validate([
-            'id_petani' => 'required|exists:users,id', // Assuming the 'petani' table is 'users'
-            'tanggal_hutang' => 'required|date',
-            'bon' => 'required|numeric',
-        ]);
+{
+    // Validate the incoming request data
+    $request->validate([
+        'id_petani' => 'required|exists:users,id', // Assuming the 'petani' table is 'users'
+        'tanggal_hutang' => 'required|date',
+        'bon' => 'required|numeric',
+    ]);
 
-        $id_petani = $request->id_petani;
-        $tanggal_hutang = $request->tanggal_hutang;
-        $bon = $request->bon;
+    $id_petani = $request->id_petani;
+    $tanggal_hutang = $request->tanggal_hutang;
+    $bon = $request->bon;
 
-        // Check if there is already a record for this petani
-        $existingHutang = DB::table('hutang_2024')->where('id_petani', $id_petani)->first();
+    // Insert a new hutang record for the user, without checking for existing records
+    DB::table('hutang_2024')->insert([
+        'id_petani' => $id_petani,
+        'tanggal_hutang' => $tanggal_hutang,
+        'bon' => $bon,
+        // 'cicilan' and 'tanggal_lunas' can be left null or default based on your database schema
+    ]);
 
-        if ($existingHutang) {
-            // If record exists, update it by adding the new bon to the existing bon
-            $newBon = $existingHutang->bon + $bon;
+    return redirect()->back()->with('success', 'Hutang berhasil ditambah!');
+}
 
-            DB::table('hutang_2024')
-                ->where('id_petani', $id_petani)
-                ->update([
-                    'tanggal_hutang' => $tanggal_hutang,
-                    'bon' => $newBon,
-                    'cicilan' => $existingHutang->cicilan, // Retain existing cicilan
-                    'tanggal_lunas' => $existingHutang->tanggal_lunas, // Retain existing tanggal_lunas
-                ]);
-        } else {
-            // If no record exists, insert a new one
-            DB::table('hutang_2024')->insert([
-                'id_petani' => $id_petani,
-                'tanggal_hutang' => $tanggal_hutang,
-                'bon' => $bon,
-                // cicilan and tanggal_lunas are not included in this insertion
-            ]);
-        }
-
-        return redirect()->route('hutang-admin')->with('success', 'Hutang berhasil ditambahkan atau diperbarui!');
-    }
 
     public function hutangdashboard(Request $request)
     {
@@ -744,44 +728,45 @@ class SesiController extends Controller
     }
 
     public function pelunasan(Request $request)
-    {
-        // Validate the incoming request data
-        $request->validate([
-            'id_petani' => 'required|exists:hutang_2024,id_petani', // Ensure id_petani exists in hutang_2024
-            'jumlah_bayar' => 'required|numeric',
-        ]);
+{
+    // Validate the incoming request data
+    $request->validate([
+        'id_hutang' => 'required|exists:hutang_2024,id_hutang', // Ensure id_hutang exists in hutang_2024
+        'jumlah_bayar' => 'required|numeric',
+    ]);
 
-        $id_petani = $request->id_petani;
-        $jumlah_bayar = $request->jumlah_bayar;
+    $id_hutang = $request->id_hutang;
+    $jumlah_bayar = $request->jumlah_bayar;
 
-        // Fetch the current hutang entry
-        $hutang = DB::table('hutang_2024')->where('id_petani', $id_petani)->first();
+    // Fetch the current hutang entry by id_hutang
+    $hutang = DB::table('hutang_2024')->where('id_hutang', $id_hutang)->first();
 
-        if ($hutang) {
-            // Check if tanggal_lunas is already filled
-            if ($hutang->tanggal_lunas !== null) {
-                return redirect()->back()->with('error', 'Hutang ini sudah lunas dan tidak dapat diproses.');
-            }
-
-            // Calculate the new cicilan amount
-            $newCicilan = $hutang->cicilan + $jumlah_bayar;
-
-            // Determine tanggal_lunas based on new cicilan amount
-            $tanggalLunas = $newCicilan >= $hutang->bon ? now()->format('Y-m-d') : null;
-
-            // Update the hutang entry
-            DB::table('hutang_2024')
-                ->where('id_petani', $id_petani)
-                ->update([
-                    'cicilan' => $newCicilan,
-                    'tanggal_lunas' => $tanggalLunas,
-                ]);
-
-            return redirect()->back()->with('success', 'Pelunasan berhasil!');
+    if ($hutang) {
+        // Check if tanggal_lunas is already filled
+        if ($hutang->tanggal_lunas !== null) {
+            return redirect()->back()->with('error', 'Hutang ini sudah lunas dan tidak dapat diproses.');
         }
 
-        return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        // Calculate the new cicilan amount
+        $newCicilan = $hutang->cicilan + $jumlah_bayar;
+
+        // Determine tanggal_lunas based on new cicilan amount
+        $tanggalLunas = $newCicilan >= $hutang->bon ? now()->format('Y-m-d') : null;
+
+        // Update the hutang entry
+        DB::table('hutang_2024')
+            ->where('id_hutang', $id_hutang)
+            ->update([
+                'cicilan' => $newCicilan,
+                'tanggal_lunas' => $tanggalLunas,
+            ]);
+
+        return redirect()->back()->with('success', 'Pelunasan berhasil!');
     }
+
+    return redirect()->back()->with('error', 'Data tidak ditemukan.');
+}
+
     public function destroy($id)
     {
         // Delete the record from the hutang_2024 table

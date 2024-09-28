@@ -20,11 +20,13 @@ while ($userRow = mysqli_fetch_assoc($allPetaniResult)) {
 }
 
 // Query to get users with entries in hutang_2024
-$petaniInHutangQuery = "SELECT DISTINCT users.id, users.name 
+$petaniInHutangQuery = "SELECT hutang_2024.id_hutang, users.id AS id_petani, users.name, hutang_2024.tanggal_hutang, hutang_2024.bon, hutang_2024.cicilan, hutang_2024.tanggal_lunas 
                         FROM hutang_2024 
                         JOIN users ON hutang_2024.id_petani = users.id 
-                        WHERE users.role = 'petani'";
+                        WHERE users.role = 'petani' 
+                        ORDER BY users.name ASC";  // Sorting by name in ascending order
 $petaniInHutangResult = mysqli_query($con, $petaniInHutangQuery);
+
 
 if (!$petaniInHutangResult) {
     die('Query Error: ' . mysqli_error($con));
@@ -36,7 +38,7 @@ while ($userRow = mysqli_fetch_assoc($petaniInHutangResult)) {
 }
 
 // Query to get hutang_2024 data
-$query = "SELECT hutang_2024.id_petani, hutang_2024.tanggal_hutang, hutang_2024.bon, hutang_2024.cicilan, hutang_2024.tanggal_lunas, users.name 
+$query = "SELECT hutang_2024.id_hutang, hutang_2024.id_petani, hutang_2024.tanggal_hutang, hutang_2024.bon, hutang_2024.cicilan, hutang_2024.tanggal_lunas, users.name 
           FROM hutang_2024
           JOIN users ON hutang_2024.id_petani = users.id
           WHERE users.role = 'petani'";
@@ -265,7 +267,7 @@ if (!$result) {
                                     <table id="example2" class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
+                                                <th>Id Hutang</th>
                                                 <th>Nama Petani</th>
                                                 <th>Tanggal Hutang</th>
                                                 <th>Bon</th>
@@ -287,7 +289,7 @@ if (!$result) {
                                                 $cicilanFormatted = number_format($row['cicilan'], 0, ',', '.');
                                         
                                                 echo '<tr>';
-                                                echo '<td>' . $row['id_petani'] . '</td>';
+                                                echo '<td>' . $row['id_hutang'] . '</td>';
                                                 echo '<td>' . htmlspecialchars($row['name']) . '</td>';
                                                 echo '<td>' . htmlspecialchars($tanggal_hutang) . '</td>';
                                                 echo '<td>Rp. ' . htmlspecialchars($bonFormatted) . '</td>';
@@ -386,18 +388,17 @@ if (!$result) {
                                             @csrf
                                             <div class="card-body">
                                                 <div class="form-group">
-                                                    <label>Nomor ID Petani:</label>
+                                                    <label>ID Hutang:</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i
-                                                                    class="far fa-user"></i></span>
+                                                            <span class="input-group-text"><i class="far fa-user"></i></span>
                                                         </div>
-                                                        <select name="id_petani" class="form-control" required>
-                                                            <option value="" selected disabled>Pilih Petani</option>
-                                                            <?php foreach ($petaniInHutang as $user) : ?>
-                                                            <option value="<?= $user['id'] ?>">
-                                                                <?= $user['id'] . ' - ' . $user['name'] ?>
-                                                            </option>
+                                                        <select name="id_hutang" class="form-control" required>
+                                                            <option value="" selected disabled>Pilih Hutang</option>
+                                                            <?php foreach ($petaniInHutang as $hutang) : ?>
+                                                                <option value="<?= $hutang['id_hutang'] ?>">
+                                                                    <?= $hutang['id_hutang'] . ' - ' . $hutang['id_petani'] . ' - ' . $hutang['name'] ?>
+                                                                </option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
@@ -406,23 +407,21 @@ if (!$result) {
                                                     <label>Jumlah Bayar</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i
-                                                                    class="nav-icon fas fa-hand-holding-usd"></i></span>
+                                                            <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
                                                         </div>
-                                                        <input type="number" name="jumlah_bayar" class="form-control"
-                                                            required>
+                                                        <input type="number" name="jumlah_bayar" class="form-control" required>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="width: 100%; justify-content: center;">
                                                     <div class="col-12">
-                                                        <button type="submit"
-                                                            class="btn btn-success btn-block">Selesai</button>
+                                                        <button type="submit" class="btn btn-success btn-block">Selesai</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
+                                
                             </div>
                             <!-- /.col (right) -->
                         </div>
