@@ -275,8 +275,8 @@ if (!$result) {
                                                 <th>Bunga Hutang</th>
                                                 <th>Total Bon</th>
                                                 <th>Cicilan</th>
-                                                <th>Lunas</th>
-                                                {{-- <th>Action</th> --}}
+                                                <th>Sisa</th>
+                                                {{-- <th>Lunas</th> --}}
                                                 <th>History</th>
                                             </tr>
                                         </thead>
@@ -303,14 +303,16 @@ if (!$result) {
 
                                                 // Calculate total bunga (including original 'bon' amount)
                                                 $totalbon = $row['bon'] + ($row['bon'] * ($bunga_hutang_percentage / 100)); // Convert percentage to decimal for calculation
-
+                                                $sisahutang = $totalbon - $row['cicilan'];
                                                 // Formatting numbers
                                                 $bonFormatted = number_format($row['bon'], 0, ',', '.');
                                                 $cicilanFormatted = number_format($row['cicilan'], 0, ',', '.');
                                                 $totalbonFormatted = number_format($totalbon, 0, ',', '.');
+                                                $sisahutangformatted = number_format($sisahutang, 0, ',', '.');
                                                 
                                                 // Display bunga hutang percentage without comma and decimal
-                                                $bungaFormatted = ceil($bunga_hutang_percentage);// Convert to integer for whole number
+                                                $bungaFormatted = ceil($bunga_hutang_percentage);
+                                                
                                         
                                                 echo '<tr>';
                                                 echo '<td>' . $row['id_hutang'] . '</td>';
@@ -320,7 +322,8 @@ if (!$result) {
                                                 echo '<td>' . htmlspecialchars($bungaFormatted) . ' %</td>'; 
                                                 echo '<td>Rp. ' . htmlspecialchars($totalbonFormatted) . '</td>';
                                                 echo '<td>Rp. ' . htmlspecialchars($cicilanFormatted) . '</td>';
-                                                echo '<td>' . htmlspecialchars($tanggal_lunas) . '</td>';
+                                                echo '<td><strong>Rp. ' . htmlspecialchars($sisahutangformatted) . '</strong></td>';
+                                                // echo '<td>' . htmlspecialchars($tanggal_lunas) . '</td>';
                                                 // echo '<td>
                                                 //         <form action="' . route('hutang.delete', ['id' => $row['id_petani']]) . '" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus data ini?\');">
                                                 //             ' . csrf_field() . '

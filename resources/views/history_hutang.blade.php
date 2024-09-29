@@ -103,8 +103,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             
                                         <!-- Check if tanggal_lunas is not null before formatting -->
                                         <td>
-                                            @if ($item->tanggal_lunas)
-                                                {{ \Carbon\Carbon::createFromFormat('Y-m-d', $item->tanggal_lunas)->format('d/m/Y') }}
+                                            @if ($item->tanggal_hutang)
+                                                {{ \Carbon\Carbon::createFromFormat('Y-m-d', $item->tanggal_hutang)->format('d/m/Y') }}
                                             @else
                                                 <em>-</em>
                                             @endif
