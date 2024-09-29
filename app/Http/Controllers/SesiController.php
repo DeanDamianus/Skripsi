@@ -788,6 +788,14 @@ class SesiController extends Controller
 
         // Determine tanggal_lunas based on new cicilan amount
         $tanggalLunas = $newCicilan >= $hutang->bon ? now()->format('Y-m-d') : null;
+        $tanggal_cicilan = now(); // Use current date or modify as needed
+
+    // Insert a new record into hutang_history
+        DB::table('hutang_history')->insert([
+            'id_hutang' => $id_hutang,
+            'tanggal_cicilan' => $tanggal_cicilan,
+            'bon' => $jumlah_bayar, // Use jumlah_bayar as bon or adjust according to your schema
+        ]);
 
         // Update the hutang entry
         DB::table('hutang_2024')
@@ -802,6 +810,25 @@ class SesiController extends Controller
 
     return redirect()->back()->with('error', 'Data tidak ditemukan.');
 }
+
+public function history_hutang($id_hutang)
+{
+    // Fetch the history data along with the petani's name
+    $history = DB::table('hutang_history')
+        ->join('hutang_2024', 'hutang_history.id_hutang', '=', 'hutang_2024.id_hutang') // Join hutang_2024 to get id_petani
+        ->join('users', 'hutang_2024.id_petani', '=', 'users.id') // Join users to get the name
+        ->where('hutang_history.id_hutang', $id_hutang)
+        ->select('hutang_history.*', 'users.name') // Select fields you want
+        ->get();
+
+    // Return the view with the retrieved data
+    return view('history_hutang', [
+        'history' => $history, // Pass the history data to the view
+    ]);
+}
+
+
+
 
     public function destroy($id)
     {

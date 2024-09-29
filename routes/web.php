@@ -44,14 +44,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/datapetani/search', [SesiController::class, 'search']);//halaman list data petani
         
         Route::get('/parameter', [SesiController::class, 'parameter'])->name('parameter'); //halaman menambah parameter
-
-        Route::get('/hapuspetani', function (){
-            return view ('hapus-petani');
-        })->name('hapus-petani');
-
-        Route::get('/register', function (){
-            return view ('register');
-        })->name('register');
+        
+        Route::get('/historyhutang/{id_hutang}', [SesiController::class, 'history_hutang'])->name('historyhutang');
 
         Route::get('/register', [SesiController::class, 'register']);//halaman penambah user
 
