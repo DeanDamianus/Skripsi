@@ -8,7 +8,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-
 class SesiController extends Controller
 {
     public function index()
@@ -116,38 +115,38 @@ class SesiController extends Controller
     }
 
     public function create(Request $request)
-    {   
+    {
         // Validate the input
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'role' => 'required|in:operator,petani',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-    
+
         // Prepare user data
         $userData = [
             'name' => $validated['name'],
             'role' => $validated['role'],
             // We will set the image after moving it
         ];
-    
+
         // Create a new user
         $user = User::create($userData);
-    
+
         // Handle image upload
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName(); // Generate a unique name for the file
             $file->move(public_path('uploads'), $filename); // Move the file to the uploads directory
-    
+
             // Update user image
             $user->update(['image' => $filename]);
         }
-    
+
         // Redirect to login with a success message
         return redirect('/datapetani')->with('success', 'Registrasi berhasil! Silakan login.');
     }
-    
+
     public function parameter(Request $request)
     {
         // Get the selected year, default to the current year if not provided
@@ -204,7 +203,6 @@ class SesiController extends Controller
             ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim from the request
             ->select('rekap_2024.*', 'parameter_2024.*', 'users.image') // Select the image field from users table
             ->get();
-
 
         // Fetch parameter data
         $parameter = DB::table('parameter_2024')->where('id', $year)->first();
@@ -336,73 +334,66 @@ class SesiController extends Controller
 
     //post controller
     public function inputDistribusi(Request $request)
-{
-    // Validate the incoming request
-    $request->validate([
-        'id_rekap' => 'required|integer',
-        'id_musim' => 'required|integer',
-        'mobil_berangkat' => 'required|integer',
-        'mobil_pulang' => 'required|integer',
-        'status' => 'required|string|max:255',
-    ]);
+    {
+        // Validate the incoming request
+        $request->validate([
+            'id_rekap' => 'required|integer',
+            'id_musim' => 'required|integer',
+            'mobil_berangkat' => 'required|integer',
+            'mobil_pulang' => 'required|integer',
+            'status' => 'required|string|max:255',
+        ]);
 
-    // Get the year from the request or default to current year
-    $year = $request->input('year', date('Y'));
+        // Get the year from the request or default to current year
+        $year = $request->input('year', date('Y'));
 
-    $tgl_diterima = null;
-    $tgl_diproses = null;
-    $tgl_ditolak = null;
+        $tgl_diterima = null;
+        $tgl_diproses = null;
+        $tgl_ditolak = null;
 
-    if ($request->input('status') === 'Diterima') {
-        $tgl_diterima = date('Y-m-d');
-    } elseif ($request->input('status') === 'Diproses') {
-        $tgl_diproses = date('Y-m-d');
-    } elseif ($request->input('status') === 'Dikembalikan') {
-        $tgl_ditolak = date('Y-m-d');
+        if ($request->input('status') === 'Diterima') {
+            $tgl_diterima = date('Y-m-d');
+        } elseif ($request->input('status') === 'Diproses') {
+            $tgl_diproses = date('Y-m-d');
+        } elseif ($request->input('status') === 'Dikembalikan') {
+            $tgl_ditolak = date('Y-m-d');
+        }
+
+        // Prepare the data for insertion/update
+        $data = [
+            'id_rekap' => $request->input('id_rekap'),
+            'id_musim' => $request->input('id_musim'),
+            'tgl_diterima' => $tgl_diterima,
+            'tgl_diproses' => $tgl_diproses,
+            'tgl_ditolak' => $tgl_ditolak,
+            'n_gudang' => $request->input('n_gudang'),
+            'nt_pabrik' => $request->input('nt_pabrik'),
+            'kasut' => $request->input('kasut'),
+            'transport_gudang' => $request->input('transport_gudang'),
+            'mobil_berangkat' => $request->input('mobil_berangkat'),
+            'mobil_pulang' => $request->input('mobil_pulang'),
+            'status' => $request->input('status'),
+        ];
+
+        // Check if the record exists based on id_rekap and id_musim
+        $existingRecord = DB::table('distribusi_2024')->where('id_rekap', $request->input('id_rekap'))->where('id_musim', $request->input('id_musim'))->first();
+
+        if ($existingRecord) {
+            // Update the existing record
+            DB::table('distribusi_2024')->where('id_rekap', $request->input('id_rekap'))->where('id_musim', $request->input('id_musim'))->update($data);
+
+            return redirect()
+                ->to('http://127.0.0.1:8000/distribusi?year=' . $year)
+                ->with('success', 'Data updated successfully!');
+        } else {
+            // Insert a new record if it doesn't exist
+            DB::table('distribusi_2024')->insert($data);
+
+            return redirect()
+                ->to('http://127.0.0.1:8000/distribusi?year=' . $year)
+                ->with('success', 'Data inserted successfully!');
+        }
     }
-
-    // Prepare the data for insertion/update
-    $data = [
-        'id_rekap' => $request->input('id_rekap'),
-        'id_musim' => $request->input('id_musim'),
-        'tgl_diterima' => $tgl_diterima,
-        'tgl_diproses' => $tgl_diproses,
-        'tgl_ditolak' => $tgl_ditolak,
-        'n_gudang' => $request->input('n_gudang'),
-        'nt_pabrik' => $request->input('nt_pabrik'),
-        'kasut' => $request->input('kasut'),
-        'transport_gudang' => $request->input('transport_gudang'),
-        'mobil_berangkat' => $request->input('mobil_berangkat'),
-        'mobil_pulang' => $request->input('mobil_pulang'),
-        'status' => $request->input('status'),
-    ];
-
-    // Check if the record exists based on id_rekap and id_musim
-    $existingRecord = DB::table('distribusi_2024')
-        ->where('id_rekap', $request->input('id_rekap'))
-        ->where('id_musim', $request->input('id_musim'))
-        ->first();
-
-    if ($existingRecord) {
-        // Update the existing record
-        DB::table('distribusi_2024')
-            ->where('id_rekap', $request->input('id_rekap'))
-            ->where('id_musim', $request->input('id_musim'))
-            ->update($data);
-
-        return redirect()
-            ->to('http://127.0.0.1:8000/distribusi?year=' . $year)
-            ->with('success', 'Data updated successfully!');
-    } else {
-        // Insert a new record if it doesn't exist
-        DB::table('distribusi_2024')->insert($data);
-
-        return redirect()
-            ->to('http://127.0.0.1:8000/distribusi?year=' . $year)
-            ->with('success', 'Data inserted successfully!');
-    }
-}
-
 
     //untuk dashboard input distribusi get
     public function formdistribusi(Request $request)
@@ -594,37 +585,36 @@ class SesiController extends Controller
     }
 
     public function hutang(Request $request)
-{
-    // Validate the incoming request data
-    $request->validate([
-        'id_petani' => 'required|exists:users,id', // Assuming the 'petani' table is 'users'
-        'tanggal_hutang' => 'required|date',
-        'bon' => 'required|numeric',
-    ]);
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'id_petani' => 'required|exists:users,id', // Assuming the 'petani' table is 'users'
+            'tanggal_hutang' => 'required|date',
+            'bon' => 'required|numeric',
+        ]);
 
-    $id_petani = $request->id_petani;
-    $tanggal_hutang = $request->tanggal_hutang;
-    $bon = $request->bon;
-    $idhutang = $request->id_hutang;
+        $id_petani = $request->id_petani;
+        $tanggal_hutang = $request->tanggal_hutang;
+        $bon = $request->bon;
+        $idhutang = $request->id_hutang;
 
-    // Insert a new hutang record for the user, without checking for existing records
-    $id_hutang = DB::table('hutang_2024')->insertGetId([
-        'id_petani' => $id_petani,
-        'tanggal_hutang' => $tanggal_hutang,
-        'bon' => $bon,
-        // 'cicilan' and 'tanggal_lunas' can be left null or default based on your database schema
-    ]);
+        // Insert a new hutang record for the user, without checking for existing records
+        $id_hutang = DB::table('hutang_2024')->insertGetId([
+            'id_petani' => $id_petani,
+            'tanggal_hutang' => $tanggal_hutang,
+            'bon' => $bon,
+            // 'cicilan' and 'tanggal_lunas' can be left null or default based on your database schema
+        ]);
 
-    // Now insert into hutang_history with the retrieved id_hutang
-    DB::table('hutang_history')->insert([
-        'id_hutang' => $id_hutang, // Use the retrieved id_hutang here
-        'tanggal_hutang' => $tanggal_hutang,
-        'bon' => $bon,
-    ]);
+        // Now insert into hutang_history with the retrieved id_hutang
+        DB::table('hutang_history')->insert([
+            'id_hutang' => $id_hutang, // Use the retrieved id_hutang here
+            'tanggal_hutang' => $tanggal_hutang,
+            'bon' => $bon,
+        ]);
 
-    return redirect()->back()->with('success', 'Hutang berhasil ditambah!');
-}
-
+        return redirect()->back()->with('success', 'Hutang berhasil ditambah!');
+    }
 
     public function hutangdashboard(Request $request)
     {
@@ -702,8 +692,7 @@ class SesiController extends Controller
         $data = DB::table('rekap_2024')
             ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
             ->where('rekap_2024.id_musim', $musim->id) // Join distribusi_2024 with rekap_2024
-            ->select('rekap_2024.id_rekap', 'rekap_2024.periode', 
-            'distribusi_2024.tgl_diterima', 'distribusi_2024.tgl_diproses', 'distribusi_2024.tgl_ditolak','distribusi_2024.status', 'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 'rekap_2024.id_petani', 'rekap_2024.id_musim')
+            ->select('rekap_2024.id_rekap', 'rekap_2024.periode', 'distribusi_2024.tgl_diterima', 'distribusi_2024.tgl_diproses', 'distribusi_2024.tgl_ditolak', 'distribusi_2024.status', 'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 'rekap_2024.id_petani', 'rekap_2024.id_musim')
             ->get();
 
         foreach ($data as $rekap) {
@@ -748,8 +737,6 @@ class SesiController extends Controller
             }
         }
 
-
-
         return view('distribusi', [
             'data' => $data,
             'dikirim' => $dikirim,
@@ -764,71 +751,79 @@ class SesiController extends Controller
     }
 
     public function pelunasan(Request $request)
-{
-    // Validate the incoming request data
-    $request->validate([
-        'id_hutang' => 'required|exists:hutang_2024,id_hutang', // Ensure id_hutang exists in hutang_2024
-        'jumlah_bayar' => 'required|numeric',
-    ]);
-
-    $id_hutang = $request->id_hutang;
-    $jumlah_bayar = $request->jumlah_bayar;
-
-    // Fetch the current hutang entry by id_hutang
-    $hutang = DB::table('hutang_2024')->where('id_hutang', $id_hutang)->first();
-
-    if ($hutang) {
-        // Check if tanggal_lunas is already filled
-        if ($hutang->tanggal_lunas !== null) {
-            return redirect()->back()->with('error', 'Hutang ini sudah lunas dan tidak dapat diproses.');
-        }
-
-        // Calculate the new cicilan amount
-        $newCicilan = $hutang->cicilan + $jumlah_bayar;
-
-        // Determine tanggal_lunas based on new cicilan amount
-        $tanggalLunas = $newCicilan >= $hutang->bon ? now()->format('Y-m-d') : null;
-        $tanggal_cicilan = now(); // Use current date or modify as needed
-
-    // Insert a new record into hutang_history
-        DB::table('hutang_history')->insert([
-            'id_hutang' => $id_hutang,
-            'tanggal_cicilan' => $tanggal_cicilan,
-            'bon' => $jumlah_bayar, // Use jumlah_bayar as bon or adjust according to your schema
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'id_hutang' => 'required|exists:hutang_2024,id_hutang', // Ensure id_hutang exists in hutang_2024
+            'jumlah_bayar' => 'required|numeric',
         ]);
 
-        // Update the hutang entry
-        DB::table('hutang_2024')
-            ->where('id_hutang', $id_hutang)
-            ->update([
-                'cicilan' => $newCicilan,
-                'tanggal_lunas' => $tanggalLunas,
+        $id_hutang = $request->id_hutang;
+        $jumlah_bayar = $request->jumlah_bayar;
+
+        // Fetch the current hutang entry by id_hutang
+        $hutang = DB::table('hutang_2024')->where('id_hutang', $id_hutang)->first();
+
+        if ($hutang) {
+            // Check if tanggal_lunas is already filled
+            if ($hutang->tanggal_lunas !== null) {
+                return redirect()->back()->with('error', 'Hutang ini sudah lunas dan tidak dapat diproses.');
+            }
+
+            // Calculate interest and total bon
+            $tanggal_hutang = Carbon::createFromFormat('Y-m-d', $hutang->tanggal_hutang);
+            $current_tanggal = Carbon::now(); // tanggal hari ini
+            $bunga = 0.25; // 25%
+
+            $diff_in_years = $tanggal_hutang->diffInDays($current_tanggal) / 365;
+            $bunga_hutang = $diff_in_years * $bunga * $hutang->bon;
+            $bunga_hutang_percentage = ($bunga_hutang / $hutang->bon) * 100;
+            $totalbon = $hutang->bon + $hutang->bon * ($bunga_hutang_percentage / 100);
+
+            // Calculate the new cicilan amount
+            $newCicilan = $hutang->cicilan + $jumlah_bayar;
+
+            // Check if hutang is fully paid and set tanggal_lunas
+            $tanggalLunas = $newCicilan >= $totalbon ? now()->format('Y-m-d') : null;
+            $tanggal_cicilan = now(); // Use current date or modify as needed
+
+            // Insert a new record into hutang_history
+            DB::table('hutang_history')->insert([
+                'id_hutang' => $id_hutang,
+                'tanggal_cicilan' => $tanggal_cicilan,
+                'bon' => $jumlah_bayar, // Insert the amount paid
+                'tanggal_lunas' => $tanggalLunas, // Auto-insert the same tanggal_lunas if fully paid
             ]);
 
-        return redirect()->back()->with('success', 'Pelunasan berhasil!');
+            // Update the hutang entry
+            DB::table('hutang_2024')
+                ->where('id_hutang', $id_hutang)
+                ->update([
+                    'cicilan' => $newCicilan,
+                    'tanggal_lunas' => $tanggalLunas,
+                ]);
+
+            return redirect()->back()->with('success', 'Pelunasan berhasil!');
+        }
+
+        return redirect()->back()->with('error', 'Data tidak ditemukan.');
     }
 
-    return redirect()->back()->with('error', 'Data tidak ditemukan.');
-}
+    public function history_hutang($id_hutang)
+    {
+        // Fetch the history data along with the petani's name
+        $history = DB::table('hutang_history')
+            ->join('hutang_2024', 'hutang_history.id_hutang', '=', 'hutang_2024.id_hutang') // Join hutang_2024 to get id_petani
+            ->join('users', 'hutang_2024.id_petani', '=', 'users.id') // Join users to get the name
+            ->where('hutang_history.id_hutang', $id_hutang)
+            ->select('hutang_history.*', 'users.name') // Select fields you want
+            ->get();
 
-public function history_hutang($id_hutang)
-{
-    // Fetch the history data along with the petani's name
-    $history = DB::table('hutang_history')
-        ->join('hutang_2024', 'hutang_history.id_hutang', '=', 'hutang_2024.id_hutang') // Join hutang_2024 to get id_petani
-        ->join('users', 'hutang_2024.id_petani', '=', 'users.id') // Join users to get the name
-        ->where('hutang_history.id_hutang', $id_hutang)
-        ->select('hutang_history.*', 'users.name') // Select fields you want
-        ->get();
-
-    // Return the view with the retrieved data
-    return view('history_hutang', [
-        'history' => $history, // Pass the history data to the view
-    ]);
-}
-
-
-
+        // Return the view with the retrieved data
+        return view('history_hutang', [
+            'history' => $history, // Pass the history data to the view
+        ]);
+    }
 
     public function destroy($id)
     {

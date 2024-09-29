@@ -268,7 +268,7 @@ if (!$result) {
                                     <table id="example2" class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
-                                                <th>Id Hutang</th>
+                                                <th>ID Hutang</th>
                                                 <th>Nama Petani</th>
                                                 <th>Hutang</th>
                                                 <th>Bon</th>
@@ -302,12 +302,12 @@ if (!$result) {
                                                 $tanggal_lunas = !empty($row['tanggal_lunas']) ? Carbon::createFromFormat('Y-m-d', $row['tanggal_lunas'])->format('d-m-Y') : '-';
 
                                                 // Calculate total bunga (including original 'bon' amount)
-                                                $totalbunga = $row['bon'] + ($row['bon'] * ($bunga_hutang_percentage / 100)); // Convert percentage to decimal for calculation
+                                                $totalbon = $row['bon'] + ($row['bon'] * ($bunga_hutang_percentage / 100)); // Convert percentage to decimal for calculation
 
                                                 // Formatting numbers
                                                 $bonFormatted = number_format($row['bon'], 0, ',', '.');
                                                 $cicilanFormatted = number_format($row['cicilan'], 0, ',', '.');
-                                                $totalbungaFormatted = number_format($totalbunga, 0, ',', '.');
+                                                $totalbonFormatted = number_format($totalbon, 0, ',', '.');
                                                 
                                                 // Display bunga hutang percentage without comma and decimal
                                                 $bungaFormatted = ceil($bunga_hutang_percentage);// Convert to integer for whole number
@@ -318,7 +318,7 @@ if (!$result) {
                                                 echo '<td>' . htmlspecialchars($formatted_tanggal_hutang) . '</td>';
                                                 echo '<td>Rp. ' . htmlspecialchars($bonFormatted) . '</td>';
                                                 echo '<td>' . htmlspecialchars($bungaFormatted) . ' %</td>'; 
-                                                echo '<td>Rp. ' . htmlspecialchars($totalbungaFormatted) . '</td>';
+                                                echo '<td>Rp. ' . htmlspecialchars($totalbonFormatted) . '</td>';
                                                 echo '<td>Rp. ' . htmlspecialchars($cicilanFormatted) . '</td>';
                                                 echo '<td>' . htmlspecialchars($tanggal_lunas) . '</td>';
                                                 // echo '<td>
