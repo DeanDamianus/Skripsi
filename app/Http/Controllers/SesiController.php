@@ -357,7 +357,7 @@ class SesiController extends Controller
         $tgl_diterima = date('Y-m-d');
     } elseif ($request->input('status') === 'Diproses') {
         $tgl_diproses = date('Y-m-d');
-    } elseif ($request->input('status') === 'Ditolak') {
+    } elseif ($request->input('status') === 'Dikembalikan') {
         $tgl_ditolak = date('Y-m-d');
     }
 
@@ -605,13 +605,21 @@ class SesiController extends Controller
     $id_petani = $request->id_petani;
     $tanggal_hutang = $request->tanggal_hutang;
     $bon = $request->bon;
+    $idhutang = $request->id_hutang;
 
     // Insert a new hutang record for the user, without checking for existing records
-    DB::table('hutang_2024')->insert([
+    $id_hutang = DB::table('hutang_2024')->insertGetId([
         'id_petani' => $id_petani,
         'tanggal_hutang' => $tanggal_hutang,
         'bon' => $bon,
         // 'cicilan' and 'tanggal_lunas' can be left null or default based on your database schema
+    ]);
+
+    // Now insert into hutang_history with the retrieved id_hutang
+    DB::table('hutang_history')->insert([
+        'id_hutang' => $id_hutang, // Use the retrieved id_hutang here
+        'tanggal_hutang' => $tanggal_hutang,
+        'bon' => $bon,
     ]);
 
     return redirect()->back()->with('success', 'Hutang berhasil ditambah!');
@@ -718,7 +726,7 @@ class SesiController extends Controller
 
         $ditolak = $data
             ->filter(function ($rekap) {
-                return $rekap->status == 'Ditolak';
+                return $rekap->status == 'Dikembalikan';
             })
             ->count();
 
@@ -733,8 +741,8 @@ class SesiController extends Controller
                 $rekap->status = '<span class="badge badge-success">Diterima</span>';
             } elseif ($rekap->status == 'Diproses') {
                 $rekap->status = '<span class="badge badge-warning">Diproses</span>';
-            } elseif ($rekap->status == 'Ditolak') {
-                $rekap->status = '<span class="badge badge-danger">Ditolak</span>';
+            } elseif ($rekap->status == 'Dikembalikan') {
+                $rekap->status = '<span class="badge badge-danger">Dikembalikan</span>';
             } elseif ($rekap->status == '') {
                 $rekap->status = '<span class="badge badge-info">Belum Diproses</span>';
             }

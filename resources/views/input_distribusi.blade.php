@@ -103,9 +103,9 @@
                                 <label class="form-check-label" for="Diproses">Diproses <i class="fas fa-truck"></i></label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input type="radio" id="Ditolak" name="status" value="Ditolak"
-                                    class="form-check-input" {{ $status === 'Ditolak' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="Ditolak">Ditolak <i class="fas fa-times"></i></label>
+                                <input type="radio" id="Dikembalikan" name="status" value="Dikembalikan"
+                                    class="form-check-input" {{ $status === 'Dikembalikan' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="Dikembalikan">Dikembalikan <i class="fas fa-times"></i></label>
                             </div>
                         </div>
                     </div>

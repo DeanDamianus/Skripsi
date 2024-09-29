@@ -48,6 +48,8 @@ $result = mysqli_query($con, $query);
 if (!$result) {
     die('Query Error: ' . mysqli_error($con));
 }
+
+
 ?>
 
 
@@ -275,7 +277,7 @@ if (!$result) {
                                                 <th>Total Bon</th>
                                                 <th>Cicilan</th>
                                                 <th>Lunas</th>
-                                                <th>Action</th>
+                                                {{-- <th>Action</th> --}}
                                                 <th>History</th>
                                             </tr>
                                         </thead>
@@ -320,15 +322,15 @@ if (!$result) {
                                                 echo '<td>Rp. ' . htmlspecialchars($totalbungaFormatted) . '</td>';
                                                 echo '<td>Rp. ' . htmlspecialchars($cicilanFormatted) . '</td>';
                                                 echo '<td>' . htmlspecialchars($tanggal_lunas) . '</td>';
-                                                echo '<td>
-                                                        <form action="' . route('hutang.delete', ['id' => $row['id_petani']]) . '" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus data ini?\');">
-                                                            ' . csrf_field() . '
-                                                            ' . method_field('DELETE') . '
-                                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                      </td>';
+                                                // echo '<td>
+                                                //         <form action="' . route('hutang.delete', ['id' => $row['id_petani']]) . '" method="POST" onsubmit="return confirm(\'Apakah anda yakin ingin menghapus data ini?\');">
+                                                //             ' . csrf_field() . '
+                                                //             ' . method_field('DELETE') . '
+                                                //             <button type="submit" class="btn btn-danger btn-sm">
+                                                //                 <i class="fa fa-trash"></i>
+                                                //             </button>
+                                                //         </form>
+                                                //       </td>';
                                                 echo '<td>
                                                         <button type="submit" class="btn btn-success btn-sm">
                                                             <i class="fa fa-history"></i>
