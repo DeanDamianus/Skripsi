@@ -622,10 +622,14 @@ class SesiController extends Controller
 
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
+        $petaniInHutang = DB::table('hutang_2024')
+        ->whereNull('tanggal_lunas') // Ensure only records with null tanggal_lunas are retrieved
+        ->get();
         return view('hutang_admin', [
             'selectedYear' => $year,
             'musim' => $musim,
             'currentMusim' => $musimList,
+            'petaniInHutang' => $petaniInHutang,
         ]);
     }
 
@@ -818,6 +822,7 @@ class SesiController extends Controller
             ->where('hutang_history.id_hutang', $id_hutang)
             ->select('hutang_history.*', 'users.name') // Select fields you want
             ->get();
+        
 
         // Return the view with the retrieved data
         return view('history_hutang', [

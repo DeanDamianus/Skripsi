@@ -1,4 +1,6 @@
+
 <!DOCTYPE html>
+
 <!--
 This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
@@ -98,17 +100,46 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 @foreach ($history as $item)
                                     <tr>
                                         <td>{{ $item->id_hutang }}</td>
-                                        <td>{{ $item->tanggal_hutang }}</td>
-                                        <td>{{ $item->tanggal_cicilan }}</td>
-                                        <td>{{ $item->tanggal_lunas }}</td>
+                            
+                                        <!-- Check if tanggal_lunas is not null before formatting -->
+                                        <td>
+                                            @if ($item->tanggal_lunas)
+                                                {{ \Carbon\Carbon::createFromFormat('Y-m-d', $item->tanggal_lunas)->format('d/m/Y') }}
+                                            @else
+                                                <em>-</em>
+                                            @endif
+                                        </td>
+                            
+                                        <!-- Check if tanggal_cicilan is not null before formatting -->
+                                        <td>
+                                            @if ($item->tanggal_cicilan)
+                                                {{ \Carbon\Carbon::createFromFormat('Y-m-d', $item->tanggal_cicilan)->format('d/m/Y') }}
+                                            @else
+                                                <em>-</em>
+                                            @endif
+                                        </td>
+                            
+                                        <!-- Repeat the check for tanggal_lunas for display as a strong tag -->
+                                        <td><strong>
+                                            @if ($item->tanggal_lunas)
+                                                {{ \Carbon\Carbon::createFromFormat('Y-m-d', $item->tanggal_lunas)->format('d/m/Y') }}
+                                            @else
+                                                <em>-</em>
+                                            @endif
+                                        </strong></td>
+                            
+                                        <!-- Format bon -->
                                         <td>{{ 'Rp. ' . number_format($item->bon, 0, ',', '.') }}</td>
-                                        <td><a href="' . route('') . '" class="btn btn-success">
-                                            <i class="fa fa-print"></i>
+                            
+                                        <td>
+                                            <a href="" class="btn btn-success">
+                                                <i class="fa fa-print"></i>
                                             </a>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
+                            
                         </table>
                     </div>
                     <!-- /.card-body -->

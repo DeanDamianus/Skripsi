@@ -265,7 +265,7 @@ if (!$result) {
                             <div class="card">
                                 <!-- /.card-header -->
                                 <div class="card-body table-responsive p-0">
-                                    <table id="example2" class="table table-bordered table-hover">
+                                    <table id="example2" class="table table table-hover">
                                         <thead>
                                             <tr>
                                                 <th>ID Hutang</th>
@@ -421,39 +421,35 @@ if (!$result) {
                                                     <label>ID Hutang:</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i
-                                                                    class="far fa-user"></i></span>
+                                                            <span class="input-group-text"><i class="far fa-user"></i></span>
                                                         </div>
                                                         <select name="id_hutang" class="form-control" required>
-                                                            <option value="" selected disabled>Pilih Hutang
-                                                            </option>
-                                                            <?php foreach ($petaniInHutang as $hutang) : ?>
-                                                            <option value="<?= $hutang['id_hutang'] ?>">
-                                                                <?= $hutang['id_hutang'] . ' - ' . $hutang['id_petani'] . ' - ' . $hutang['name'] ?>
-                                                            </option>
-                                                            <?php endforeach; ?>
-                                                        </select>
+                                                            <option value="" selected disabled>Pilih Hutang</option>
+                                                            @foreach ($petaniInHutang as $hutang)
+                                                                <option value="{{ $hutang['id_hutang'] }}">
+                                                                    {{ $hutang['id_hutang'] . ' - ' . $hutang['id_petani'] . ' - ' . $hutang['name'] }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>                                                                                                          
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Jumlah Bayar</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i
-                                                                    class="nav-icon fas fa-hand-holding-usd"></i></span>
+                                                            <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
                                                         </div>
-                                                        <input type="number" name="jumlah_bayar"
-                                                            class="form-control" required>
+                                                        <input type="number" name="jumlah_bayar" class="form-control" required>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="width: 100%; justify-content: center;">
                                                     <div class="col-12">
-                                                        <button type="submit"
-                                                            class="btn btn-success btn-block">Selesai</button>
+                                                        <button type="submit" class="btn btn-success btn-block">Selesai</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </form>
+                                        
 
                                     </div>
                                 </div>
