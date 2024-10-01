@@ -151,12 +151,7 @@
                                         <div class="form-group">
                                             <label>Periode <i class="fas fa-clock"></i></label></label>
                                             <input type="text" name="periode" class="form-control"
-                                                placeholder="Masukkan periode (1-A) " required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>No.GG <i class="fas fa-hashtag"></i></label>
-                                            <input type="text" id="no_gg" name="no_gg" class="form-control"
-                                                placeholder="Masukkan No.GG" required>
+                                                placeholder="Masukkan periode dan Nota (1-A) " required>
                                         </div>
                                         <div class="form-group">
                                             <label>Tipe </label> <i class="fas fa-exchange-alt"></i><br>
@@ -206,52 +201,49 @@
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var jualLuarCheckbox = document.getElementById('jual_luar_checkbox');
-        var jualLuarValueField = document.getElementById('jual_luar_value');
-    
-        // Get the form fields to be disabled and cleared
-        var periodeField = document.querySelector('input[name="periode"]');
-        var seriField = document.getElementById('seri');
-        var noGGField = document.getElementById('no_gg');
-        var gradeFields = document.querySelectorAll('input[name="grade"]');
-    
-        // Function to update hidden input based on checkbox state and clear inputs if needed
-        function updateJualLuarValue() {
-            if (jualLuarCheckbox.checked) {
-                jualLuarValueField.value = '1';  // Checked state, value = 1
-                
-                // Disable and clear the fields when Jual Luar is selected
-                periodeField.disabled = true;
-                periodeField.value = '';  // Clear input
-    
-                seriField.disabled = true;
-                seriField.value = '';     // Clear input
-    
-                noGGField.disabled = true;
-                noGGField.value = '';     // Clear input
-    
-                gradeFields.forEach(function(field) {
-                    field.disabled = true;
-                    field.checked = false;  // Clear selection
-                });
-            } else {
-                jualLuarValueField.value = '0'; 
-                
-                periodeField.disabled = false;
-                seriField.disabled = false;
-                noGGField.disabled = false;
-                gradeFields.forEach(function(field) {
-                    field.disabled = false;
-                });
-            }
+    var jualLuarCheckbox = document.getElementById('jual_luar_checkbox');
+    var jualLuarValueField = document.getElementById('jual_luar_value');
+
+    // Get the form fields to be disabled and cleared
+    var periodeField = document.querySelector('input[name="periode"]');
+    var seriField = document.getElementById('seri');
+    var gradeFields = document.querySelectorAll('input[name="grade"]');  // Grade radio buttons
+
+    // Function to update hidden input based on checkbox state and clear inputs if needed
+    function updateJualLuarValue() {
+        if (jualLuarCheckbox.checked) {
+            jualLuarValueField.value = '1';  // Checked state, value = 1
+
+            // Disable and clear the fields when Jual Luar is selected
+            periodeField.disabled = true;
+            periodeField.value = '';  // Clear input
+
+            seriField.disabled = true;
+            seriField.value = '';  // Clear input
+
+            gradeFields.forEach(function(field) {
+                field.disabled = true;  // Disable grade radio buttons
+                field.checked = false;  // Clear selection
+            });
+
+        } else {
+            jualLuarValueField.value = '0';  // Unchecked state, value = 0
+
+            // Enable the fields again when Jual Luar is unchecked
+            periodeField.disabled = false;
+            seriField.disabled = false;
+            gradeFields.forEach(function(field) {
+                field.disabled = false;  // Enable grade radio buttons
+            });
         }
-    
-        // Attach event listener to the checkbox
-        jualLuarCheckbox.addEventListener('change', updateJualLuarValue);
-    
-        // Call the function on page load to set initial state
-        updateJualLuarValue();
-    });
+    }
+
+    // Attach event listener to the checkbox
+    jualLuarCheckbox.addEventListener('change', updateJualLuarValue);
+
+    // Call the function on page load to set initial state
+    updateJualLuarValue();
+});
 </script>
 
 

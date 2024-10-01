@@ -364,8 +364,8 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                                <th>{{ 'Rp. ' . number_format($totalpengeluaran, 0, ',', '.') }}</th>
                                 <th></th>
+                                <th>{{ 'Rp. ' . number_format($totalpengeluaran, 0, ',', '.') }}</th>
                             </tfoot>
                         </table>
                     </div>

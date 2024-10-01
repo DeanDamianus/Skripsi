@@ -575,7 +575,6 @@ class SesiController extends Controller
             'bruto' => 'required|numeric', // Include bruto in validation
             'netto' => 'required|numeric',
             'periode' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
-            'no_gg' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
             'id_petani' => 'required|integer',
             'id_musim' => 'required|integer',
         ]);
@@ -596,7 +595,6 @@ class SesiController extends Controller
             'grade' => $request->input('grade'),
             'periode' => $request->input('periode'),
             'seri' => $request->input('seri'),
-            'no_gg' => $request->input('no_gg'),
             'bruto' => $request->input('bruto'),
         ]);
 
