@@ -462,7 +462,7 @@ class SesiController extends Controller
 
         $ditolak = DB::table('distribusi_2024')
                 ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-                ->where('distribusi_2024.status', 'Ditolak')
+                ->where('distribusi_2024.status', 'Dikembalikan')
                 ->where('rekap_2024.periode', 'LIKE', '%A%') // Replace 'periode' with the appropriate column name from rekap_2024
                 ->where('rekap_2024.id_musim', $musim->id)
                 ->count();
@@ -496,7 +496,7 @@ class SesiController extends Controller
 
         $ditolak_B = DB::table('distribusi_2024')
                 ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-                ->where('distribusi_2024.status', 'Ditolak')
+                ->where('distribusi_2024.status', 'Dikembalikan')
                 ->where('rekap_2024.periode', 'LIKE', '%B%') // Replace 'periode' with the appropriate column name from rekap_2024
                 ->where('rekap_2024.id_musim', $musim->id)
                 ->count();
