@@ -319,6 +319,7 @@
                             <thead>
                                 <tr>
                                     <th>ID Keranjang</th>
+                                    <th>Periode</th>
                                     <th>Status</th>
                                     <th>Diterima</th>
                                     <th>Diproses</th>
@@ -329,11 +330,13 @@
                             </thead>
                             <tbody>
                                 @foreach ($data as $rekap)
+                                
                                 <tr>
                                     <td><a
                                             href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim) }}">{{
                                             $rekap->id_rekap }}</a>
                                     </td>
+                                    <td>{!! $rekap->periode !!}</td>
                                     <td>{!! $rekap->status !!}</td>
                                     <td>{{ $rekap->tgl_diterima ?
                                         \Carbon\Carbon::parse($rekap->tgl_diterima)->format('d-m-Y') : '' }}
@@ -417,6 +420,7 @@
     <script src="dist/js/pages/dashboard3.js"></script>
     <script src="dist/js/pages/dashboard2.js"></script>
     <script src="plugins/chart.js/Chart.min.js"></script>
+    
 </body>
 
 </html>

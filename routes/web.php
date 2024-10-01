@@ -6,6 +6,8 @@ use App\Http\Middleware\PetaniMiddleware;
 use App\Http\Controllers\SesiController;
 use Illuminate\Support\Facades\Route;
 
+use function Pest\Laravel\get;
+
 // Routes for login, logout, and error handling
 Route::get('/', [SesiController::class, 'index']);
 Route::post('/', [SesiController::class, 'login']);
@@ -39,7 +41,9 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/hutang-admin', [SesiController::class, 'hutangdashboard']); //halman hutang 
 
-        Route::get('/datapetani', [SesiController::class, 'datapetani']);
+        Route::get('/datapetani', [SesiController::class, 'datapetani']); //route datta petani
+
+        Route::get('/dashboardindividual', [SesiController::class, 'dashboardindividual']);
         
         Route::get('/datapetani/search', [SesiController::class, 'search']);//halaman list data petani
         

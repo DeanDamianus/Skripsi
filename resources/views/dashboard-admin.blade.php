@@ -23,7 +23,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="" class="nav-link">Home</a>
@@ -36,15 +37,14 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
                         <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
-                            {{$selectedYear}}
+                            {{ $selectedYear }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            @foreach($musim as $season)
-                            <div class="dropdown-divider"></div>
-                            <a href="{{ url('/owner?tahun=' . $season->tahun) }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
-                            </a>
-
+                            @foreach ($musim as $season)
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ url('/owner?tahun=' . $season->tahun) }}" class="dropdown-item">
+                                    <i class="fas fa-calendar"></i> {{ $season->tahun }}
+                                </a>
                             @endforeach
                         </div>
                     </div>
@@ -75,9 +75,9 @@
                     </div>
                     <div class="info">
                         @if (Auth::check())
-                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                            <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                         @else
-                        <a href="#" class="d-block">Guest</a>
+                            <a href="#" class="d-block">Guest</a>
                         @endif
                     </div>
                 </div>
@@ -220,7 +220,8 @@
                         <!-- small card -->
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <h3><sup style="font-size: 20px">Rp.</sup>{{ number_format($totalHarga, 0, ',', '.') }}
+                                <h3><sup
+                                        style="font-size: 20px">Rp.</sup>{{ number_format($totalHarga, 0, ',', '.') }}
                                 </h3>
                                 <p>Total Harga Keranjang</p>
                             </div>
@@ -238,7 +239,7 @@
                         <div class="small-box bg-yellow">
                             <div class="inner">
                                 <h3>{{ $jualLuar }}<sup style="font-size: 20px"> Keranjang</sup></h3>
-                                <p>Jual Luar</p>
+                                <p>Total Jual Luar</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-exchange-alt"></i> <!-- Ikon pertukaran -->
@@ -269,110 +270,50 @@
                     <!-- Jumlah Jual Lua -->
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-6">
-                        <div class="small-box bg-dark">
-                            <div class="inner">
-                                <h3><sup style="font-size: 20px">Rp. </sup>{{ number_format($biayaParam, 0, ',', '.') }}
-                                </h3>
-                                <p>Biaya Jual</p>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="card card-info">
+                                <div class="card-header">
+                                  <h3 class="card-title">Distribusi Nota A</h3>
+                                  <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                      <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                      <i class="fas fa-times"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                                <div class="card-body">
+                                  <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                                <!-- /.card-body -->
                             </div>
-                            <div class="icon">
-                                <i class="fas fa-dollar-sign"></i> <!-- Icon for money -->
+                            <!--nota A -->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Nota B -->
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h3 class="card-title">Distribusi Nota B</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <a href="{{ url('/parameter') }}" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
-                            </a>
+                            <div class="card-body">
+                                <canvas id="donutChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Jumlah Jual Lua -->
                 </div>
-                <!-- /.container-fluid -->
             </div>
-            {{-- <div class="content">
-                <div class="content-header">
-                    <div class="container-fluid">
-                        <div class="row mb-2">
-                            <div class="col-sm-6">
-                                <h1 class="m-0">Nota Per- Periode</h1>
-                            </div><!-- /.col -->
-                            <div class="col-sm-6">
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                    </div><!-- /.container-fluid -->
-                </div>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header border-0">
-                                    <div class="d-flex justify-content-between">
-                                        <h3 class="card-title">Nota A </h3>
-                                        <a href="javascript:void(0);">View Report</a>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <!-- /.d-flex -->
-
-                                    <div class="position-relative mb-4">
-                                        <canvas id="sales-chart2" height="200"></canvas>
-                                    </div>
-
-                                    <div class="d-flex flex-row justify-content-end">
-                                        <span class="mr-2">
-                                            <i class="fas fa-square text-primary"></i> Periode Ini
-                                        </span>
-
-                                        <span>
-                                            <i class="fas fa-square text-gray"></i> Periode Lalu
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.col-md-6 -->
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header border-0">
-                                    <div class="d-flex justify-content-between">
-                                        <h3 class="card-title">Nota B</h3>
-                                        <a href="javascript:void(0);">View Report</a>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        {{-- <p class="ml-auto d-flex flex-column text-right">
-                                            <span class="text-success">
-                                                <i class="fas fa-arrow-up"></i> 33.1%
-                                            </span>
-                                            <span class="text-muted">Since last month</span>
-                                        </p> --}}
-                                        {{-- </div>
-                                    <!-- /.d-flex -->
-
-                                    <div class="position-relative mb-4">
-                                        <canvas id="sales-chart" height="200"></canvas>
-                                    </div>
-
-                                    <div class="d-flex flex-row justify-content-end">
-                                        <span class="mr-2">
-                                            <i class="fas fa-square text-primary"></i> Periode Ini
-                                        </span>
-
-                                        <span>
-                                            <i class="fas fa-square text-gray"></i> Periode Lalu
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.card -->
-                        </div>
-                        <!-- /.col-md-6 -->
-                    </div>
-                    <!--Last-->
-                </div>
-            </div> --}}
-            <!-- /.row -->
         </div>
         <!-- /.container-fluid -->
     </div>
@@ -416,305 +357,67 @@
     <!-- AdminLTE for demo purposes -->
     <script src="dist/js/pages/dashboard3.js"></script>
     <script src="dist/js/pages/dashboard2.js"></script>
-    <script src="plugins/chart.js/Chart.min.js"></script>
 
     <script>
-        $(function() {
-            /*
-             * Flot Interactive Chart
-             * -----------------------
-             */
-            // We use an inline data source in the example, usually data would
-            // be fetched from a server
-            var data = [],
-                totalPoints = 100
-
-            function getRandomData() {
-
-                if (data.length > 0) {
-                    data = data.slice(1)
-                }
-
-                // Do a random walk
-                while (data.length < totalPoints) {
-
-                    var prev = data.length > 0 ? data[data.length - 1] : 50,
-                        y = prev + Math.random() * 10 - 5
-
-                    if (y < 0) {
-                        y = 0
-                    } else if (y > 100) {
-                        y = 100
-                    }
-
-                    data.push(y)
-                }
-
-                // Zip the generated y values with the x values
-                var res = []
-                for (var i = 0; i < data.length; ++i) {
-                    res.push([i, data[i]])
-                }
-
-                return res
-            }
-
-            var interactive_plot = $.plot('#interactive', [{
-                data: getRandomData(),
-            }], {
-                grid: {
-                    borderColor: '#f3f3f3',
-                    borderWidth: 1,
-                    tickColor: '#f3f3f3'
-                },
-                series: {
-                    color: '#3c8dbc',
-                    lines: {
-                        lineWidth: 2,
-                        show: true,
-                        fill: true,
-                    },
-                },
-                yaxis: {
-                    min: 0,
-                    max: 100,
-                    show: true
-                },
-                xaxis: {
-                    show: true
-                }
-            })
-
-            var updateInterval = 500 //Fetch data ever x milliseconds
-            var realtime = 'on' //If == to on then fetch data every x seconds. else stop fetching
-            function update() {
-
-                interactive_plot.setData([getRandomData()])
-
-                // Since the axes don't change, we don't need to call plot.setupGrid()
-                interactive_plot.draw()
-                if (realtime === 'on') {
-                    setTimeout(update, updateInterval)
-                }
-            }
-
-            //INITIALIZE REALTIME DATA FETCHING
-            if (realtime === 'on') {
-                update()
-            }
-            //REALTIME TOGGLE
-            $('#realtime .btn').click(function() {
-                if ($(this).data('toggle') === 'on') {
-                    realtime = 'on'
-                } else {
-                    realtime = 'off'
-                }
-                update()
-            })
-
-            var sin = [],
-                cos = []
-            for (var i = 0; i < 14; i += 0.5) {
-                sin.push([i, Math.sin(i)])
-                cos.push([i, Math.cos(i)])
-            }
-            var line_data1 = {
-                data: sin,
-                color: '#3c8dbc'
-            }
-            var line_data2 = {
-                data: cos,
-                color: '#00c0ef'
-            }
-            $.plot('#line-chart', [line_data1, line_data2], {
-                grid: {
-                    hoverable: true,
-                    borderColor: '#f3f3f3',
-                    borderWidth: 1,
-                    tickColor: '#f3f3f3'
-                },
-                series: {
-                    shadowSize: 0,
-                    lines: {
-                        show: true
-                    },
-                    points: {
-                        show: true
-                    }
-                },
-                lines: {
-                    fill: false,
-                    color: ['#3c8dbc', '#f56954']
-                },
-                yaxis: {
-                    show: true
-                },
-                xaxis: {
-                    show: true
-                }
-            })
-            //Initialize tooltip on hover
-            $('<div class="tooltip-inner" id="line-chart-tooltip"></div>').css({
-                position: 'absolute',
-                display: 'none',
-                opacity: 0.8
-            }).appendTo('body')
-            $('#line-chart').bind('plothover', function(event, pos, item) {
-
-                if (item) {
-                    var x = item.datapoint[0].toFixed(2),
-                        y = item.datapoint[1].toFixed(2)
-
-                    $('#line-chart-tooltip').html(item.series.label + ' of ' + x + ' = ' + y)
-                        .css({
-                            top: item.pageY + 5,
-                            left: item.pageX + 5
-                        })
-                        .fadeIn(200)
-                } else {
-                    $('#line-chart-tooltip').hide()
-                }
-
-            })
-            /* END LINE CHART */
-
-            /*
-             * FULL WIDTH STATIC AREA CHART
-             * -----------------
-             */
-            var areaData = [
-                [2, 88.0],
-                [3, 93.3],
-                [4, 102.0],
-                [5, 108.5],
-                [6, 115.7],
-                [7, 115.6],
-                [8, 124.6],
-                [9, 130.3],
-                [10, 134.3],
-                [11, 141.4],
-                [12, 146.5],
-                [13, 151.7],
-                [14, 159.9],
-                [15, 165.4],
-                [16, 167.8],
-                [17, 168.7],
-                [18, 169.5],
-                [19, 168.0]
-            ]
-            $.plot('#area-chart', [areaData], {
-                grid: {
-                    borderWidth: 0
-                },
-                series: {
-                    shadowSize: 0, // Drawing is faster without shadows
-                    color: '#00c0ef',
-                    lines: {
-                        fill: true //Converts the line chart to area chart
-                    },
-                },
-                yaxis: {
-                    show: false
-                },
-                xaxis: {
-                    show: false
-                }
-            })
-
-
-            var bar_data = {
-                data: [
-                    [1, 10],
-                    [2, 8],
-                    [3, 4],
-                    [4, 13],
-                    [5, 17],
-                    [6, 9]
-                ],
-                bars: {
-                    show: true
-                }
-            }
-            $.plot('#bar-chart', [bar_data], {
-                grid: {
-                    borderWidth: 1,
-                    borderColor: '#f3f3f3',
-                    tickColor: '#f3f3f3'
-                },
-                series: {
-                    bars: {
-                        show: true,
-                        barWidth: 0.5,
-                        align: 'center',
-                    },
-                },
-                colors: ['#3c8dbc'],
-                xaxis: {
-                    ticks: [
-                        [1, 'January'],
-                        [2, 'February'],
-                        [3, 'March'],
-                        [4, 'April'],
-                        [5, 'May'],
-                        [6, 'June']
-                    ]
-                }
-            })
-
-            var donutData = [{
-                    label: 'Series2',
-                    data: 30,
-                    color: '#3c8dbc'
-                },
-                {
-                    label: 'Series3',
-                    data: 20,
-                    color: '#0073b7'
-                },
-                {
-                    label: 'Series4',
-                    data: 50,
-                    color: '#00c0ef'
-                }
-            ]
-            $.plot('#donut-chart', donutData, {
-                series: {
-                    pie: {
-                        show: true,
-                        radius: 1,
-                        innerRadius: 0.5,
-                        label: {
-                            show: true,
-                            radius: 2 / 3,
-                            formatter: labelFormatter,
-                            threshold: 0.1
-                        }
-
-                    }
-                },
-                legend: {
-                    show: false
-                }
-            })
-            /*
-             * END DONUT CHART
-             */
-
-
-
-        })
-
-        /*
-         * Custom Label formatter
-         * ----------------------
-         */
-        function labelFormatter(label, series) {
-            return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">' +
-                label +
-                '<br>' +
-                Math.round(series.percent) + '%</div>'
-        }
+        $(document).ready(function() {
+            // Create the first donut chart
+            var ctxDonutA = $('#donutChart').get(0).getContext('2d');
+            
+            // Use Blade to pass the PHP variable to JavaScript
+            var diterima = {{ $diterima }};
+            var diproses = {{ $diproses }};
+            var ditolak = {{ $ditolak }};
+            var belumproses = {{ $belumproses }};
+    
+            // Prepare the data for the chart
+            var donutDataA = {
+                labels: ['Diterima', 'Diproses', 'Ditolak', 'Belum Diproses'],
+                datasets: [{
+                    data: [diterima, diproses, ditolak, belumproses],
+                    backgroundColor: ['#00a65a', '#f39c12', '#f56954', '#00c0ef'],
+                }]
+            };
+    
+            var donutOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+            };
+    
+            // Create the first doughnut chart
+            new Chart(ctxDonutA, {
+                type: 'doughnut',
+                data: donutDataA,
+                options: donutOptions
+            });
+    
+            // Create the second donut chart
+            var ctxDonutB = $('#donutChart2').get(0).getContext('2d');
+            
+            // Use Blade to pass the PHP variable to JavaScript
+            var diterimaB = {{ $diterima_B }};
+            var diprosesB = {{ $diproses_B }};
+            var ditolakB = {{ $ditolak_B }};
+            var belumprosesB = {{ $belumproses_B }};
+    
+            // Prepare the data for the second chart
+            var donutDataB = {
+                labels: ['Diterima', 'Diproses', 'Ditolak', 'Belum Diproses'],
+                datasets: [{
+                    data: [diterimaB, diprosesB, ditolakB, belumprosesB],
+                    backgroundColor: ['#00a65a', '#f39c12', '#f56954', '#00c0ef'],
+                }]
+            };
+    
+            // Create the second doughnut chart
+            new Chart(ctxDonutB, {
+                type: 'doughnut',
+                data: donutDataB,
+                options: donutOptions
+            });
+        });
     </script>
+    
+
 </body>
 
 </html>

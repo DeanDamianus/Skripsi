@@ -445,6 +445,74 @@ class SesiController extends Controller
             abort(404, 'Year not found');
         }
 
+        //NOTA A
+        $diterima = DB::table('distribusi_2024')
+            ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.periode', 'LIKE', '%A%') // Replace 'periode' with the appropriate column name from rekap_2024
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->count();
+
+        $diproses = DB::table('distribusi_2024')
+                ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+                ->where('distribusi_2024.status', 'Diproses')
+                ->where('rekap_2024.periode', 'LIKE', '%A%') // Replace 'periode' with the appropriate column name from rekap_2024
+                ->where('rekap_2024.id_musim', $musim->id)
+                ->count();
+
+        $ditolak = DB::table('distribusi_2024')
+                ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+                ->where('distribusi_2024.status', 'Ditolak')
+                ->where('rekap_2024.periode', 'LIKE', '%A%') // Replace 'periode' with the appropriate column name from rekap_2024
+                ->where('rekap_2024.id_musim', $musim->id)
+                ->count();
+
+      
+        $belumproses = DB::table('rekap_2024')
+            ->where('id_musim', $musim->id)
+            ->whereNotIn('id_rekap', function($query) use ($musim) {
+                $query->select('id_rekap')
+                    ->from('distribusi_2024')
+                    ->where('id_musim', $musim->id);
+            })
+            ->where('periode', 'LIKE', '%A%')
+            ->count();
+
+        //NOTA B
+
+        $diterima_B = DB::table('distribusi_2024')
+            ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.periode', 'LIKE', '%B%') // Replace 'periode' with the appropriate column name from rekap_2024
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->count();
+
+        $diproses_B = DB::table('distribusi_2024')
+                ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+                ->where('distribusi_2024.status', 'Diproses')
+                ->where('rekap_2024.periode', 'LIKE', '%B%') // Replace 'periode' with the appropriate column name from rekap_2024
+                ->where('rekap_2024.id_musim', $musim->id)
+                ->count();
+
+        $ditolak_B = DB::table('distribusi_2024')
+                ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+                ->where('distribusi_2024.status', 'Ditolak')
+                ->where('rekap_2024.periode', 'LIKE', '%B%') // Replace 'periode' with the appropriate column name from rekap_2024
+                ->where('rekap_2024.id_musim', $musim->id)
+                ->count();
+
+      
+        $belumproses_B = DB::table('rekap_2024')
+            ->where('id_musim', $musim->id)
+            ->whereNotIn('id_rekap', function($query) use ($musim) {
+                $query->select('id_rekap')
+                    ->from('distribusi_2024')
+                    ->where('id_musim', $musim->id);
+            })
+            ->where('periode', 'LIKE', '%B%')
+            ->count();
+
+
         $musimList = DB::table('musim')->get();
 
         $totalNetto = DB::table('rekap_2024')
@@ -475,6 +543,14 @@ class SesiController extends Controller
         // Kembalikan view dengan data yang diperlukan
         return view('dashboard-admin', [
             'data' => $data,
+            'diterima' => $diterima,
+            'belumproses' => $belumproses,
+            'ditolak' => $ditolak,
+            'diproses' => $diproses,
+            'diterima_B' => $diterima_B,
+            'belumproses_B' => $belumproses_B,
+            'ditolak_B' => $ditolak_B,
+            'diproses_B' => $diproses_B,
             'selectedYear' => $year,
             'musim' => $musimList,
             'id_musim' => $musim->id,
@@ -694,10 +770,28 @@ class SesiController extends Controller
         $musimList = DB::table('musim')->get();
 
         $data = DB::table('rekap_2024')
-            ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-            ->where('rekap_2024.id_musim', $musim->id) // Join distribusi_2024 with rekap_2024
-            ->select('rekap_2024.id_rekap', 'rekap_2024.periode', 'distribusi_2024.tgl_diterima', 'distribusi_2024.tgl_diproses', 'distribusi_2024.tgl_ditolak', 'distribusi_2024.status', 'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 'rekap_2024.id_petani', 'rekap_2024.id_musim')
-            ->get();
+        ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+        ->where('rekap_2024.id_musim', $musim->id)
+        ->where('rekap_2024.jual_luar', '!=', '1')
+        ->select(
+            'rekap_2024.id_rekap',
+            'rekap_2024.periode',
+            'distribusi_2024.tgl_diterima',
+            'distribusi_2024.tgl_diproses',
+            'distribusi_2024.tgl_ditolak',
+            'distribusi_2024.status',
+            'distribusi_2024.n_gudang',
+            'distribusi_2024.mobil_berangkat',
+            'distribusi_2024.mobil_pulang',
+            'distribusi_2024.nt_pabrik',
+            'distribusi_2024.kasut',
+            'distribusi_2024.transport_gudang',
+            'rekap_2024.id_petani',
+            'rekap_2024.id_musim'
+        )
+        ->orderByRaw("CASE WHEN rekap_2024.periode LIKE '%A%' THEN 0 ELSE 1 END, rekap_2024.periode ASC")
+        ->get();
+            
 
         foreach ($data as $rekap) {
             $rekap->pengeluaran = $rekap->n_gudang + $rekap->mobil_berangkat + $rekap->mobil_pulang + $rekap->nt_pabrik + $rekap->kasut + $rekap->transport_gudang;
