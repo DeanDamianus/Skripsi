@@ -32,8 +32,7 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="../../index3.html" class="nav-link">Home</a>
@@ -50,10 +49,10 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             @foreach ($musim as $season)
-                                <div class="dropdown-divider"></div>
-                                <a href="{{ url('/distribusi?year=' . $season->tahun) }}" class="dropdown-item">
-                                    <i class="fas fa-calendar"></i> {{ $season->tahun }}
-                                </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url('/distribusi?year=' . $season->tahun) }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
+                            </a>
                             @endforeach
                         </div>
                     </div>
@@ -82,9 +81,9 @@
                     </div>
                     <div class="info">
                         @if (Auth::check())
-                            <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                         @else
-                            <a href="#" class="d-block">Guest</a>
+                        <a href="#" class="d-block">Guest</a>
                         @endif
                     </div>
                 </div>
@@ -94,16 +93,28 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                        <li class="nav-item menu-close">
-                            <a href="{{ url('/owner?tahun=' . $selectedYear) }}" class="nav-link">
+                        <li class="nav-item menu-closed">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
-                                    <i class="right fas fa-angle-left"></i>
+                                    <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href='{{ url('/owner?tahun=' . $selectedYear) }}' class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Global</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Individual</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item menu-close">
                             <a href="{{ url('/input?year=' . $selectedYear) }}" class="nav-link">
@@ -246,120 +257,124 @@
                 </div>
                 <!-- /.col -->
             </div> --}}
-                <div class="row">
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-success">
-                            <div class="inner">
-                                <h3>{{ $diterima }}</h3>
-                                <p>Diterima</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-check-circle"></i> <!-- Ikon timbangan menggantung -->
-                            </div>
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>{{ $diterima }}</h3>
+                            <p>Diterima</p>
                         </div>
+                        <div class="icon">
+                            <i class="fas fa-check-circle"></i> <!-- Ikon timbangan menggantung -->
+                        </div>
+                    </div>
 
-                    </div>
-                    <!--NETO-->
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-yellow">
-                            <div class="inner">
-                                <h3>{{ $diproses }}</sup></h3>
-                                <p>Diproses</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-truck"></i> </i> <!-- Ikon koin -->
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Jumlah Kotor-->
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-danger">
-                            <div class="inner">
-                                <h3>{{ $ditolak }}</sup></h3>
-                                <p>Ditolak</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-times"></i> <!-- Ikon pertukaran -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-6">
-                        <!-- small card -->
-                        <div class="small-box bg-info">
-                            <div class="inner">
-                                <h3>{{ $dikirim }}</sup></h3>
-                                <p>Belum Diproses</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-hourglass-half"></i> <!-- Ikon pertukaran -->
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Jumlah Jual Lua -->
                 </div>
-                <div class="card">
-                    <!-- /.card-header -->
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table m-0">
-                                <thead>
-                                    <tr>
-                                        <th>ID Keranjang</th>
-                                        <th>Status</th>
-                                        <th>Diterima</th>
-                                        <th>Diproses</th>
-                                        <th>Ditolak</th>
-                                        <th>Pengeluaran</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($data as $rekap)
-                                        <tr>
-                                            <td><a
-                                                    href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim) }}">{{ $rekap->id_rekap }}</a>
-                                            </td>
-                                            <td>{!! $rekap->status !!}</td>
-                                            <td>{{ $rekap->tgl_diterima ? \Carbon\Carbon::parse($rekap->tgl_diterima)->format('d-m-Y') : '' }}
-                                            </td>
-                                            <td>{{ $rekap->tgl_diproses ? \Carbon\Carbon::parse($rekap->tgl_diproses)->format('d-m-Y') : '' }}
-                                            </td>
-                                            <td>{{ $rekap->tgl_ditolak ? \Carbon\Carbon::parse($rekap->tgl_ditolak)->format('d-m-Y') : '' }}
-                                            </td>
-                                            <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
-                                            <td>
-                                                <a href="{{ url('/formdistribusi?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim) }}"
-                                                    class="btn btn-block btn-success {{ $rekap->status == 'Diterima' ? 'disabled' : '' }}">
-                                                    <i class="nav-icon fas fa-edit"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-
-                                <tfoot>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th>{{ 'Rp. ' . number_format($totalpengeluaran, 0, ',', '.') }}</th>
-                                    <th></th>
-                                </tfoot>
-                            </table>
+                <!--NETO-->
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>{{ $diproses }}</sup></h3>
+                            <p>Diproses</p>
                         </div>
-                        <!-- /.table-responsive -->
+                        <div class="icon">
+                            <i class="fas fa-truck"></i> </i> <!-- Ikon koin -->
+                        </div>
                     </div>
-                    <!-- /.card-footer -->
                 </div>
-                <!-- /.container-fluid -->
+                <!-- Jumlah Kotor-->
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>{{ $ditolak }}</sup></h3>
+                            <p>Ditolak</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-times"></i> <!-- Ikon pertukaran -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small card -->
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>{{ $dikirim }}</sup></h3>
+                            <p>Belum Diproses</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-hourglass-half"></i> <!-- Ikon pertukaran -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Jumlah Jual Lua -->
             </div>
-            <!-- /.row -->
+            <div class="card">
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th>ID Keranjang</th>
+                                    <th>Status</th>
+                                    <th>Diterima</th>
+                                    <th>Diproses</th>
+                                    <th>Ditolak</th>
+                                    <th>Pengeluaran</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $rekap)
+                                <tr>
+                                    <td><a
+                                            href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim) }}">{{
+                                            $rekap->id_rekap }}</a>
+                                    </td>
+                                    <td>{!! $rekap->status !!}</td>
+                                    <td>{{ $rekap->tgl_diterima ?
+                                        \Carbon\Carbon::parse($rekap->tgl_diterima)->format('d-m-Y') : '' }}
+                                    </td>
+                                    <td>{{ $rekap->tgl_diproses ?
+                                        \Carbon\Carbon::parse($rekap->tgl_diproses)->format('d-m-Y') : '' }}
+                                    </td>
+                                    <td>{{ $rekap->tgl_ditolak ?
+                                        \Carbon\Carbon::parse($rekap->tgl_ditolak)->format('d-m-Y') : '' }}
+                                    </td>
+                                    <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
+                                    <td>
+                                        <a href="{{ url('/formdistribusi?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim) }}"
+                                            class="btn btn-block btn-success {{ $rekap->status == 'Diterima' ? 'disabled' : '' }}">
+                                            <i class="nav-icon fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+
+                            <tfoot>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>{{ 'Rp. ' . number_format($totalpengeluaran, 0, ',', '.') }}</th>
+                                <th></th>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.card-footer -->
+            </div>
+            <!-- /.container-fluid -->
         </div>
-        <!-- /.container-fluid -->
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
     </div>
     <!-- /.content -->
     </div>

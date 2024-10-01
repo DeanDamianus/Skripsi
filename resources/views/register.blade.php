@@ -83,14 +83,28 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <li class="nav-item menu-close">
-                            <a href="{{ url('/owner?tahun=' . $selectedYear) }}" class="nav-link">
+                        <li class="nav-item menu-closed">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
-                                    <i class="right fas fa-angle-left"></i>
+                                    <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href='{{ url('/owner?tahun=' . $selectedYear) }}' class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Global</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Individual</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item menu-close">
                             <a href="{{ url('/input?year=' . $selectedYear) }}" class="nav-link">
@@ -191,14 +205,14 @@
                         <!-- jquery validation -->
                         <div class="card card-primary">
                             @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
 
                             <form action="{{ route('register.store') }}" method="POST" id="quickForm">
                                 @csrf
@@ -221,7 +235,8 @@
                                 {{-- <div class="form-group">
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="file" name="image" accept=".jpg,.jpeg,.png" class="form-control" id="exampleInputFile" onchange="updateFileName()">
+                                            <input type="file" name="image" accept=".jpg,.jpeg,.png"
+                                                class="form-control" id="exampleInputFile" onchange="updateFileName()">
                                             <label class="custom-file-label" for="exampleInputFile">Upload Foto</label>
                                         </div>
                                     </div>

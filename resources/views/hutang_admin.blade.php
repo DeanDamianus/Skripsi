@@ -87,8 +87,7 @@ if (!$result) {
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ url('/owner') }}" class="nav-link">Home</a>
@@ -105,10 +104,10 @@ if (!$result) {
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             @foreach ($currentMusim as $season)
-                                <div class="dropdown-divider"></div>
-                                <a href="{{ url('/hutang-admin?year=' . $season->tahun) }}" class="dropdown-item">
-                                    <i class="fas fa-calendar"></i> {{ $season->tahun }}
-                                </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url('/hutang-admin?year=' . $season->tahun) }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
+                            </a>
                             @endforeach
                         </div>
                     </div>
@@ -139,9 +138,9 @@ if (!$result) {
                     </div>
                     <div class="info">
                         @if (Auth::check())
-                            <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                         @else
-                            <a href="#" class="d-block">Guest</a>
+                        <a href="#" class="d-block">Guest</a>
                         @endif
                     </div>
                 </div>
@@ -151,14 +150,28 @@ if (!$result) {
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                        <li class="nav-item menu-close">
-                            <a href="{{ url('/owner?tahun=' . $selectedYear) }}" class="nav-link">
+                        <li class="nav-item menu-closed">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
-                                    <i class="right fas fa-angle-left"></i>
+                                    <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href='{{ url(' /owner?tahun=' . $selectedYear) }}' class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Global</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Individual</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item menu-close">
                             <a href="{{ url('/input?year=' . $selectedYear) }}" class="nav-link">
@@ -385,8 +398,8 @@ if (!$result) {
                                                             <span class="input-group-text"><i
                                                                     class="far fa-calendar-alt"></i></span>
                                                         </div>
-                                                        <input type="date" name="tanggal_hutang"
-                                                            class="form-control" required>
+                                                        <input type="date" name="tanggal_hutang" class="form-control"
+                                                            required>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -424,35 +437,40 @@ if (!$result) {
                                                     <label>ID Hutang:</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="far fa-user"></i></span>
+                                                            <span class="input-group-text"><i
+                                                                    class="far fa-user"></i></span>
                                                         </div>
                                                         <select name="id_hutang" class="form-control" required>
                                                             <option value="" selected disabled>Pilih Hutang</option>
                                                             @foreach ($petaniInHutang as $hutang)
-                                                                <option value="{{ $hutang['id_hutang'] }}">
-                                                                    {{ $hutang['id_hutang'] . ' - ' . $hutang['id_petani'] . ' - ' . $hutang['name'] }}
-                                                                </option>
+                                                            <option value="{{ $hutang['id_hutang'] }}">
+                                                                {{ $hutang['id_hutang'] . ' - ' . $hutang['id_petani'] .
+                                                                ' - ' . $hutang['name'] }}
+                                                            </option>
                                                             @endforeach
-                                                        </select>                                                                                                          
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Jumlah Bayar</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
+                                                            <span class="input-group-text"><i
+                                                                    class="nav-icon fas fa-hand-holding-usd"></i></span>
                                                         </div>
-                                                        <input type="number" name="jumlah_bayar" class="form-control" required>
+                                                        <input type="number" name="jumlah_bayar" class="form-control"
+                                                            required>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="width: 100%; justify-content: center;">
                                                     <div class="col-12">
-                                                        <button type="submit" class="btn btn-success btn-block">Selesai</button>
+                                                        <button type="submit"
+                                                            class="btn btn-success btn-block">Selesai</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </form>
-                                        
+
 
                                     </div>
                                 </div>
@@ -516,15 +534,15 @@ if (!$result) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
     @endif
 
     @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
     @endif
 
     <script>
