@@ -91,7 +91,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a a href="#" class="nav-link">
+                                    <a a href='{{ url('/dashboardindividual?year=' . $selectedYears) }}'class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Individual</p>
                                     </a>

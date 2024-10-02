@@ -433,6 +433,26 @@ class SesiController extends Controller
         ]);
     }
 
+    public function dashboardindividual(Request $request)
+    {
+        $year = $request->input('year', date('Y'));
+
+        $musim = DB::table('musim')->where('tahun', $year)->first();
+        $musimList = DB::table('musim')->get();
+
+        $data = DB::table('users')->where('role', 'petani')->get();
+
+        foreach ($data as $user) {
+            $user->formatted_created_at = \Carbon\Carbon::parse($user->created_at)->format('d-m-Y');
+        }
+
+        return view('dashboard-Petani', [
+            'selectedYear' => $year,
+            'data' => $data,
+            'musim' => $musim,
+            'currentMusim' => $musimList,
+        ]);
+    }
     public function dashboard(Request $request)
     {
         // Ambil tahun yang dipilih dari request
