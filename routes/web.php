@@ -43,7 +43,9 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/datapetani', [SesiController::class, 'datapetani']); //route datta petani
 
-        Route::get('/dashboardindividual', [SesiController::class, 'dashboardindividual']);
+        Route::get('/dashboardindividual', [SesiController::class, 'dashboardindividual']); //dashbaord pemilihan petani
+
+        Route::get('/dashboardpetani', [SesiController::class, 'dashboardpetani']); // dashboard seteleah petani di klik
         
         Route::get('/datapetani/search', [SesiController::class, 'search']);//halaman list data petani
         
@@ -64,14 +66,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/formdistribusi', [SesiController::class, 'formdistribusi']);//formdistribusi
         
         Route::get('/uploadfoto', [SesiController::class, 'uploadfoto']);//halaman upload foto
-
-        Route::get('/editInput', function (){
-            return view ('edit_petani');
-        })->name('edit_petani');
-
-        Route::get('/inputdistribusi', function (){
-            return view ('input_distribusi');
-        })->name('inputdistribusi');
 
        
     });

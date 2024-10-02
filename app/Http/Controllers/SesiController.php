@@ -461,13 +461,35 @@ class SesiController extends Controller
             $user->formatted_created_at = \Carbon\Carbon::parse($user->created_at)->format('d-m-Y');
         }
 
-        return view('dashboard-Petani', [
+        return view('dashboard-Petanidata', [
             'selectedYear' => $year,
             'data' => $data,
             'musim' => $musim,
             'currentMusim' => $musimList,
         ]);
     }
+
+    public function dashboardpetani(Request $request)
+    {   
+
+        $userId = $request->input('id');
+        $year = $request->input('year', date('Y'));
+
+        $musim = DB::table('musim')->where('tahun', $year)->first();
+        $musimList = DB::table('musim')->get();
+
+        $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
+
+
+        return view('dashboardpetani', [
+            'selectedYear' => $year,
+            'userId' => $userId,
+            'username' => $username,
+            'musim' => $musim,
+            'currentMusim' => $musimList,
+        ]);
+    }
+
     public function dashboard(Request $request)
     {
         // Ambil tahun yang dipilih dari request
