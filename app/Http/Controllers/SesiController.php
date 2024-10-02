@@ -445,6 +445,174 @@ class SesiController extends Controller
             abort(404, 'Year not found');
         }
 
+        $periode1 = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '1-A')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode1b = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '1-B')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode2a = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '2-A')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode2b = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '2-B')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode3a = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '3-A')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode3b = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '3-B')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode4a = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '4-A')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode4b = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '4-B')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode5a = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '5-A')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode5b = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '5-B')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode6a = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '6-A')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode6b = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '6-B')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode7a = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '7-A')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode7b = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '7-B')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode8a = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '8-A')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode8b = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '8-B')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode9a = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '9-A')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode9b = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '9-B')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode10a = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '10-A')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode10b = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '10-B')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode11a = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '11-A')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode11b = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '11-B')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode12a = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '12-A')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
+        $periode12b = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.periode', '12-B')
+            ->where('distribusi_2024.status', 'Diterima')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+
         //NOTA A
         $diterima = DB::table('distribusi_2024')
             ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
@@ -454,24 +622,24 @@ class SesiController extends Controller
             ->count();
 
         $diproses = DB::table('distribusi_2024')
-                ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-                ->where('distribusi_2024.status', 'Diproses')
-                ->where('rekap_2024.periode', 'LIKE', '%A%') // Replace 'periode' with the appropriate column name from rekap_2024
-                ->where('rekap_2024.id_musim', $musim->id)
-                ->count();
+            ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'Diproses')
+            ->where('rekap_2024.periode', 'LIKE', '%A%') // Replace 'periode' with the appropriate column name from rekap_2024
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->count();
 
         $ditolak = DB::table('distribusi_2024')
-                ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-                ->where('distribusi_2024.status', 'Dikembalikan')
-                ->where('rekap_2024.periode', 'LIKE', '%A%') // Replace 'periode' with the appropriate column name from rekap_2024
-                ->where('rekap_2024.id_musim', $musim->id)
-                ->count();
+            ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'Dikembalikan')
+            ->where('rekap_2024.periode', 'LIKE', '%A%') // Replace 'periode' with the appropriate column name from rekap_2024
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->count();
 
-      
         $belumproses = DB::table('rekap_2024')
             ->where('id_musim', $musim->id)
-            ->whereNotIn('id_rekap', function($query) use ($musim) {
-                $query->select('id_rekap')
+            ->whereNotIn('id_rekap', function ($query) use ($musim) {
+                $query
+                    ->select('id_rekap')
                     ->from('distribusi_2024')
                     ->where('id_musim', $musim->id);
             })
@@ -488,30 +656,29 @@ class SesiController extends Controller
             ->count();
 
         $diproses_B = DB::table('distribusi_2024')
-                ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-                ->where('distribusi_2024.status', 'Diproses')
-                ->where('rekap_2024.periode', 'LIKE', '%B%') // Replace 'periode' with the appropriate column name from rekap_2024
-                ->where('rekap_2024.id_musim', $musim->id)
-                ->count();
+            ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'Diproses')
+            ->where('rekap_2024.periode', 'LIKE', '%B%') // Replace 'periode' with the appropriate column name from rekap_2024
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->count();
 
         $ditolak_B = DB::table('distribusi_2024')
-                ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-                ->where('distribusi_2024.status', 'Dikembalikan')
-                ->where('rekap_2024.periode', 'LIKE', '%B%') // Replace 'periode' with the appropriate column name from rekap_2024
-                ->where('rekap_2024.id_musim', $musim->id)
-                ->count();
+            ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'Dikembalikan')
+            ->where('rekap_2024.periode', 'LIKE', '%B%') // Replace 'periode' with the appropriate column name from rekap_2024
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->count();
 
-      
         $belumproses_B = DB::table('rekap_2024')
             ->where('id_musim', $musim->id)
-            ->whereNotIn('id_rekap', function($query) use ($musim) {
-                $query->select('id_rekap')
+            ->whereNotIn('id_rekap', function ($query) use ($musim) {
+                $query
+                    ->select('id_rekap')
                     ->from('distribusi_2024')
                     ->where('id_musim', $musim->id);
             })
             ->where('periode', 'LIKE', '%B%')
             ->count();
-
 
         $musimList = DB::table('musim')->get();
 
@@ -522,6 +689,15 @@ class SesiController extends Controller
         $totalHarga = DB::table('rekap_2024')
             ->where('id_musim', $musim->id)
             ->sum(DB::raw('netto * harga'));
+
+            $totalHargaditerima = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'Diterima')        
+            ->where('rekap_2024.id_musim', $musim->id)  // Prefix table name
+            ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
+        
+
+        $periode12b = DB::table('rekap_2024')->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')->where('rekap_2024.periode', '12-B')->where('distribusi_2024.status', 'Diterima')->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
 
         $jualLuar = DB::table('rekap_2024')
             ->where('id_musim', $musim->id)
@@ -544,6 +720,31 @@ class SesiController extends Controller
         return view('dashboard-admin', [
             'data' => $data,
             'diterima' => $diterima,
+            'periode1' => $periode1,
+            'periode1b' => $periode1b,
+            'periode2a' => $periode2a,
+            'periode2b' => $periode2b,
+            'periode3a' => $periode3a,
+            'periode3b' => $periode3b,
+            'periode4a' => $periode4a,
+            'periode4b' => $periode4b,
+            'periode5a' => $periode5a,
+            'periode5b' => $periode5b,
+            'periode6a' => $periode6a,
+            'periode6b' => $periode6b,
+            'periode7a' => $periode7a,
+            'periode7b' => $periode7b,
+            'periode8a' => $periode8a,
+            'periode8b' => $periode8b,
+            'periode9a' => $periode9a,
+            'periode9b' => $periode9b,
+            'periode10a' => $periode10a,
+            'periode10b' => $periode10b,
+            'periode11a' => $periode11a,
+            'periode11b' => $periode11b,
+            'periode12a' => $periode12a,
+            'periode12b' => $periode12b,
+            'hargaditerima' => $totalHargaditerima,
             'belumproses' => $belumproses,
             'ditolak' => $ditolak,
             'diproses' => $diproses,
@@ -697,8 +898,8 @@ class SesiController extends Controller
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
         $petaniInHutang = DB::table('hutang_2024')
-        ->whereNull('tanggal_lunas') // Ensure only records with null tanggal_lunas are retrieved
-        ->get();
+            ->whereNull('tanggal_lunas') // Ensure only records with null tanggal_lunas are retrieved
+            ->get();
         return view('hutang_admin', [
             'selectedYear' => $year,
             'musim' => $musim,
@@ -768,28 +969,12 @@ class SesiController extends Controller
         $musimList = DB::table('musim')->get();
 
         $data = DB::table('rekap_2024')
-        ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-        ->where('rekap_2024.id_musim', $musim->id)
-        ->where('rekap_2024.jual_luar', '!=', '1')
-        ->select(
-            'rekap_2024.id_rekap',
-            'rekap_2024.periode',
-            'distribusi_2024.tgl_diterima',
-            'distribusi_2024.tgl_diproses',
-            'distribusi_2024.tgl_ditolak',
-            'distribusi_2024.status',
-            'distribusi_2024.n_gudang',
-            'distribusi_2024.mobil_berangkat',
-            'distribusi_2024.mobil_pulang',
-            'distribusi_2024.nt_pabrik',
-            'distribusi_2024.kasut',
-            'distribusi_2024.transport_gudang',
-            'rekap_2024.id_petani',
-            'rekap_2024.id_musim'
-        )
-        ->orderByRaw("CASE WHEN rekap_2024.periode LIKE '%A%' THEN 0 ELSE 1 END, rekap_2024.periode ASC")
-        ->get();
-            
+            ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->where('rekap_2024.jual_luar', '!=', '1')
+            ->select('rekap_2024.id_rekap', 'rekap_2024.periode', 'distribusi_2024.tgl_diterima', 'distribusi_2024.tgl_diproses', 'distribusi_2024.tgl_ditolak', 'distribusi_2024.status', 'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 'rekap_2024.id_petani', 'rekap_2024.id_musim')
+            ->orderByRaw("CASE WHEN rekap_2024.periode LIKE '%A%' THEN 0 ELSE 1 END, rekap_2024.periode ASC")
+            ->get();
 
         foreach ($data as $rekap) {
             $rekap->pengeluaran = $rekap->n_gudang + $rekap->mobil_berangkat + $rekap->mobil_pulang + $rekap->nt_pabrik + $rekap->kasut + $rekap->transport_gudang;
@@ -914,7 +1099,6 @@ class SesiController extends Controller
             ->where('hutang_history.id_hutang', $id_hutang)
             ->select('hutang_history.*', 'users.name') // Select fields you want
             ->get();
-        
 
         // Return the view with the retrieved data
         return view('history_hutang', [

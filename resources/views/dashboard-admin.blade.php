@@ -221,7 +221,7 @@
                         <div class="small-box bg-success">
                             <div class="inner">
                                 <h3><sup
-                                    style="font-size: 20px">Rp.</sup>{{ number_format($totalHarga, 0, ',', '.') }}
+                                        style="font-size: 20px">Rp.</sup>{{ number_format($totalHarga, 0, ',', '.') }}
                                 </h3>
                                 <p>Total Harga Keranjang</p>
                             </div>
@@ -315,33 +315,37 @@
                         <div class="card">
                             <div class="card-header border-0">
                                 <div class="d-flex justify-content-between">
-                                    <p class="card-title">Jumlah Total Harga</p>
+                                    <p class="card-title">Jumlah Total Harga Keranjang Diterima</p>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="d-flex">
                                     <p class="d-flex flex-column">
-                                        <span class="text-bold text-lg">{{ 'Rp. '. number_format($totalHarga, 0, ',', '.') }}</span>
+                                        <span
+                                            class="text-bold text-lg">{{ 'Rp. ' . number_format($hargaditerima, 0, ',', '.') }}</span>
                                     </p>
                                 </div>
                                 <!-- /.d-flex -->
-    
-                                <div class="position-relative mb-2">
-                                    <canvas id="sales-charts" height="200"></canvas>
+                                <div class="position-relative mb-1">
+                                    <canvas id="sales-charts" height="160"></canvas>
                                 </div>
-    
+                                <div class="d-flex justify-content-center mt-1">
+                                    <p class="text-bold">Periode</p>
+                                </div>
+
                                 <div class="d-flex flex-row justify-content-end">
                                     <span class="mr-2">
                                         <i class="fas fa-square text-primary"></i> Nota A
                                     </span>
-    
+
                                     <span>
                                         <i class="fas fa-square text-gray"></i> Nota B
                                     </span>
                                 </div>
+
                             </div>
                         </div>
-    
+
                     </div>
                 </div>
             </div>
@@ -398,23 +402,52 @@
 
             var mode = 'index'
             var intersect = true
+            //data periode untuk total jumla harga
+            var periode1 = {{ $periode1 }}
+            var periode1b = {{ $periode1b }};
+            var periode2a = {{ $periode2a }};
+            var periode2b = {{ $periode2b }};
+            var periode3a = {{ $periode3a }};
+            var periode3b = {{ $periode3b }};
+            var periode4a = {{ $periode4a }};
+            var periode4b = {{ $periode4b }};
+            var periode5a = {{ $periode5a }};
+            var periode5b = {{ $periode5b }};
+            var periode6a = {{ $periode6a }};
+            var periode6b = {{ $periode6b }};
+            var periode7a = {{ $periode7a }};
+            var periode7b = {{ $periode7b }};
+            var periode8a = {{ $periode8a }};
+            var periode8b = {{ $periode8b }};
+            var periode9a = {{ $periode9a }};
+            var periode9b = {{ $periode9b }};
+            var periode10a = {{ $periode10a }};
+            var periode10b = {{ $periode10b }};
+            var periode11a = {{ $periode11a }};
+            var periode11b = {{ $periode11b }};
+            var periode12a = {{ $periode12a }};
+            var periode12b = {{ $periode12b }};
+
+
 
             var $salesChart = $('#sales-charts')
             // eslint-disable-next-line no-unused-vars
             var salesChart = new Chart($salesChart, {
                 type: 'bar',
                 data: {
-                    labels: ['1','2','3','4','5','6','7','8','9','10','11','12'
-                    ],
+                    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
                     datasets: [{
                             backgroundColor: '#007bff',
                             borderColor: '#007bff',
-                            data: [700, 1700, 2700, 2000, 1800, 1500, 2000]
+                            data: [periode1, periode2a, periode3a, periode4a, periode5a, periode6a,
+                                periode7a, periode8a, periode9a, periode10a, periode11a, periode12a
+                            ]
                         },
                         {
                             backgroundColor: '#ced4da',
                             borderColor: '#ced4da',
-                            data: [1000, 2000, 3000, 2500, 2700, 2500, 3000]
+                            data: [periode1b, periode2b, periode3b, periode4b, periode5b, periode6b, periode7b, periode8b, periode9b, periode10b, periode11b, periode12b]
+
                         }
                     ]
                 },
@@ -436,21 +469,17 @@
                             // display: false,
                             gridLines: {
                                 display: true,
-                                lineWidth: '4px',
+                                lineWidth: '2px',
                                 color: 'rgba(0, 0, 0, .2)',
                                 zeroLineColor: 'transparent'
                             },
                             ticks: $.extend({
                                 beginAtZero: true,
-
-                                // Include a dollar sign in the ticks
                                 callback: function(value) {
-                                    if (value >= 1000) {
-                                        value /= 1000
-                                        value += 'k'
-                                    }
-
-                                    return 'Rp. ' + value
+                                    return 'Rp. ' + value.toLocaleString('id-ID', {
+                                        minimumFractionDigits: 0,
+                                        maximumFractionDigits: 0
+                                    });
                                 }
                             }, ticksStyle)
                         }],
