@@ -162,7 +162,7 @@
                     <div class="row mb-2">
                         <div class="col-sm-6">
                             <strong>
-                                <h1>Dashboard Individu Petani</h1>
+                                <h1>Pilih Petani</h1>
                             </strong>
                         </div>
                         <div class="col-sm-6 text-right">
@@ -189,7 +189,7 @@
                             <div class="col-md-3">
                                 <div class="card fixed-card">
                                     <div style="position: relative; display: inline-block;">
-                                        <a href="{{ url('/uploadfoto?id=' . $users->id) }}" style="text-decoration: none;">
+                                        <a href="{{ url('' . $users->id) }}" style="text-decoration: none;">
                                             <!-- Display user's uploaded image or fallback to a default image -->
                                             <img class="card-img-top"
                                                 src="{{ $users->image ? asset('uploads/' . $users->image) : asset('dist/img/blank.png') }}"

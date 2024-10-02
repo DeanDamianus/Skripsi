@@ -160,7 +160,7 @@ if (!$result) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href='{{ url(' /owner?tahun=' . $selectedYear) }}' class="nav-link">
+                                    <a href='{{ url('/owner?tahun=' . $selectedYear) }}' class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Global</p>
                                     </a>
