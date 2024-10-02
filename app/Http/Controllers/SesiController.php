@@ -470,19 +470,77 @@ class SesiController extends Controller
     }
 
     public function dashboardpetani(Request $request)
-    {   
+    {      
+        
 
         $userId = $request->input('id');
         $year = $request->input('year', date('Y'));
+        $idMusim = $request->input('id)musim');
 
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
 
         $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
+        
+        $data = DB::table('rekap_2024')
+            ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
+            ->join('users', 'rekap_2024.id_petani', '=', 'users.id') // Join with users table
+            ->where('rekap_2024.id_petani', $userId)
+            ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim from the request
+            ->select('rekap_2024.*', 'parameter_2024.*', 'users.image') 
+            ->get();
 
+        // Fetch parameter data
+        $parameter = DB::table('parameter_2024')->where('id', $year)->first();
+
+        // Get netting and pricing information
+        $netto = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('netto')->first();
+        $harga = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('harga')->first();
+
+        // Calculate KJ and other fields dynamically
+
+        $totaljumlahbersih = 0;
+        foreach ($data as $rekap) {
+            $rekap->kj = $rekap->harga <= 50000 ? 1000 * $rekap->netto : ($rekap->harga <= 75000 ? 2000 * $rekap->netto : ($rekap->harga <= 100000 ? 3000 * $rekap->netto : ($rekap->harga <= 125000 ? 4000 * $rekap->netto : ($rekap->harga <= 150000 ? 5000 * $rekap->netto : 6000 * $rekap->netto))));
+
+            $rekap->jumlah = $rekap->netto * $rekap->harga;
+            $rekap->jumlahkotor = $rekap->jumlah - $rekap->kj - $rekap->biaya_jual - $rekap->naik_turun;
+            $rekap->komisi = $rekap->jumlahkotor * $rekap->kepala_petani;
+            $rekap->bersih = $rekap->jumlahkotor - $rekap->komisi;
+
+            $totaljumlahbersih += $rekap->bersih;
+        }
+
+        // Get the list of musim
+        $musimList = DB::table('musim')->get();
+        foreach ($data as $rekap) {
+            $rekap->indicator = $rekap->jual_luar == 1 ? '<span class="badge badge-warning">Jual Luar</span>' : '';
+        }
+
+        foreach ($data as $rekap) {
+            $rekap->cek = $rekap->bruto - $rekap->berat_gudang;
+        }
+
+        //calculate all total
+        $totalnetto = $data->sum('netto');
+        $totalbruto = $data->sum('bruto');
+        $totaljumlahharga = $data->sum('jumlah');
+
+        $hutang = DB::table('hutang_2024')
+            ->select(DB::raw('bon - COALESCE(cicilan, 0) AS remaining_hutang'))
+            ->where('id_petani', $userId)
+            ->first();
 
         return view('dashboardpetani', [
             'selectedYear' => $year,
+            'netto' => $netto,
+            'harga' => $harga,
+            'totalnetto' => $totalnetto,
+            'totalbruto' => $totalbruto,
+            'totalharga' => $totaljumlahharga,
+            'totalbersih' => $totaljumlahbersih,
+            'parameter' => $parameter,
+            'remainingHutang' => $hutang->remaining_hutang ?? 0,
             'userId' => $userId,
             'username' => $username,
             'musim' => $musim,
