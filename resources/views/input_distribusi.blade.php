@@ -115,7 +115,33 @@
                             <input type="number" name="mobil_pulang" class="form-control" required
                                 placeholder="{{ $mobil_pulang ?? 'Masukkan Harga pulang' }}" value="{{ old('mobil_pulang', $mobil_pulang ?? '') }}">
                         </div>
+                        <div class="form-group">
+                            <label>Grade <i class="fas fa-star-half-alt"></i></label>
+                            <br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="gradeA" name="grade" value="A" class="form-check-input" 
+                                       {{ ($grade == 'A') ? 'checked' : '' }} required>
+                                <label class="form-check-label" for="gradeA">A</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="gradeB" name="grade" value="B" class="form-check-input" 
+                                       {{ ($grade == 'B') ? 'checked' : '' }} required>
+                                <label class="form-check-label" for="gradeB">B</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="gradeC" name="grade" value="C" class="form-check-input" 
+                                       {{ ($grade == 'C') ? 'checked' : '' }} required>
+                                <label class="form-check-label" for="gradeC">C</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="gradeD" name="grade" value="D" class="form-check-input" 
+                                       {{ ($grade == 'D') ? 'checked' : '' }} required>
+                                <label class="form-check-label" for="gradeD">D</label>
+                            </div>
+                        </div>
+                        
                     </div>
+                    
                 </div>
             </div>
             <div class="card-footer text-center">
