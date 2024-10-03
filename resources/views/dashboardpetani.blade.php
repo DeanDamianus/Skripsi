@@ -130,34 +130,47 @@
     $(function () {
         // Get the remaining hutang passed from the controller
         var remainingHutang = {{ $remainingHutang ?? 0 }};
-        var jumlahbersih = {{ $totalbersih ?? 0}}
-        var donutData        = {
-      labels: [
-          'Hutang',
-          'Hasil Bersih',
-      ],
-      datasets: [
-        {
-          data: [remainingHutang,jumlahbersih],
-          backgroundColor : ['#dc3545', '#28a745'],
-        }
-      ]
-    }
+        var jumlahbersih = {{ $totalbersih ?? 0 }};
 
-        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-        var pieData        = donutData;
-        var pieOptions     = {
-        maintainAspectRatio : false,
-        responsive : true,
-        }
-        //Create pie or douhnut chart
-        // You can switch between pie and douhnut using the method below.
+        var donutData = {
+            labels: [
+                'Hutang',
+                'Hasil Bersih',
+            ],
+            datasets: [
+                {
+                    data: [remainingHutang, jumlahbersih],
+                    backgroundColor: ['#dc3545', '#28a745'],
+                }
+            ]
+        };
+
+        var pieChartCanvas = $('#pieChart').get(0).getContext('2d');
+        var pieData = donutData;
+        var pieOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        // Get the value of the data
+                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+
+                        // Format the value as currency (Rupiah)
+                        return 'Rp. ' + value.toLocaleString('id-ID');
+                    }
+                }
+            }
+        };
+
+        // Create pie chart
         new Chart(pieChartCanvas, {
-        type: 'pie',
-        data: pieData,
-        options: pieOptions
-        })
-    })
-</script>    
+            type: 'pie',
+            data: pieData,
+            options: pieOptions
+        });
+    });
+</script>
+  
 
 </html>

@@ -190,6 +190,7 @@
                         <div class="row">
                             @foreach ($data as $user)
                                 <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+                                    <a href="{{ url('/dashboardpetani?id=' . $user->id . '&tahun=' . $selectedYear) }}">
                                     <div class="card bg-light d-flex flex-fill">
                                         <div class="card-header text-muted border-bottom-0">
                                             {{ $user->id }}
@@ -209,14 +210,14 @@
 
                                             </div>
                                         </div>
-                                        <div class="card-footer">
+                                        {{-- <div class="card-footer">
                                             <div class="text-right">
                                                 <a href="{{ url('/dashboardpetani?id=' . $user->id . '&tahun=' . $selectedYear) }}"
                                                     class="btn btn-sm btn-primary">
                                                     <i class="nav-icon fas fa-tachometer-alt"></i> Dashboard
                                                 </a>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             @endforeach
