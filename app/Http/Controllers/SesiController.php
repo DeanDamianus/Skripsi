@@ -495,6 +495,10 @@ class SesiController extends Controller
     // Get the username based on user ID
     $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
 
+    $rekapcount = DB ::table('rekap_2024')
+        ->where('id_petani', $userId)
+        ->count();
+
     // Fetch data for rekap based on the current id_musim and selected year
     $data = DB::table('rekap_2024')
         ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
@@ -597,6 +601,7 @@ class SesiController extends Controller
 
     return view('dashboardpetani', [
         'selectedYear' => $year,
+        'rekap' => $rekapcount,
         'biayajual' => $biaya_jual,
         'naikturun' => $naik_turun,
         'harga' => $sumTotal, // Use sumTotal here

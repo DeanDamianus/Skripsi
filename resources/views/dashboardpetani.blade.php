@@ -82,6 +82,60 @@
         <div class="content-wrapper">
             <div class="container-fluid">
                 <div class="row">
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box">
+                        <span class="info-box-icon bg-info"><i class="fa fa-coins"></i></span>
+          
+                        <div class="info-box-content">
+                          <span class="info-box-text">Omset</span>
+                          <span class="info-box-number">{{ 'Rp. ' . number_format($totalbersih, 0, ',', '.')}}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                      </div>
+                      <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box">
+                        <span class="info-box-icon bg-danger"><i class="fas fa-hand-holding-usd"></i></span>
+          
+                        <div class="info-box-content">
+                          <span class="info-box-text">Hutang</span>
+                          <span class="info-box-number">{{ 'Rp. ' . number_format($remainingHutang, 0, ',', '.')}}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                      </div>
+                      <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box">
+                        <span class="info-box-icon bg-success"><i class="fas fa-dollar-sign"></i></span>
+          
+                        <div class="info-box-content">
+                          <span class="info-box-text">Hasil Bersih</span>
+                          <span class="info-box-number">{{ 'Rp. '. number_format($totalbersih - $remainingHutang, 0,',','.' )}}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                      </div>
+                      <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-12">
+                      <div class="info-box">
+                        <span class="info-box-icon bg-purple"><i class="fas fa-leaf"></i></span>
+          
+                        <div class="info-box-content">
+                          <span class="info-box-text">Total Keranjang</span>
+                          <span class="info-box-number">{{ $rekap }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                      </div>
+                      <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                  </div>
+                <div class="row">
                     <div class="col-md-4">
                         <div class="card card-success">
                             <div class="card-header">
@@ -135,12 +189,12 @@
         var donutData = {
             labels: [
                 'Hutang',
-                'Hasil Bersih',
+                'Omset',
             ],
             datasets: [
                 {
                     data: [remainingHutang, jumlahbersih],
-                    backgroundColor: ['#dc3545', '#28a745'],
+                    backgroundColor: ['#dc3545', '#17a2b8'],
                 }
             ]
         };
