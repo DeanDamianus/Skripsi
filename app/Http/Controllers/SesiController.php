@@ -452,18 +452,23 @@ class SesiController extends Controller
     {
         $year = $request->input('year', date('Y'));
         $idMusim = $request->input('id_musim');
+        $userId = $request->input('id');
 
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
 
         $data = DB::table('users')->where('role', 'petani')->get();
 
+        $rekap = DB::table('rekap_2024')->where('id_petani', $userId)->get();
+        
         foreach ($data as $user) {
             $user->formatted_created_at = \Carbon\Carbon::parse($user->created_at)->format('d-m-Y');
         }
 
         return view('dashboard-Petanidata', [
             'selectedYear' => $year,
+            'rekap' => $rekap,
+            'userId' => $userId,
             'idmusim' => $idMusim,
             'data' => $data,
             'musim' => $musim,
@@ -483,6 +488,7 @@ class SesiController extends Controller
     if (!$musim) {
         abort(404, 'Year not found');
     }
+   
 
     $idMusim = $musim->id; // Assign id_musim from the fetched musim
 

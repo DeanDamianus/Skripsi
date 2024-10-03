@@ -39,7 +39,8 @@
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             @foreach ($currentMusim as $season)
                                 <div class="dropdown-divider"></div>
-                                <a href="{{ url('/dashboardindividual?year=' . $season->tahun) }}" class="dropdown-item">
+                                <a href="{{ url('/dashboardindividual?year=' . $season->tahun) }}"
+                                    class="dropdown-item">
                                     <i class="fas fa-calendar"></i> {{ $season->tahun }}
                                 </a>
                             @endforeach
@@ -197,20 +198,8 @@
                                             <div class="row">
                                                 <div class="col-7">
                                                     <h2 class="lead"><b>{{ $user->name }}</b></h2>
-                                                    <p class="text-muted text-sm"><b>About: </b></p>
+                                                    <p class="text-muted text-sm"><b>Sejak: </b>{{ \Carbon\Carbon::parse($user->created_at)->format('d/m/y') }}</p>
                                                     <!-- Added about field -->
-                                                    <ul class="ml-4 mb-0 fa-ul text-muted">
-                                                        <li class="small">
-                                                            <span class="fa-li"><i
-                                                                    class="fas fa-lg fa-building"></i></span> Address:
-                                                            <!-- Added address field -->
-                                                        </li>
-                                                        <li class="small">
-                                                            <span class="fa-li"><i
-                                                                    class="fas fa-lg fa-phone"></i></span> Phone #:
-                                                            <!-- Added phone field -->
-                                                        </li>
-                                                    </ul>
                                                 </div>
                                                 <div class="col-5 text-center">
                                                     <img src="{{ $user->image ? asset('uploads/' . $user->image) : asset('dist/img/blank.png') }}"
