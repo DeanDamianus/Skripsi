@@ -188,15 +188,6 @@
 
             <div class="content">
                 <div class="content-header">
-                    {{-- <div class="container-fluid">
-                        <div class="row mb-2">
-                            <div class="col-sm-6">
-                                <h1 class="m-0">Rekap Pengumpulan {{ $selectedYear }}</h1>
-                            </div><!-- /.col -->
-                            <div class="col-sm-6">
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
-                    </div><!-- /.container-fluid --> --}}
                 </div>
                 <div class="row">
                     <div class="col-lg-3 col-6">
@@ -236,13 +227,13 @@
                     <!-- Jumlah Kotor-->
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
-                        <div class="small-box bg-yellow">
+                        <div class="small-box bg-purple">
                             <div class="inner">
-                                <h3>{{ $jualLuar }}<sup style="font-size: 20px"> Keranjang</sup></h3>
-                                <p>Total Jual Luar</p>
+                                <h3>{{ $rekapcount }}<sup style="font-size: 20px"> Keranjang</sup></h3>
+                                <p>Total Keranjang</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-exchange-alt"></i> <!-- Ikon pertukaran -->
+                                <i class="fas fa-leaf"></i> <!-- Ikon pertukaran -->
                             </div>
                             <a href="{{ url('/input') }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
@@ -266,10 +257,30 @@
                             </a>
                         </div>
                     </div>
-                    <!-- Jumlah Petani -->
-                    <!-- Jumlah Jual Lua -->
                 </div>
                 <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h3 class="card-title">Tren Harga Per-Keranjang</h3>
+                
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <canvas id="lineChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
                     <div class="col-md-3">
                         <div class="card card-info">
                             <div class="card-header">
@@ -311,11 +322,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 lg-4">
+                    <div class="col-6 lg-1">
                         <div class="card">
                             <div class="card-header border-0">
                                 <div class="d-flex justify-content-between">
-                                    <p class="card-title">Jumlah Total Harga Keranjang Diterima</p>
+                                    <p class="card-title">Harga Keranjang yang Diterima</p>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -389,11 +400,9 @@
     <!-- OPTIONAL SCRIPTS -->
     <script src="plugins/chart.js/Chart.min.js"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="dist/js/pages/dashboard3.js"></script>
     <script src="dist/js/pages/dashboard2.js"></script>
     <script>
         $(function() {
-            'use strict'
 
             var ticksStyle = {
                 fontColor: '#495057',
@@ -446,7 +455,9 @@
                         {
                             backgroundColor: '#ced4da',
                             borderColor: '#ced4da',
-                            data: [periode1b, periode2b, periode3b, periode4b, periode5b, periode6b, periode7b, periode8b, periode9b, periode10b, periode11b, periode12b]
+                            data: [periode1b, periode2b, periode3b, periode4b, periode5b, periode6b,
+                                periode7b, periode8b, periode9b, periode10b, periode11b, periode12b
+                            ]
 
                         }
                     ]
@@ -495,6 +506,70 @@
             })
         })
     </script>
+    <script>
+        $(function() {
+            // Define the line chart data
+            var lineChartData = {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [
+                    {
+                        label: 'Nota A',
+                        backgroundColor: 'rgba(60,141,188,0.9)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: [28, 48, 40, 19, 86, 27, 90]
+                    },
+                    {
+                        label: 'Nota B',
+                        backgroundColor: 'rgba(210, 214, 222, 1)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: [65, 59, 80, 81, 56, 55, 40]
+                    },
+                ]
+            };
+
+            // Define chart options
+            var areaChartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                legend: {
+                    display: true // Display the legend
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            display: false,
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display: false,
+                        }
+                    }]
+                }
+            };
+
+            // Get the context for the line chart
+            var lineChartCanvas = $('#lineChart').get(0).getContext('2d');
+
+            // Create the line chart
+            var lineChart = new Chart(lineChartCanvas, {
+                type: 'line',
+                data: lineChartData,
+                options: areaChartOptions
+            });
+        });
+    </script>
+
     <script>
         $(document).ready(function() {
             // Create the first donut chart

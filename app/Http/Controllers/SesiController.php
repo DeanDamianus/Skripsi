@@ -632,6 +632,10 @@ class SesiController extends Controller
             abort(404, 'Year not found');
         }
 
+        $rekapcount = DB ::table('rekap_2024')
+        ->where('id_musim', $musim->id)
+        ->count();
+
         $periode1 = DB::table('rekap_2024')
             ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
             ->where('rekap_2024.periode', '1-A')
@@ -947,6 +951,7 @@ class SesiController extends Controller
             'jualLuar' => $jualLuar,
             'jumlahPetani' => $jumlahPetani,
             'biayaParam' => $biayaParam,
+            'rekapcount' => $rekapcount
         ]);
     }
 
