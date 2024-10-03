@@ -37,11 +37,11 @@
                             {{ $selectedYear }}
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            @foreach($currentMusim as $season)
-                            <div class="dropdown-divider"></div>
-                            <a href="{{ url('/dashboardindividual?year='.$season->tahun) }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
-                            </a>
+                            @foreach ($currentMusim as $season)
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ url('/dashboardindividual?year=' . $season->tahun) }}" class="dropdown-item">
+                                    <i class="fas fa-calendar"></i> {{ $season->tahun }}
+                                </a>
                             @endforeach
                         </div>
                     </div>
@@ -182,39 +182,62 @@
                 </div>
             </section>
 
-            <div class="content">
-                <div class="container-fluid">
-                    <div class="row card-container">
-                        @foreach ($data as $users)
-                            <div class="col-md-3">
-                                <div class="card fixed-card">
-                                    <div style="position: relative; display: inline-block;">
-                                        <a href="{{ url('/dashboardpetani?id=' . $users->id . '&tahun=' . $selectedYear) }}" style="text-decoration: none;">
-                                            <!-- Display user's uploaded image or fallback to a default image -->
-                                            <img class="card-img-top"
-                                                src="{{ $users->image ? asset('uploads/' . $users->image) : asset('dist/img/blank.png') }}"
-                                                alt="Petani image"
-                                                style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.3s;"
-                                                onmouseenter="this.style.transform='scale(1.05)'; this.nextElementSibling.style.display='block';"
-                                                onmouseleave="this.style.transform='scale(1)'; this.nextElementSibling.style.display='none';">
-            
-                                            <!-- Edit icon -->
-                                        </a>
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">ID Petani: <strong>{{ $users->id }}</strong></h5>
-                                        <p class="card-text">
-                                            Nama Petani: <strong>{{ $users->name }}</strong><br>
-                                            Dibuat Tanggal: <strong>{{ $users->formatted_created_at }}</strong>
-                                        </p>
+            <section class="content">
+                <!-- Default box -->
+                <div class="card card-solid">
+                    <div class="card-body pb-0">
+                        <div class="row">
+                            @foreach ($data as $user)
+                                <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+                                    <div class="card bg-light d-flex flex-fill">
+                                        <div class="card-header text-muted border-bottom-0">
+                                            {{ $user->id }}
+                                        </div>
+                                        <div class="card-body pt-0">
+                                            <div class="row">
+                                                <div class="col-7">
+                                                    <h2 class="lead"><b>{{ $user->name }}</b></h2>
+                                                    <p class="text-muted text-sm"><b>About: </b></p>
+                                                    <!-- Added about field -->
+                                                    <ul class="ml-4 mb-0 fa-ul text-muted">
+                                                        <li class="small">
+                                                            <span class="fa-li"><i
+                                                                    class="fas fa-lg fa-building"></i></span> Address:
+                                                            <!-- Added address field -->
+                                                        </li>
+                                                        <li class="small">
+                                                            <span class="fa-li"><i
+                                                                    class="fas fa-lg fa-phone"></i></span> Phone #:
+                                                            <!-- Added phone field -->
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-5 text-center">
+                                                    <img src="{{ $user->image ? asset('uploads/' . $user->image) : asset('dist/img/blank.png') }}"
+                                                        alt="user-avatar" class="img-circle img-fluid"
+                                                        style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="text-right">
+                                                <a href="{{ url('/dashboardpetani?id=' . $user->id . '&tahun=' . $selectedYear) }}"
+                                                    class="btn btn-sm btn-primary">
+                                                    <i class="nav-icon fas fa-tachometer-alt"></i> Dashboard
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+
+                        </div>
                     </div>
                 </div>
-            </div>
-            
+            </section>
+
+
         </div>
 
         <footer class="main-footer">
