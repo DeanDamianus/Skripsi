@@ -130,7 +130,7 @@
     $(function () {
         // Get the remaining hutang passed from the controller
         var remainingHutang = {{ $remainingHutang ?? 0 }};
-        var jumlahbersih = {{ $totaljumlahharga ?? 0}}
+        var jumlahbersih = {{ $totalbersih ?? 0}}
         var donutData        = {
       labels: [
           'Hutang',

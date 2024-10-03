@@ -189,7 +189,7 @@
                             <div class="col-md-3">
                                 <div class="card fixed-card">
                                     <div style="position: relative; display: inline-block;">
-                                        <a href="{{ url('/dashboardpetani?id=' . $users->id) }}" style="text-decoration: none;">
+                                        <a href="{{ url('/dashboardpetani?id=' . $users->id . '&tahun=' . $selectedYear) }}" style="text-decoration: none;">
                                             <!-- Display user's uploaded image or fallback to a default image -->
                                             <img class="card-img-top"
                                                 src="{{ $users->image ? asset('uploads/' . $users->image) : asset('dist/img/blank.png') }}"
