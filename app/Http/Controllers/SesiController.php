@@ -472,51 +472,57 @@ class SesiController extends Controller
     }
 
     public function dashboardpetani(Request $request)
-    {      
-        $year = $request->input('year', date('Y')); // Ensure 'tahun' is being set correctly
-        $userId = $request->input('id');
-        $idMusim = $request->input('id_musim');
+{      
+    $year = $request->input('tahun', date('Y')); // Ensure 'tahun' is being set correctly
+    $userId = $request->input('id');
 
-        // Fetch the season (musim) based on the selected year
-        $musim = DB::table('musim')->where('tahun', $year)->first();
+    // Fetch the musim based on the selected year
+    $musim = DB::table('musim')->where('tahun', $year)->first();
 
-        // If no season is found for the selected year, return a 404 error
-        if (!$musim) {
-            abort(404, 'Year not found');
-        }
+    // If no season is found for the selected year, return a 404 error
+    if (!$musim) {
+        abort(404, 'Year not found');
+    }
 
-        // Get the username based on user ID
-        $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
+    $idMusim = $musim->id; // Assign id_musim from the fetched musim
 
-        // Fetch data for rekap based on the current id_musim and selected year
-        $data = DB::table('rekap_2024')
-            ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
-            ->join('users', 'rekap_2024.id_petani', '=', 'users.id') // Join with users table
-            ->where('rekap_2024.id_petani', $userId)
-            ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim from the request
-            ->select('rekap_2024.*', 'parameter_2024.*', 'users.image') // Select the image field from users table
-            ->get();
+    // Get the username based on user ID
+    $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
 
-        // Fetch parameter data
-        $parameter = DB::table('parameter_2024')
+    // Fetch data for rekap based on the current id_musim and selected year
+    $data = DB::table('rekap_2024')
+        ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
+        ->join('users', 'rekap_2024.id_petani', '=', 'users.id') // Join with users table
+        ->where('rekap_2024.id_petani', $userId)
+        ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim
+        ->select('rekap_2024.*', 'parameter_2024.*', 'users.image') // Select the image field from users table
+        ->get();
+
+    // Fetch parameter data
+    $parameter = DB::table('parameter_2024')
         ->select('biaya_jual', 'naik_turun', 'kepala_petani')
-        ->where('id_musim', $musim->id)
+        ->where('id_musim', $idMusim)
         ->first();
 
-        $biaya_jual = $parameter->biaya_jual;
-        $naik_turun = $parameter->naik_turun;
-        // Get netting and pricing information
-        $nettoValues = DB::table('rekap_2024')
-    ->where('id_petani', $userId)
-    ->pluck('netto'); // Get all netto values
+    $biaya_jual = $parameter->biaya_jual;
+    $naik_turun = $parameter->naik_turun;
+
+    // Get netting and pricing information
+    $nettoValues = DB::table('rekap_2024')
+        ->where('id_petani', $userId)
+        ->where('id_musim', $idMusim) // Filter by id_musim
+        ->pluck('netto'); // Get all netto values
 
     $hargaValues = DB::table('rekap_2024')
         ->where('id_petani', $userId)
+        ->where('id_musim', $idMusim) // Filter by id_musim
         ->pluck('harga'); // Get all harga values
 
     $totalValues = [];
     $kjValues = []; // Array to store kj values
     $jumlahKotorValues = []; // Array to store jumlahkotor values
+    $komisiValues = []; // Array to store komisi values
+    $jumlahBersihValues = []; // Array to store jumlah bersih values
 
     foreach ($nettoValues as $index => $netto) {
         $harga = $hargaValues[$index]; // Assuming both arrays have the same length
@@ -540,73 +546,68 @@ class SesiController extends Controller
             $kj = 6000 * $netto;
         }
 
-        // melihat hasil tiap baris kj
+        // Store kj value
         $kjValues[] = $kj;
 
-        // jumlahkotor
+        // Calculate jumlahkotor
         $jumlahKotor = $total - $kj - $parameter->biaya_jual - $parameter->naik_turun;
         $jumlahKotorValues[] = $jumlahKotor;
-        
-        //komisi
+
+        // Calculate komisi
         $komisi = $jumlahKotor * $parameter->kepala_petani;
-        $komisivalue [] = $komisi;
+        $komisiValues[] = $komisi;
 
-        //jumlahbersih
-        $jumlahbersih = $jumlahKotor - $komisi;
-        $jumlahbersihvalue [] = $jumlahbersih;
-
+        // Calculate jumlahbersih
+        $jumlahBersih = $jumlahKotor - $komisi;
+        $jumlahBersihValues[] = $jumlahBersih;
     }
 
-        // menghitung total
-        $sumTotal = array_sum($totalValues); 
-        $sumKj = array_sum($kjValues); 
-        $sumJumlahKotor = array_sum($jumlahKotorValues); 
-        $sumJumlahBersih = array_sum($jumlahbersihvalue);
+    // Calculate totals
+    $sumTotal = array_sum($totalValues); 
+    $sumKj = array_sum($kjValues); 
+    $sumJumlahKotor = array_sum($jumlahKotorValues); 
+    $sumJumlahBersih = array_sum($jumlahBersihValues);
 
+    // Get the list of musim
+    $musimList = DB::table('musim')->get();
+    foreach ($data as $rekap) {
+        $rekap->indicator = $rekap->jual_luar == 1 ? '<span class="badge badge-warning">Jual Luar</span>' : '';
+    }
 
+    foreach ($data as $rekap) {
+        $rekap->cek = $rekap->bruto - $rekap->berat_gudang;
+    }
 
-        // Get the list of musim
-        $musimList = DB::table('musim')->get();
-        foreach ($data as $rekap) {
-            $rekap->indicator = $rekap->jual_luar == 1 ? '<span class="badge badge-warning">Jual Luar</span>' : '';
-        }
-
-        foreach ($data as $rekap) {
-            $rekap->cek = $rekap->bruto - $rekap->berat_gudang;
-        }
-
-
-        //calculate all total
-        $totalnetto = $data->sum('netto');
-        $totalbruto = $data->sum('bruto');
-        $totaljumlahharga = $data->sum('jumlah');
-        $totaljumlahbersih = $data->sum('bersih');
+    // Calculate all total
+    $totalnetto = $data->sum('netto');
+    $totalbruto = $data->sum('bruto');
+    $totaljumlahharga = $data->sum('jumlah');
+    $totaljumlahbersih = $data->sum('bersih');
         
+    $hutang = DB::table('hutang_2024')
+        ->select(DB::raw('bon - COALESCE(cicilan, 0) AS remaining_hutang'))
+        ->where('id_petani', $userId)
+        ->first();
 
-        $hutang = DB::table('hutang_2024')
-            ->select(DB::raw('bon - COALESCE(cicilan, 0) AS remaining_hutang'))
-            ->where('id_petani', $userId)
-            ->first();
+    return view('dashboardpetani', [
+        'selectedYear' => $year,
+        'biayajual' => $biaya_jual,
+        'naikturun' => $naik_turun,
+        'harga' => $sumTotal, // Use sumTotal here
+        'kj' => $sumKj, // Use sumKj here
+        'totalnetto' => $totalnetto,
+        'totalbruto' => $totalbruto,
+        'totalharga' => $totaljumlahharga,
+        'totalbersih' => $sumJumlahBersih,
+        'parameter' => $parameter,
+        'remainingHutang' => $hutang->remaining_hutang ?? 0,
+        'userId' => $userId,
+        'username' => $username,
+        'musim' => $idMusim,
+        'currentMusim' => $musimList,
+    ]);
+}
 
-        return view('dashboardpetani', [
-            'selectedYear' => $year,
-            'biayajual' => $biaya_jual,
-            'naikturun' => $naik_turun,
-            'netto' => $netto,
-            'harga' => $total,
-            'kj' => $kj,
-            'totalnetto' => $totalnetto,
-            'totalbruto' => $totalbruto,
-            'totalharga' => $totaljumlahharga,
-            'totalbersih' => $sumJumlahBersih,
-            'parameter' => $parameter,
-            'remainingHutang' => $hutang->remaining_hutang ?? 0,
-            'userId' => $userId,
-            'username' => $username,
-            'musim' => $musim,
-            'currentMusim' => $musimList,
-        ]);
-    }
 
     public function dashboard(Request $request)
     {
