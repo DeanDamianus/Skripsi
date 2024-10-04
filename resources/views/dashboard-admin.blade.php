@@ -262,8 +262,8 @@
                     <div class="col-lg-12">
                         <div class="card card-info">
                             <div class="card-header">
-                                <h3 class="card-title">Tren Harga Per-Keranjang</h3>
-                
+                                <h3 class="card-title">Tren Harga Keranjang Per-Periode</h3>
+
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
@@ -275,7 +275,8 @@
                             </div>
                             <div class="card-body">
                                 <div class="chart">
-                                    <canvas id="lineChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                    <canvas id="lineChart"
+                                    style="min-height: 250px; height: 250px; max-height: 300px; width: 100%; max-width: 1200px;"></canvas>
                                 </div>
                             </div>
                             <!-- /.card-body -->
@@ -497,7 +498,7 @@
                         xAxes: [{
                             display: true,
                             gridLines: {
-                                display: false
+                                display: true
                             },
                             ticks: ticksStyle
                         }]
@@ -507,68 +508,118 @@
         })
     </script>
     <script>
-        $(function() {
-            // Define the line chart data
-            var lineChartData = {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [
-                    {
-                        label: 'Nota A',
-                        backgroundColor: 'rgba(60,141,188,0.9)',
-                        borderColor: 'rgba(60,141,188,0.8)',
-                        pointRadius: false,
-                        pointColor: '#3b8bba',
-                        pointStrokeColor: 'rgba(60,141,188,1)',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(60,141,188,1)',
-                        data: [28, 48, 40, 19, 86, 27, 90]
-                    },
-                    {
-                        label: 'Nota B',
-                        backgroundColor: 'rgba(210, 214, 222, 1)',
-                        borderColor: 'rgba(210, 214, 222, 1)',
-                        pointRadius: false,
-                        pointColor: 'rgba(210, 214, 222, 1)',
-                        pointStrokeColor: '#c1c7d1',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(220,220,220,1)',
-                        data: [65, 59, 80, 81, 56, 55, 40]
-                    },
-                ]
-            };
-
-            // Define chart options
-            var areaChartOptions = {
-                maintainAspectRatio: false,
-                responsive: true,
-                legend: {
-                    display: true // Display the legend
-                },
-                scales: {
-                    xAxes: [{
-                        gridLines: {
-                            display: false,
-                        }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            display: false,
-                        }
-                    }]
-                }
-            };
-
-            // Get the context for the line chart
-            var lineChartCanvas = $('#lineChart').get(0).getContext('2d');
-
-            // Create the line chart
-            var lineChart = new Chart(lineChartCanvas, {
-                type: 'line',
-                data: lineChartData,
-                options: areaChartOptions
-            });
+    $(function() {
+        var harga1a = {{ $harga1_A }};
+    var harga1b = {{ $harga1_B }};
+    var harga2a = {{ $harga2_A }};
+    var harga2b = {{ $harga2_B }};
+    var harga3a = {{ $harga3_A }};
+    var harga3b = {{ $harga3_B }};
+    var harga4a = {{ $harga4_A }};
+    var harga4b = {{ $harga4_B }};
+    var harga5a = {{ $harga5_A }};
+    var harga5b = {{ $harga5_B }};
+    var harga6a = {{ $harga6_A }};
+    var harga6b = {{ $harga6_B }};
+    var harga7a = {{ $harga7_A }};
+    var harga7b = {{ $harga7_B }};
+    var harga8a = {{ $harga8_A }};
+    var harga8b = {{ $harga8_B }};
+    var harga9a = {{ $harga9_A }};
+    var harga9b = {{ $harga9_B }};
+    var harga10a = {{ $harga10_A }};
+    var harga10b = {{ $harga10_B }};
+    var harga11a = {{ $harga11_A }};
+    var harga11b = {{ $harga11_B }};
+    var harga12a = {{ $harga12_A }};
+    var harga12b = {{ $harga12_B }};
+        
+        // Formatter for Rupiah
+        var rupiahFormatter = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
         });
-    </script>
+
+        // Line chart data
+        var lineChartData = {
+            labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+            datasets: [{
+                    label: 'Nota A',
+                    backgroundColor: 'rgba(60,141,188,0.9)',
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    pointRadius: false,
+                    pointColor: '#3b8bba',
+                    pointStrokeColor: 'rgba(60,141,188,1)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data: [harga1a, harga2a, harga3a, harga4a, harga5a, harga6a, harga7a, harga8a, harga9a, harga10a, harga11a, harga12a]
+                },
+                {
+                    label: 'Nota B',
+                    backgroundColor: '#ced4da',
+                    borderColor: '#ced4da',
+                    pointRadius: false,
+                    pointColor: '#ced4da',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: [harga1b, harga2b, harga3b, harga4b, harga5b, harga6b, harga7b, harga8b, harga9b, harga10b, harga11b, harga12b]
+                },
+            ]
+        };
+
+        // Disable fill for the datasets
+        lineChartData.datasets[0].fill = false;
+        lineChartData.datasets[1].fill = false;
+
+        // Chart options
+        var lineChartOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+            legend: {
+                display: true
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                        return datasetLabel + ': ' + rupiahFormatter.format(tooltipItem.yLabel);
+                    }
+                }
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        display: true,
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        callback: function(value) {
+                            return rupiahFormatter.format(value);
+                        }
+                    },
+                    gridLines: {
+                        display: true,
+                    }
+                }]
+            }
+        };
+
+        // Ensure no dataset fill
+        lineChartOptions.datasetFill = false;
+
+        // Create the line chart
+        var lineChartCanvas = $('#lineChart').get(0).getContext('2d');
+        var lineChart = new Chart(lineChartCanvas, {
+            type: 'line',
+            data: lineChartData,
+            options: lineChartOptions
+        });
+    });
+</script>
+
 
     <script>
         $(document).ready(function() {
