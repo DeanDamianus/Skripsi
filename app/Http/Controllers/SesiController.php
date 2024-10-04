@@ -618,6 +618,15 @@ class SesiController extends Controller
         $rekapcount = DB::table('rekap_2024')
             ->where('id_musim', $musim->id)
             ->count();
+        
+        $data = DB::table('rekap_2024')
+            ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
+            ->select('rekap_2024.id_petani', 'users.name', DB::raw('SUM(rekap_2024.netto) as total_netto'))
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->groupBy('rekap_2024.id_petani', 'users.name')
+            ->orderBy('total_netto', 'desc')
+            ->get();
+
 
         $periode1 = DB::table('rekap_2024')
             ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')

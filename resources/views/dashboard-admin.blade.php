@@ -185,7 +185,6 @@
 
 
         <div class="content-wrapper">
-
             <div class="content">
                 <div class="content-header">
                 </div>
@@ -276,55 +275,55 @@
                             <div class="card-body">
                                 <div class="chart">
                                     <canvas id="lineChart"
-                                    style="min-height: 250px; height: 250px; max-height: 300px; width: 100%; max-width: 1200px;"></canvas>
+                                        style="min-height: 250px; height: 250px; max-height: 300px; width: 100%; max-width: 1200px;"></canvas>
                                 </div>
                             </div>
                             <!-- /.card-body -->
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <div class="card card-info">
                             <div class="card-header">
-                                <h3 class="card-title">Distribusi Nota A</h3>
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
+                                <h3 class="card-title">Berat Netto Tertinggi</h3>
                             </div>
+                            <!-- /.card-header -->
                             <div class="card-body">
-                                <canvas id="donutChart"
-                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10px"></th>
+                                            <th>Petani</th>
+                                            {{-- <th>Progress</th> --}}
+                                            <th style="width: 40px">Berat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($data->unique('id_petani')->sortByDesc('netto')->slice(0, 4) as $index => $user)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}.</td> <!-- Index starts from 1 -->
+                                                <td>{{ $user->name }}</td>
+                                                <td>{{ number_format($user->netto, 0, ',', '.') }} Kg</td> 
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    
+                                </table>
                             </div>
                             <!-- /.card-body -->
-                        </div>
-                        <!--nota A -->
-                    </div>
-                    <div class="col-md-3">
-                        <!-- Nota B -->
-                        <div class="card card-info">
-                            <div class="card-header">
-                                <h3 class="card-title">Distribusi Nota B</h3>
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="donutChart2"
-                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            <div class="card-footer clearfix">
+                                <ul class="pagination pagination-sm m-0 float-right">
+                                    <a href="#" class="float-end">Selengkapnya</a>
+                                </ul>
                             </div>
                         </div>
+                        <!-- /.card -->
+
+
+                        <!-- /.card -->
                     </div>
                     <div class="col-6 lg-1">
-                        <div class="card">
+
+                        <div class="card card-info">
                             <div class="card-header border-0">
                                 <div class="d-flex justify-content-between">
                                     <p class="card-title">Harga Keranjang yang Diterima</p>
@@ -358,6 +357,47 @@
                             </div>
                         </div>
 
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-success">
+                            <div class="card-header">
+                                <h3 class="card-title">Distribusi Nota A</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="donutChart"
+                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!--nota A -->
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Nota B -->
+                        <div class="card card-success">
+                            <div class="card-header">
+                                <h3 class="card-title">Distribusi Nota B</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="donutChart2"
+                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -508,117 +548,121 @@
         })
     </script>
     <script>
-    $(function() {
-        var harga1a = {{ $harga1_A }};
-    var harga1b = {{ $harga1_B }};
-    var harga2a = {{ $harga2_A }};
-    var harga2b = {{ $harga2_B }};
-    var harga3a = {{ $harga3_A }};
-    var harga3b = {{ $harga3_B }};
-    var harga4a = {{ $harga4_A }};
-    var harga4b = {{ $harga4_B }};
-    var harga5a = {{ $harga5_A }};
-    var harga5b = {{ $harga5_B }};
-    var harga6a = {{ $harga6_A }};
-    var harga6b = {{ $harga6_B }};
-    var harga7a = {{ $harga7_A }};
-    var harga7b = {{ $harga7_B }};
-    var harga8a = {{ $harga8_A }};
-    var harga8b = {{ $harga8_B }};
-    var harga9a = {{ $harga9_A }};
-    var harga9b = {{ $harga9_B }};
-    var harga10a = {{ $harga10_A }};
-    var harga10b = {{ $harga10_B }};
-    var harga11a = {{ $harga11_A }};
-    var harga11b = {{ $harga11_B }};
-    var harga12a = {{ $harga12_A }};
-    var harga12b = {{ $harga12_B }};
-        
-        // Formatter for Rupiah
-        var rupiahFormatter = new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0
-        });
+        $(function() {
+            var harga1a = {{ $harga1_A }};
+            var harga1b = {{ $harga1_B }};
+            var harga2a = {{ $harga2_A }};
+            var harga2b = {{ $harga2_B }};
+            var harga3a = {{ $harga3_A }};
+            var harga3b = {{ $harga3_B }};
+            var harga4a = {{ $harga4_A }};
+            var harga4b = {{ $harga4_B }};
+            var harga5a = {{ $harga5_A }};
+            var harga5b = {{ $harga5_B }};
+            var harga6a = {{ $harga6_A }};
+            var harga6b = {{ $harga6_B }};
+            var harga7a = {{ $harga7_A }};
+            var harga7b = {{ $harga7_B }};
+            var harga8a = {{ $harga8_A }};
+            var harga8b = {{ $harga8_B }};
+            var harga9a = {{ $harga9_A }};
+            var harga9b = {{ $harga9_B }};
+            var harga10a = {{ $harga10_A }};
+            var harga10b = {{ $harga10_B }};
+            var harga11a = {{ $harga11_A }};
+            var harga11b = {{ $harga11_B }};
+            var harga12a = {{ $harga12_A }};
+            var harga12b = {{ $harga12_B }};
 
-        // Line chart data
-        var lineChartData = {
-            labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-            datasets: [{
-                    label: 'Nota A',
-                    backgroundColor: 'rgba(60,141,188,0.9)',
-                    borderColor: 'rgba(60,141,188,0.8)',
-                    pointRadius: false,
-                    pointColor: '#3b8bba',
-                    pointStrokeColor: 'rgba(60,141,188,1)',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data: [harga1a, harga2a, harga3a, harga4a, harga5a, harga6a, harga7a, harga8a, harga9a, harga10a, harga11a, harga12a]
-                },
-                {
-                    label: 'Nota B',
-                    backgroundColor: '#ced4da',
-                    borderColor: '#ced4da',
-                    pointRadius: false,
-                    pointColor: '#ced4da',
-                    pointStrokeColor: '#c1c7d1',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data: [harga1b, harga2b, harga3b, harga4b, harga5b, harga6b, harga7b, harga8b, harga9b, harga10b, harga11b, harga12b]
-                },
-            ]
-        };
+            // Formatter for Rupiah
+            var rupiahFormatter = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            });
 
-        // Disable fill for the datasets
-        lineChartData.datasets[0].fill = false;
-        lineChartData.datasets[1].fill = false;
-
-        // Chart options
-        var lineChartOptions = {
-            maintainAspectRatio: false,
-            responsive: true,
-            legend: {
-                display: true
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-                        return datasetLabel + ': ' + rupiahFormatter.format(tooltipItem.yLabel);
-                    }
-                }
-            },
-            scales: {
-                xAxes: [{
-                    gridLines: {
-                        display: true,
-                    }
-                }],
-                yAxes: [{
-                    ticks: {
-                        callback: function(value) {
-                            return rupiahFormatter.format(value);
-                        }
+            // Line chart data
+            var lineChartData = {
+                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                datasets: [{
+                        label: 'Nota A',
+                        backgroundColor: 'rgba(60,141,188,0.9)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: [harga1a, harga2a, harga3a, harga4a, harga5a, harga6a, harga7a, harga8a,
+                            harga9a, harga10a, harga11a, harga12a
+                        ]
                     },
-                    gridLines: {
-                        display: true,
+                    {
+                        label: 'Nota B',
+                        backgroundColor: '#ced4da',
+                        borderColor: '#ced4da',
+                        pointRadius: false,
+                        pointColor: '#ced4da',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: [harga1b, harga2b, harga3b, harga4b, harga5b, harga6b, harga7b, harga8b,
+                            harga9b, harga10b, harga11b, harga12b
+                        ]
+                    },
+                ]
+            };
+
+            // Disable fill for the datasets
+            lineChartData.datasets[0].fill = false;
+            lineChartData.datasets[1].fill = false;
+
+            // Chart options
+            var lineChartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                legend: {
+                    display: true
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                            return datasetLabel + ': ' + rupiahFormatter.format(tooltipItem.yLabel);
+                        }
                     }
-                }]
-            }
-        };
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            display: true,
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            callback: function(value) {
+                                return rupiahFormatter.format(value);
+                            }
+                        },
+                        gridLines: {
+                            display: true,
+                        }
+                    }]
+                }
+            };
 
-        // Ensure no dataset fill
-        lineChartOptions.datasetFill = false;
+            // Ensure no dataset fill
+            lineChartOptions.datasetFill = false;
 
-        // Create the line chart
-        var lineChartCanvas = $('#lineChart').get(0).getContext('2d');
-        var lineChart = new Chart(lineChartCanvas, {
-            type: 'line',
-            data: lineChartData,
-            options: lineChartOptions
+            // Create the line chart
+            var lineChartCanvas = $('#lineChart').get(0).getContext('2d');
+            var lineChart = new Chart(lineChartCanvas, {
+                type: 'line',
+                data: lineChartData,
+                options: lineChartOptions
+            });
         });
-    });
-</script>
+    </script>
 
 
     <script>
