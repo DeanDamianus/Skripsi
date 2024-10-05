@@ -72,7 +72,9 @@
                         <i class="fas fa-arrow-left" style="font-size: 20px; color: black;"></i>
                     </a>
                     <div class="col-sm-6">
-                        <h1>Dashboard <label> {{ $username }} </label></h1>
+                        <h1><label><img src="{{ $foto ? asset('uploads/' . $foto) : asset('dist/img/blank.png') }}"
+                            alt="user-avatar" class="img-circle img-fluid"
+                            style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"> {{ $username }} </label> </h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -123,11 +125,12 @@
                     <!-- /.col -->
                     <div class="col-md-3 col-sm-6 col-12">
                       <div class="info-box">
-                        <span class="info-box-icon bg-purple"><i class="fas fa-leaf"></i></span>
-          
+                        <span class="info-box-icon bg-purple">
+                            <img src="dist/img/basket.png" alt="Basket" style="width: 50%; height: 50%;">
+                          </span>
                         <div class="info-box-content">
                           <span class="info-box-text">Total Keranjang</span>
-                          <span class="info-box-number">{{ $rekap }}</span>
+                          <span class="info-box-number">{{ $rekap .' keranjang' }}</span>
                         </div>
                         <!-- /.info-box-content -->
                       </div>

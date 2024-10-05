@@ -487,6 +487,8 @@ class SesiController extends Controller
         // Get the username based on user ID
         $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
 
+        $foto = DB::table('users')->where('id', $userId)->pluck('image')->first();
+
         $rekapcount = DB::table('rekap_2024')->where('id_petani', $userId)->count();
 
         // Fetch data for rekap based on the current id_musim and selected year
@@ -592,6 +594,7 @@ class SesiController extends Controller
             'kj' => $sumKj, // Use sumKj here
             'totalnetto' => $totalnetto,
             'totalbruto' => $totalbruto,
+            'foto' => $foto,
             'totalharga' => $totaljumlahharga,
             'totalbersih' => $sumJumlahBersih,
             'parameter' => $parameter,

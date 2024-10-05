@@ -198,7 +198,7 @@
                                         <div class="card-body pt-0">
                                             <div class="row">
                                                 <div class="col-7">
-                                                    <h2 class="lead"><b>{{ $user->name }}</b></h2>
+                                                    <h2 class="lead"><strong>{{ $user->name }}</strong></h2>
                                                     <p class="text-muted text-sm"><b>Sejak: </b>{{ \Carbon\Carbon::parse($user->created_at)->format('d/m/y') }}</p>
                                                     <!-- Added about field -->
                                                 </div>
