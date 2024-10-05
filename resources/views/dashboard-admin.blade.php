@@ -284,38 +284,22 @@
                     <div class="col-md-6">
                         <div class="card card-info">
                             <div class="card-header">
-                                <h3 class="card-title">Berat Netto Tertinggi</h3>
+                              <h3 class="card-title">Grade Tembakau</h3>
+              
+                              <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                  <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                  <i class="fas fa-times"></i>
+                                </button>
+                              </div>
                             </div>
-                            <!-- /.card-header -->
                             <div class="card-body">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 10px"></th>
-                                            <th>Petani</th>
-                                            {{-- <th>Progress</th> --}}
-                                            <th style="width: 40px">Berat</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($data->unique('id_petani')->sortByDesc('netto')->slice(0, 4) as $index => $user)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}.</td> <!-- Index starts from 1 -->
-                                                <td>{{ $user->name }}</td>
-                                                <td>{{ number_format($user->netto, 0, ',', '.') }} Kg</td> 
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                    
-                                </table>
+                              <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                             </div>
                             <!-- /.card-body -->
-                            <div class="card-footer clearfix">
-                                <ul class="pagination pagination-sm m-0 float-right">
-                                    <a href="#" class="float-end">Selengkapnya</a>
-                                </ul>
-                            </div>
-                        </div>
+                          </div>
                         <!-- /.card -->
 
 
@@ -660,6 +644,41 @@
                 type: 'line',
                 data: lineChartData,
                 options: lineChartOptions
+            });
+        });
+    </script>
+    <script>
+        $(function() {
+            var gradeA = {{ $gradeA }};
+            var gradeB = {{ $gradeB }};
+            var gradeC = {{ $gradeC }};
+            var gradeD = {{ $gradeD }};
+            var pieData        = {
+            labels: [
+                'A',
+                'B',
+                'C',
+                'D',
+            ],
+            datasets: [
+                {
+                data: [gradeA,gradeB,gradeC,gradeD],
+                backgroundColor : ['#f56954', '#f39c12', '#00c0ef', '#00a65a', '#d2d6de'],
+                }
+            ]
+            }
+            var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+            var pieData        = pieData;
+            var pieOptions     = {
+            maintainAspectRatio : false,
+            responsive : true,
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: pieData,
+            options: pieOptions
             });
         });
     </script>

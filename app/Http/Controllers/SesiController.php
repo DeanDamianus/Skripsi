@@ -619,14 +619,33 @@ class SesiController extends Controller
             ->where('id_musim', $musim->id)
             ->count();
         
+        $gradeA = DB::table('rekap_2024')
+        ->where('id_musim', $musim->id)
+        ->where('grade', 'LIKE', '%A%') 
+        ->count();
+
+        $gradeB = DB::table('rekap_2024')
+        ->where('id_musim', $musim->id)
+        ->where('grade', 'LIKE', '%B%') 
+        ->count();
+
+        $gradeC = DB::table('rekap_2024')
+        ->where('id_musim', $musim->id)
+        ->where('grade', 'LIKE', '%C%') 
+        ->count();
+
+        $gradeD = DB::table('rekap_2024')
+        ->where('id_musim', $musim->id)
+        ->where('grade', 'LIKE', '%D%') 
+        ->count();
+        
         $data = DB::table('rekap_2024')
             ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
             ->select('rekap_2024.id_petani', 'users.name', DB::raw('SUM(rekap_2024.netto) as total_netto'))
             ->where('rekap_2024.id_musim', $musim->id)
             ->groupBy('rekap_2024.id_petani', 'users.name')
-            ->orderBy('total_netto', 'desc')
+            ->orderByDesc('total_netto') // Sort by highest total_netto
             ->get();
-
 
         $periode1 = DB::table('rekap_2024')
             ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
@@ -1021,6 +1040,10 @@ class SesiController extends Controller
         return view('dashboard-admin', [
             'data' => $data,
             'diterima' => $diterima,
+            'gradeA' => $gradeA,
+            'gradeB' => $gradeB,
+            'gradeC' => $gradeC,
+            'gradeD' => $gradeD,
             'harga1_A' => $harga1_A,
             'harga1_B' => $harga1_B,
             'harga2_A' => $harga2_A,
