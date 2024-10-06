@@ -232,7 +232,7 @@
                                 <p>Total Keranjang</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-leaf"></i> <!-- Ikon pertukaran -->
+                                <i class="fas fa-shopping-basket"></i><!-- Basket icon -->
                             </div>
                             <a href="{{ url('/input') }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
@@ -648,6 +648,7 @@
         });
     </script>
     <script>
+        //grade
         $(function() {
             var gradeA = {{ $gradeA }};
             var gradeB = {{ $gradeB }};
@@ -655,15 +656,15 @@
             var gradeD = {{ $gradeD }};
             var pieData        = {
             labels: [
-                'A',
-                'B',
-                'C',
                 'D',
+                'C',
+                'B',
+                'A',
             ],
             datasets: [
                 {
-                data: [gradeA,gradeB,gradeC,gradeD],
-                backgroundColor : ['#f56954', '#f39c12', '#00c0ef', '#00a65a', '#d2d6de'],
+                data: [gradeD,gradeC,gradeB,gradeA],
+                backgroundColor : [  '#00a65a','#f56954','#f39c12','#00c0ef',]
                 }
             ]
             }

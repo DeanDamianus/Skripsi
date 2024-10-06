@@ -477,10 +477,25 @@ class SesiController extends Controller
         // Fetch the musim based on the selected year
         $musim = DB::table('musim')->where('tahun', $year)->first();
 
-        // If no season is found for the selected year, return a 404 error
-        if (!$musim) {
-            abort(404, 'Year not found');
-        }
+       $gradeA = DB::table('rekap_2024')
+       ->where('id_petani', $userId)
+       ->where('grade', 'LIKE', '%A%') 
+       ->count();
+
+       $gradeB = DB::table('rekap_2024')
+       ->where('id_petani', $userId)
+       ->where('grade', 'LIKE', '%B%') 
+       ->count();
+
+       $gradeC = DB::table('rekap_2024')
+       ->where('id_petani', $userId)
+       ->where('grade', 'LIKE', '%C%') 
+       ->count();
+
+       $gradeD = DB::table('rekap_2024')
+       ->where('id_petani', $userId)
+       ->where('grade', 'LIKE', '%D%') 
+       ->count();
 
         $idMusim = $musim->id; // Assign id_musim from the fetched musim
 
@@ -603,6 +618,10 @@ class SesiController extends Controller
             'username' => $username,
             'musim' => $idMusim,
             'currentMusim' => $musimList,
+            'gradeA' => $gradeA,
+            'gradeB' => $gradeB,
+            'gradeC' => $gradeC,
+            'gradeD' => $gradeD,
         ]);
     }
 

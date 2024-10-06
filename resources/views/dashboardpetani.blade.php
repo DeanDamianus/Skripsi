@@ -126,7 +126,7 @@
                     <div class="col-md-3 col-sm-6 col-12">
                       <div class="info-box">
                         <span class="info-box-icon bg-purple">
-                            <img src="dist/img/basket.png" alt="Basket" style="width: 50%; height: 50%;">
+                          <i class="fas fa-shopping-basket"></i>
                           </span>
                         <div class="info-box-content">
                           <span class="info-box-text">Total Keranjang</span>
@@ -159,6 +159,26 @@
                             <!-- /.card-body -->
                           </div>
                     </div>
+                    <div class="col-md-4">
+                      <div class="card card-info">
+                          <div class="card-header">
+                            <h3 class="card-title">Grade</h3>
+            
+                            <div class="card-tools">
+                              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                              </button>
+                              <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                <i class="fas fa-times"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <div class="card-body">
+                            <canvas id="pieCharthutang" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                          </div>
+                          <!-- /.card-body -->
+                        </div>
+                  </div>
                 </div>
                 <!-- /.row -->
             </div>
@@ -227,6 +247,46 @@
             options: pieOptions
         });
     });
+</script>
+<script>
+  $(function () {
+    //grade
+      // Get the remaining hutang passed from the controller
+      var remainingHutang = {{ $remainingHutang ?? 0 }};
+      var jumlahbersih = {{ $totalbersih ?? 0 }};
+      var gradeA = {{ $gradeA }};
+      var gradeB = {{ $gradeB }};
+      var gradeC = {{ $gradeC }};
+      var gradeD = {{ $gradeD }};
+      var donutData = {
+          labels: [
+              'D',
+              'C',
+              'B',
+              'A',
+          ],
+          datasets: [
+              {
+                  data: [gradeD,gradeC,gradeB,gradeA],
+                  backgroundColor : [  '#00a65a','#f56954','#f39c12','#00c0ef',]
+              }
+          ]
+      };
+
+      var pieChartCanvas = $('#pieCharthutang').get(0).getContext('2d');
+      var pieData = donutData;
+      var pieOptions = {
+          maintainAspectRatio: false,
+          responsive: true,
+      };
+
+      // Create pie chart
+      new Chart(pieChartCanvas, {
+          type: 'pie',
+          data: pieData,
+          options: pieOptions
+      });
+  });
 </script>
   
 
