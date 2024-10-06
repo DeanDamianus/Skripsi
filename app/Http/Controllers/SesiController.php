@@ -476,28 +476,34 @@ class SesiController extends Controller
 
         // Fetch the musim based on the selected year
         $musim = DB::table('musim')->where('tahun', $year)->first();
+        $idMusim = $musim->id;
 
-       $gradeA = DB::table('rekap_2024')
-       ->where('id_petani', $userId)
-       ->where('grade', 'LIKE', '%A%') 
-       ->count();
 
-       $gradeB = DB::table('rekap_2024')
-       ->where('id_petani', $userId)
-       ->where('grade', 'LIKE', '%B%') 
-       ->count();
+        $netto_d_a = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%d%')->where('periode', 'LIKE', '%A%')->where('id_musim', $idMusim)->sum('netto');
 
-       $gradeC = DB::table('rekap_2024')
-       ->where('id_petani', $userId)
-       ->where('grade', 'LIKE', '%C%') 
-       ->count();
+        $netto_d_b = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%d%')->where('periode', 'LIKE', '%B%')->where('id_musim', $idMusim)->sum('netto');
 
-       $gradeD = DB::table('rekap_2024')
-       ->where('id_petani', $userId)
-       ->where('grade', 'LIKE', '%D%') 
-       ->count();
+        $netto_c_a = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%c%')->where('periode', 'LIKE', '%A%')->where('id_musim', $idMusim)->sum('netto');
 
-        $idMusim = $musim->id; // Assign id_musim from the fetched musim
+        $netto_c_b = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%c%')->where('periode', 'LIKE', '%B%')->where('id_musim', $idMusim)->sum('netto');
+
+        $netto_b_a = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%b%')->where('periode', 'LIKE', '%A%')->where('id_musim', $idMusim)->sum('netto');
+
+        $netto_b_b = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%b%')->where('periode', 'LIKE', '%B%')->where('id_musim', $idMusim)->sum('netto');
+
+        $netto_a_a = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%A%')->where('periode', 'LIKE', '%A%')->where('id_musim', $idMusim)->sum('netto');
+
+        $netto_a_b = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%A%')->where('periode', 'LIKE', '%B%')->where('id_musim', $idMusim)->sum('netto');
+
+        $gradeA = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%A%')->where('id_musim', $idMusim)->count();
+
+        $gradeB = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%B%')->where('id_musim', $idMusim)->count();
+
+        $gradeC = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%C%')->where('id_musim', $idMusim)->count();
+
+        $gradeD = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%D%')->where('id_musim', $idMusim)->count();
+
+        // Assign id_musim from the fetched musim
 
         // Get the username based on user ID
         $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
@@ -602,6 +608,15 @@ class SesiController extends Controller
 
         return view('dashboardpetani', [
             'selectedYear' => $year,
+            'netto_d_a' => $netto_d_a,
+            'netto_d_b' => $netto_d_b,
+            'netto_c_a' => $netto_c_a,
+            'netto_c_b' => $netto_c_b,
+            'netto_b_a' => $netto_b_a,
+            'netto_b_b' => $netto_b_b,
+            'netto_a_a' => $netto_a_a,
+            'netto_a_b' => $netto_a_b,
+            'totalnetto' =>$nettoValues,
             'rekap' => $rekapcount,
             'biayajual' => $biaya_jual,
             'naikturun' => $naik_turun,
@@ -640,27 +655,27 @@ class SesiController extends Controller
         $rekapcount = DB::table('rekap_2024')
             ->where('id_musim', $musim->id)
             ->count();
-        
+
         $gradeA = DB::table('rekap_2024')
-        ->where('id_musim', $musim->id)
-        ->where('grade', 'LIKE', '%A%') 
-        ->count();
+            ->where('id_musim', $musim->id)
+            ->where('grade', 'LIKE', '%A%')
+            ->count();
 
         $gradeB = DB::table('rekap_2024')
-        ->where('id_musim', $musim->id)
-        ->where('grade', 'LIKE', '%B%') 
-        ->count();
+            ->where('id_musim', $musim->id)
+            ->where('grade', 'LIKE', '%B%')
+            ->count();
 
         $gradeC = DB::table('rekap_2024')
-        ->where('id_musim', $musim->id)
-        ->where('grade', 'LIKE', '%C%') 
-        ->count();
+            ->where('id_musim', $musim->id)
+            ->where('grade', 'LIKE', '%C%')
+            ->count();
 
         $gradeD = DB::table('rekap_2024')
-        ->where('id_musim', $musim->id)
-        ->where('grade', 'LIKE', '%D%') 
-        ->count();
-        
+            ->where('id_musim', $musim->id)
+            ->where('grade', 'LIKE', '%D%')
+            ->count();
+
         $data = DB::table('rekap_2024')
             ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
             ->select('rekap_2024.id_petani', 'users.name', DB::raw('SUM(rekap_2024.netto) as total_netto'))

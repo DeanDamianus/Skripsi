@@ -73,8 +73,9 @@
                     </a>
                     <div class="col-sm-6">
                         <h1><label><img src="{{ $foto ? asset('uploads/' . $foto) : asset('dist/img/blank.png') }}"
-                            alt="user-avatar" class="img-circle img-fluid"
-                            style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"> {{ $username }} </label> </h1>
+                                    alt="user-avatar" class="img-circle img-fluid"
+                                    style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                                {{ $username }} </label> </h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -85,100 +86,130 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-12">
-                      <div class="info-box">
-                        <span class="info-box-icon bg-info"><i class="fa fa-coins"></i></span>
-          
-                        <div class="info-box-content">
-                          <span class="info-box-text">Omset</span>
-                          <span class="info-box-number">{{ 'Rp. ' . number_format($totalbersih, 0, ',', '.')}}</span>
+                        <div class="info-box">
+                            <span class="info-box-icon bg-info"><i class="fa fa-coins"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Omset</span>
+                                <span
+                                    class="info-box-number">{{ 'Rp. ' . number_format($totalbersih, 0, ',', '.') }}</span>
+                            </div>
+                            <!-- /.info-box-content -->
                         </div>
-                        <!-- /.info-box-content -->
-                      </div>
-                      <!-- /.info-box -->
+                        <!-- /.info-box -->
                     </div>
                     <!-- /.col -->
                     <div class="col-md-3 col-sm-6 col-12">
-                      <div class="info-box">
-                        <span class="info-box-icon bg-danger"><i class="fas fa-hand-holding-usd"></i></span>
-          
-                        <div class="info-box-content">
-                          <span class="info-box-text">Hutang</span>
-                          <span class="info-box-number">{{ 'Rp. ' . number_format($remainingHutang, 0, ',', '.')}}</span>
+                        <div class="info-box">
+                            <span class="info-box-icon bg-danger"><i class="fas fa-hand-holding-usd"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Hutang</span>
+                                <span
+                                    class="info-box-number">{{ 'Rp. ' . number_format($remainingHutang, 0, ',', '.') }}</span>
+                            </div>
+                            <!-- /.info-box-content -->
                         </div>
-                        <!-- /.info-box-content -->
-                      </div>
-                      <!-- /.info-box -->
+                        <!-- /.info-box -->
                     </div>
                     <!-- /.col -->
                     <div class="col-md-3 col-sm-6 col-12">
-                      <div class="info-box">
-                        <span class="info-box-icon bg-success"><i class="fas fa-dollar-sign"></i></span>
-          
-                        <div class="info-box-content">
-                          <span class="info-box-text">Hasil Bersih</span>
-                          <span class="info-box-number">{{ 'Rp. '. number_format($totalbersih - $remainingHutang, 0,',','.' )}}</span>
+                        <div class="info-box">
+                            <span class="info-box-icon bg-success"><i class="fas fa-dollar-sign"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Hasil Bersih</span>
+                                <span
+                                    class="info-box-number">{{ 'Rp. ' . number_format($totalbersih - $remainingHutang, 0, ',', '.') }}</span>
+                            </div>
+                            <!-- /.info-box-content -->
                         </div>
-                        <!-- /.info-box-content -->
-                      </div>
-                      <!-- /.info-box -->
+                        <!-- /.info-box -->
                     </div>
                     <!-- /.col -->
                     <div class="col-md-3 col-sm-6 col-12">
-                      <div class="info-box">
-                        <span class="info-box-icon bg-purple">
-                          <i class="fas fa-shopping-basket"></i>
-                          </span>
-                        <div class="info-box-content">
-                          <span class="info-box-text">Total Keranjang</span>
-                          <span class="info-box-number">{{ $rekap .' keranjang' }}</span>
+                        <div class="info-box">
+                            <span class="info-box-icon bg-purple">
+                                <i class="fas fa-shopping-basket"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Total Keranjang</span>
+                                <span class="info-box-number">{{ $rekap . ' keranjang' }}</span>
+                            </div>
+                            <!-- /.info-box-content -->
                         </div>
-                        <!-- /.info-box-content -->
-                      </div>
-                      <!-- /.info-box -->
+                        <!-- /.info-box -->
                     </div>
                     <!-- /.col -->
-                  </div>
+                </div>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="card card-success">
                             <div class="card-header">
-                              <h3 class="card-title">Hutang</h3>
-              
-                              <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                  <i class="fas fa-minus"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                  <i class="fas fa-times"></i>
-                                </button>
-                              </div>
+                                <h3 class="card-title">Hutang</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="card-body">
-                              <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                <canvas id="pieChart"
+                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                             </div>
                             <!-- /.card-body -->
-                          </div>
+                        </div>
                     </div>
                     <div class="col-md-4">
-                      <div class="card card-info">
-                          <div class="card-header">
-                            <h3 class="card-title">Grade</h3>
-            
-                            <div class="card-tools">
-                              <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                              </button>
-                              <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                <i class="fas fa-times"></i>
-                              </button>
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h3 class="card-title">Grade</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
                             </div>
-                          </div>
-                          <div class="card-body">
-                            <canvas id="pieCharthutang" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                          </div>
-                          <!-- /.card-body -->
+                            <div class="card-body">
+                                <canvas id="pieCharthutang"
+                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
-                  </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-success">
+                            <div class="card-header">
+                                <h3 class="card-title">Total Netto <strong>{{ $totalnetto }}</strong> Kg</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <canvas id="barChart"
+                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+
+                    </div>
+
                 </div>
                 <!-- /.row -->
             </div>
@@ -204,7 +235,95 @@
     <script src="../../plugins/chart.js/Chart.min.js"></script>
 </body>
 <script>
-    $(function () {
+  $(function() {
+      var netto_d_a = {{ $netto_d_a }};
+      var netto_d_b = {{ $netto_d_b }};
+      var netto_c_a = {{ $netto_c_a }};
+      var netto_c_b = {{ $netto_c_b }};
+      var netto_b_a = {{ $netto_b_a }};
+      var netto_b_b = {{ $netto_b_b }};
+      var netto_a_a = {{ $netto_a_a }};
+      var netto_a_b = {{ $netto_a_b }};
+      
+      var data = {
+          labels: ['Grade D', 'Grade C', 'Grade B', 'Grade A'], // Updated labels for clarity
+          datasets: [
+              {
+                  label: 'Nota B',
+                  backgroundColor: 'rgba(60,141,188,0.9)', // Keep a distinct color
+                  borderColor: 'rgba(60,141,188,0.8)',
+                  pointRadius: false,
+                  pointColor: '#3b8bba',
+                  pointStrokeColor: 'rgba(60,141,188,1)',
+                  pointHighlightFill: '#fff',
+                  pointHighlightStroke: 'rgba(60,141,188,1)',
+                  data: [netto_d_b, netto_c_b, netto_b_b, netto_a_b] // Data for 'Nota B'
+              },
+              {
+                  label: 'Nota A',
+                  backgroundColor: 'rgba(210, 214, 222, 1)', // Distinct color for 'Nota A'
+                  borderColor: 'rgba(210, 214, 222, 1)',
+                  pointRadius: false,
+                  pointColor: 'rgba(210, 214, 222, 1)',
+                  pointStrokeColor: '#c1c7d1',
+                  pointHighlightFill: '#fff',
+                  pointHighlightStroke: 'rgba(220,220,220,1)',
+                  data: [netto_d_a, netto_c_a, netto_b_a, netto_a_a] // Data for 'Nota A'
+              }
+          ]
+      };
+
+      var barChartCanvas = $('#barChart').get(0).getContext('2d');
+      var barChartData = $.extend(true, {}, data);
+
+      var barChartOptions = {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+              x: {
+                  title: {
+                      display: true,
+                      text: 'Grade' // Add X-axis title
+                  }
+              },
+              y: {
+                  beginAtZero: true,
+                  title: {
+                      display: true,
+                      text: 'Kg' // Add Y-axis title
+                  },
+                  ticks: {
+                      callback: function(value) {
+                          return value + ' Kg'; // Add 'Kg' to the Y-axis values
+                      }
+                  }
+              }
+          },
+          plugins: {
+              tooltip: {
+                  enabled: true, // Enable tooltips (default is true, but for clarity)
+                  callbacks: {
+                      label: function(tooltipItem) {
+                          return tooltipItem.dataset.label + ': ' + tooltipItem.raw + ' Kg'; // Custom tooltip text
+                      }
+                  }
+              }
+          },
+          datasetFill: false
+      };
+
+      new Chart(barChartCanvas, {
+          type: 'bar',
+          data: barChartData,
+          options: barChartOptions
+      });
+  });
+</script>
+
+
+
+<script>
+    $(function() {
         // Get the remaining hutang passed from the controller
         var remainingHutang = {{ $remainingHutang ?? 0 }};
         var jumlahbersih = {{ $totalbersih ?? 0 }};
@@ -214,12 +333,10 @@
                 'Hutang',
                 'Omset',
             ],
-            datasets: [
-                {
-                    data: [remainingHutang, jumlahbersih],
-                    backgroundColor: ['#dc3545', '#17a2b8'],
-                }
-            ]
+            datasets: [{
+                data: [remainingHutang, jumlahbersih],
+                backgroundColor: ['#dc3545', '#17a2b8'],
+            }]
         };
 
         var pieChartCanvas = $('#pieChart').get(0).getContext('2d');
@@ -249,45 +366,43 @@
     });
 </script>
 <script>
-  $(function () {
-    //grade
-      // Get the remaining hutang passed from the controller
-      var remainingHutang = {{ $remainingHutang ?? 0 }};
-      var jumlahbersih = {{ $totalbersih ?? 0 }};
-      var gradeA = {{ $gradeA }};
-      var gradeB = {{ $gradeB }};
-      var gradeC = {{ $gradeC }};
-      var gradeD = {{ $gradeD }};
-      var donutData = {
-          labels: [
-              'D',
-              'C',
-              'B',
-              'A',
-          ],
-          datasets: [
-              {
-                  data: [gradeD,gradeC,gradeB,gradeA],
-                  backgroundColor : [  '#00a65a','#f56954','#f39c12','#00c0ef',]
-              }
-          ]
-      };
+    $(function() {
+        //grade
+        // Get the remaining hutang passed from the controller
+        var remainingHutang = {{ $remainingHutang ?? 0 }};
+        var jumlahbersih = {{ $totalbersih ?? 0 }};
+        var gradeA = {{ $gradeA }};
+        var gradeB = {{ $gradeB }};
+        var gradeC = {{ $gradeC }};
+        var gradeD = {{ $gradeD }};
+        var donutData = {
+            labels: [
+                'D',
+                'C',
+                'B',
+                'A',
+            ],
+            datasets: [{
+                data: [gradeD, gradeC, gradeB, gradeA],
+                backgroundColor: ['#00a65a', '#f56954', '#f39c12', '#00c0ef', ]
+            }]
+        };
 
-      var pieChartCanvas = $('#pieCharthutang').get(0).getContext('2d');
-      var pieData = donutData;
-      var pieOptions = {
-          maintainAspectRatio: false,
-          responsive: true,
-      };
+        var pieChartCanvas = $('#pieCharthutang').get(0).getContext('2d');
+        var pieData = donutData;
+        var pieOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+        };
 
-      // Create pie chart
-      new Chart(pieChartCanvas, {
-          type: 'pie',
-          data: pieData,
-          options: pieOptions
-      });
-  });
+        // Create pie chart
+        new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: pieData,
+            options: pieOptions
+        });
+    });
 </script>
-  
+
 
 </html>
