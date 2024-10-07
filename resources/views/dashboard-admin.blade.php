@@ -194,7 +194,7 @@
                         <div class="small-box bg-info">
                             <div class="inner">
                                 <h3>{{ $totalNetto }} Kg</sup></h3>
-                                <p>Total Netto Keranjang</p>
+                                <p>Netto Keranjang diterima</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-weight-hanging"></i>
@@ -213,7 +213,7 @@
                                 <h3><sup
                                         style="font-size: 20px">Rp.</sup>{{ number_format($totalHarga, 0, ',', '.') }}
                                 </h3>
-                                <p>Total Harga Keranjang</p>
+                                <p>Harga Keranjang diterima</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-coins"></i> <!-- Ikon koin -->
@@ -229,12 +229,12 @@
                         <div class="small-box bg-purple">
                             <div class="inner">
                                 <h3>{{ $rekapcount }}<sup style="font-size: 20px"> Keranjang</sup></h3>
-                                <p>Total Keranjang</p>
+                                <p>Keranjang diterima</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-shopping-basket"></i><!-- Basket icon -->
                             </div>
-                            <a href="{{ url('/input') }}" class="small-box-footer">
+                            <a href="{{ url('/distribusi') }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -245,13 +245,13 @@
                         <!-- small card -->
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                <h3>{{ $jumlahPetani }}</h3>
-                                <p>Jumlah Petani</p>
+                                <h3>{{ $rekapsisa }}</h3>
+                                <p>Keranjang sisa</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-user"></i> <!-- Ikon orang -->
+                                <i class="fas fa-box-open"></i>
                             </div>
-                            <a href="{{ url('/datapetani?year=' . $selectedYear) }}" class="small-box-footer">
+                            <a href="{{ url('/distribusi?year=' . $selectedYear) }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -345,7 +345,7 @@
                     <div class="col-md-6">
                         <div class="card card-success">
                             <div class="card-header">
-                                <h3 class="card-title">Distribusi Nota A</h3>
+                                <h3 class="card-title">Status Distribusi Nota A</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
@@ -367,7 +367,7 @@
                         <!-- Nota B -->
                         <div class="card card-success">
                             <div class="card-header">
-                                <h3 class="card-title">Distribusi Nota B</h3>
+                                <h3 class="card-title">Status Distribusi Nota B</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
