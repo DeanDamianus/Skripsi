@@ -143,6 +143,45 @@
                     <!-- /.col -->
                 </div>
                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <div class="d-flex justify-content-between">
+                                    <h3 class="card-title">Netto</h3>
+                                    <a href="javascript:void(0);">View Report</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <p class="d-flex flex-column">
+                                        <span class="text-bold text-lg"><strong>{{ $totalnetto }}</strong> Kg</span>
+                                        <span>Berdasarkan Grade</span>
+                                    </p>
+                                    <p class="ml-auto d-flex flex-column text-right">
+                                        <span class="text-success">
+                                            <i class="fas fa-arrow-up"></i> 33.1%
+                                        </span>
+                                        <span class="text-muted">Since last month</span>
+                                    </p>
+                                </div>
+                                <!-- /.d-flex -->
+
+                                <div class="position-relative mb-4">
+                                    <canvas id="sales-chart" height="200"></canvas>
+                                </div>
+
+                                <div class="d-flex flex-row justify-content-end">
+                                    <span class="mr-2">
+                                        <i class="fas fa-square text-primary"></i> Nota A
+                                    </span>
+
+                                    <span>
+                                        <i class="fas fa-square text-gray"></i> Nota B
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-4">
                         <div class="card card-success">
                             <div class="card-header">
@@ -185,7 +224,7 @@
                             <!-- /.card-body -->
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    {{-- <div class="col-md-4">
                         <div class="card card-success">
                             <div class="card-header">
                                 <h3 class="card-title">Total Netto <strong>{{ $totalnetto }}</strong> Kg</h3>
@@ -208,7 +247,7 @@
                             <!-- /.card-body -->
                         </div>
 
-                    </div>
+                    </div> --}}
 
                 </div>
                 <!-- /.row -->
@@ -234,90 +273,173 @@
     <script src="../../dist/js/adminlte.min.js"></script>
     <script src="../../plugins/chart.js/Chart.min.js"></script>
 </body>
+
 <script>
-  $(function() {
-      var netto_d_a = {{ $netto_d_a }};
-      var netto_d_b = {{ $netto_d_b }};
-      var netto_c_a = {{ $netto_c_a }};
-      var netto_c_b = {{ $netto_c_b }};
-      var netto_b_a = {{ $netto_b_a }};
-      var netto_b_b = {{ $netto_b_b }};
-      var netto_a_a = {{ $netto_a_a }};
-      var netto_a_b = {{ $netto_a_b }};
-      
-      var data = {
-          labels: ['Grade D', 'Grade C', 'Grade B', 'Grade A'], // Updated labels for clarity
-          datasets: [
-              {
-                  label: 'Nota B',
-                  backgroundColor: 'rgba(60,141,188,0.9)', // Keep a distinct color
-                  borderColor: 'rgba(60,141,188,0.8)',
-                  pointRadius: false,
-                  pointColor: '#3b8bba',
-                  pointStrokeColor: 'rgba(60,141,188,1)',
-                  pointHighlightFill: '#fff',
-                  pointHighlightStroke: 'rgba(60,141,188,1)',
-                  data: [netto_d_b, netto_c_b, netto_b_b, netto_a_b] // Data for 'Nota B'
-              },
-              {
-                  label: 'Nota A',
-                  backgroundColor: 'rgba(210, 214, 222, 1)', // Distinct color for 'Nota A'
-                  borderColor: 'rgba(210, 214, 222, 1)',
-                  pointRadius: false,
-                  pointColor: 'rgba(210, 214, 222, 1)',
-                  pointStrokeColor: '#c1c7d1',
-                  pointHighlightFill: '#fff',
-                  pointHighlightStroke: 'rgba(220,220,220,1)',
-                  data: [netto_d_a, netto_c_a, netto_b_a, netto_a_a] // Data for 'Nota A'
-              }
-          ]
-      };
+    $(function() {
+        var netto_d_a = {{ $netto_d_a }};
+        var netto_d_b = {{ $netto_d_b }};
+        var netto_c_a = {{ $netto_c_a }};
+        var netto_c_b = {{ $netto_c_b }};
+        var netto_b_a = {{ $netto_b_a }};
+        var netto_b_b = {{ $netto_b_b }};
+        var netto_a_a = {{ $netto_a_a }};
+        var netto_a_b = {{ $netto_a_b }};
 
-      var barChartCanvas = $('#barChart').get(0).getContext('2d');
-      var barChartData = $.extend(true, {}, data);
+        var ticksStyle = {
+            fontColor: '#495057',
+            fontStyle: 'bold'
+        }
 
-      var barChartOptions = {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-              x: {
-                  title: {
-                      display: true,
-                      text: 'Grade' // Add X-axis title
-                  }
-              },
-              y: {
-                  beginAtZero: true,
-                  title: {
-                      display: true,
-                      text: 'Kg' // Add Y-axis title
-                  },
-                  ticks: {
-                      callback: function(value) {
-                          return value + ' Kg'; // Add 'Kg' to the Y-axis values
-                      }
-                  }
-              }
-          },
-          plugins: {
-              tooltip: {
-                  enabled: true, // Enable tooltips (default is true, but for clarity)
-                  callbacks: {
-                      label: function(tooltipItem) {
-                          return tooltipItem.dataset.label + ': ' + tooltipItem.raw + ' Kg'; // Custom tooltip text
-                      }
-                  }
-              }
-          },
-          datasetFill: false
-      };
+        var mode = 'index'
+        var intersect = true
 
-      new Chart(barChartCanvas, {
-          type: 'bar',
-          data: barChartData,
-          options: barChartOptions
-      });
-  });
+        var $salesChart = $('#sales-chart')
+        // eslint-disable-next-line no-unused-vars
+        var salesChart = new Chart($salesChart, {
+            type: 'bar',
+            data: {
+                labels: ['D', 'C', 'B', 'A'],
+                datasets: [{
+                        backgroundColor: '#007bff',
+                        borderColor: '#007bff',
+                        data: [netto_d_a, netto_c_a, netto_b_a, netto_a_a]
+                    },
+                    {
+                        backgroundColor: '#ced4da',
+                        borderColor: '#ced4da',
+                        data: [netto_d_b, netto_c_b, netto_b_b, netto_a_b]
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    mode: mode,
+                    intersect: intersect
+                },
+                hover: {
+                    mode: mode,
+                    intersect: intersect
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        gridLines: {
+                            display: true,
+                            lineWidth: '4px',
+                            color: 'rgba(0, 0, 0, .2)',
+                            zeroLineColor: 'transparent'
+                        },
+                        ticks: $.extend({
+
+                            beginAtZero: true,
+
+                            // Include a dollar sign in the ticks
+                            callback: function(value) {
+                                return value + ' Kg'; // Add 'Kg' to each tick value
+                            }
+
+                        }, ticksStyle)
+                    }],
+                    xAxes: [{
+                        display: true,
+                        gridLines: {
+                            display: true
+                        },
+                        ticks: ticksStyle
+                    }]
+                }
+            }
+        })
+    })
+</script>
+<script>
+    $(function() {
+        var netto_d_a = {{ $netto_d_a }};
+        var netto_d_b = {{ $netto_d_b }};
+        var netto_c_a = {{ $netto_c_a }};
+        var netto_c_b = {{ $netto_c_b }};
+        var netto_b_a = {{ $netto_b_a }};
+        var netto_b_b = {{ $netto_b_b }};
+        var netto_a_a = {{ $netto_a_a }};
+        var netto_a_b = {{ $netto_a_b }};
+
+        var data = {
+            labels: ['Grade D', 'Grade C', 'Grade B', 'Grade A'], // Updated labels for clarity
+            datasets: [{
+                    label: 'Nota A',
+                    backgroundColor: 'rgba(60,141,188,0.9)', // Keep a distinct color
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    pointRadius: false,
+                    pointColor: '#3b8bba',
+                    pointStrokeColor: 'rgba(60,141,188,1)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data: [netto_d_a, netto_c_a, netto_b_a, netto_a_a]
+                },
+                {
+                    label: 'Nota B',
+                    backgroundColor: 'rgba(210, 214, 222, 1)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: [netto_d_b, netto_c_b, netto_b_b, netto_a_b]
+                }
+            ]
+        };
+
+        var barChartCanvas = $('#barChart').get(0).getContext('2d');
+        var barChartData = $.extend(true, {}, data);
+
+        var barChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Grade' // Add X-axis title
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Kg' // Add Y-axis title
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value + ' Kg'; // Add 'Kg' to the Y-axis values
+                        }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    enabled: true, // Enable tooltips (default is true, but for clarity)
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.dataset.label + ': ' + tooltipItem.raw +
+                                ' Kg'; // Custom tooltip text
+                        }
+                    }
+                }
+            },
+            datasetFill: false
+        };
+
+        new Chart(barChartCanvas, {
+            type: 'bar',
+            data: barChartData,
+            options: barChartOptions
+        });
+    });
 </script>
 
 
