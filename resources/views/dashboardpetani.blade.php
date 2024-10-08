@@ -106,7 +106,7 @@
                             <div class="info-box-content">
                                 <span class="info-box-text">Hutang</span>
                                 <span
-                                    class="info-box-number">{{ 'Rp. ' . number_format($remainingHutang, 0, ',', '.') }}</span>
+                                    class="info-box-number">{{ 'Rp. ' . number_format($sisahutang, 0, ',', '.') }}</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
@@ -120,7 +120,7 @@
                             <div class="info-box-content">
                                 <span class="info-box-text">Hasil Bersih</span>
                                 <span
-                                    class="info-box-number">{{ 'Rp. ' . number_format($totalbersih - $remainingHutang, 0, ',', '.') }}</span>
+                                    class="info-box-number">{{ 'Rp. ' . number_format($totalbersih - $sisahutang, 0, ',', '.') }}</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
@@ -447,7 +447,7 @@
 <script>
     $(function() {
         // Get the remaining hutang passed from the controller
-        var remainingHutang = {{ $remainingHutang ?? 0 }};
+        var remainingHutang = {{ $sisahutang ?? 0 }};
         var jumlahbersih = {{ $totalbersih ?? 0 }};
 
         var donutData = {
