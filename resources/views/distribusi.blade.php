@@ -16,15 +16,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
-<!--
-`body` tag options:
 
-  Apply one or more of the following classes to to the body tag
-  to get the desired effect
-
-  * sidebar-collapse
-  * sidebar-mini
--->
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -314,6 +306,11 @@
             <div class="card">
                 <!-- /.card-header -->
                 <div class="card-body p-0">
+                    <div class="card-header">
+                        <button onclick="window.location.href=''" class="btn btn-primary">
+                            <i class="nav-icon fas fa-plus"></i>
+                        </button>                                
+                    </div>
                     <div class="table-responsive">
                         <table class="table m-0">
                             <thead>
@@ -330,34 +327,30 @@
                             </thead>
                             <tbody>
                                 @foreach ($data as $rekap)
-                                
                                 <tr>
-                                    <td><a
-                                            href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim) }}">{{
-                                            $rekap->id_rekap }}</a>
+                                    <td>
+                                        <a href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim) }}">
+                                            {{ $rekap->id_rekap }}
+                                        </a>
                                     </td>
                                     <td>{!! $rekap->periode !!}</td>
                                     <td>{!! $rekap->status !!}</td>
-                                    <td>{{ $rekap->tgl_diterima ?
-                                        \Carbon\Carbon::parse($rekap->tgl_diterima)->format('d-m-Y') : '' }}
-                                    </td>
-                                    <td>{{ $rekap->tgl_diproses ?
-                                        \Carbon\Carbon::parse($rekap->tgl_diproses)->format('d-m-Y') : '' }}
-                                    </td>
-                                    <td>{{ $rekap->tgl_ditolak ?
-                                        \Carbon\Carbon::parse($rekap->tgl_ditolak)->format('d-m-Y') : '' }}
-                                    </td>
+                                    <td>{{ $rekap->tgl_diterima ? \Carbon\Carbon::parse($rekap->tgl_diterima)->format('d-m-Y') : '' }}</td>
+                                    <td>{{ $rekap->tgl_diproses ? \Carbon\Carbon::parse($rekap->tgl_diproses)->format('d-m-Y') : '' }}</td>
+                                    <td>{{ $rekap->tgl_ditolak ? \Carbon\Carbon::parse($rekap->tgl_ditolak)->format('d-m-Y') : '' }}</td>
                                     <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
                                     <td>
-                                        <a href="{{ url('/formdistribusi?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim) }}"
-                                            class="btn btn-block btn-success {{ $rekap->status == 'Diterima' ? 'disabled' : '' }}">
+                                        <a href="{{ $rekap->tgl_ditolak ? '#' : url('/formdistribusi?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim) }}"
+                                        class="btn btn-block btn-success {{ $rekap->tgl_ditolak ? 'disabled' : '' }}"
+                                        onclick="{{ $rekap->tgl_ditolak ? 'event.preventDefault();' : '' }}">
                                             <i class="nav-icon fas fa-edit"></i>
                                         </a>
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
-
+                            
+                            
                             <tfoot>
                                 <th></th>
                                 <th></th>
@@ -366,6 +359,7 @@
                                 <th></th>
                                 <th></th>
                                 <th>{{ 'Rp. ' . number_format($totalpengeluaran, 0, ',', '.') }}</th>
+                                <th></th>
                             </tfoot>
                         </table>
                     </div>

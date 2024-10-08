@@ -148,7 +148,6 @@
                             <div class="card-header border-0">
                                 <div class="d-flex justify-content-between">
                                     <h3 class="card-title">Netto</h3>
-                                    <a href="javascript:void(0);">View Report</a>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -156,12 +155,6 @@
                                     <p class="d-flex flex-column">
                                         <span class="text-bold text-lg"><strong>{{ $totalnetto }}</strong> Kg</span>
                                         <span>Berdasarkan Grade</span>
-                                    </p>
-                                    <p class="ml-auto d-flex flex-column text-right">
-                                        <span class="text-success">
-                                            <i class="fas fa-arrow-up"></i> 33.1%
-                                        </span>
-                                        <span class="text-muted">Since last month</span>
                                     </p>
                                 </div>
                                 <!-- /.d-flex -->
@@ -506,7 +499,7 @@
             ],
             datasets: [{
                 data: [gradeD, gradeC, gradeB, gradeA],
-                backgroundColor: ['#00a65a', '#f56954', '#f39c12', '#00c0ef', ]
+                backgroundColor: [  '#00a65a','#f56954','#f39c12','#00c0ef',]
             }]
         };
 
