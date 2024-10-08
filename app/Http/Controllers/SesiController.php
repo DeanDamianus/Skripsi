@@ -260,22 +260,31 @@ class SesiController extends Controller
     }
 
     public function updateParameter(Request $request)
-    {
-        $year = $request->input('tahun', date('Y'));
+{
+    $year = $request->input('tahun', date('Y'));
+    $id = $request->input('id'); // Get the ID for the specific row to update
 
-        // Update the parameter in the database
+    // Update the bunga_hutang for all rows
+    DB::table('parameter_2024')
+        ->update([
+            'bunga_hutang' => $request->input('bunga_hutang') / 100,
+        ]);
+
+    // Optionally update biaya_jual and naik_turun for the specific row if provided
+    if ($id) {
         DB::table('parameter_2024')
-            ->where('id', $request->input('id'))
+            ->where('id', $id)
             ->update([
                 'biaya_jual' => $request->input('biaya_jual'),
                 'naik_turun' => $request->input('naik_turun'),
-                'bunga_hutang' => $request->input('bunga_hutang') / 100,
             ]);
-
-        return redirect()
-            ->route('parameter', ['tahun' => $year])
-            ->with('success', 'Parameter berhasil diubah!');
     }
+
+    return redirect()
+        ->route('parameter', ['tahun' => $year])
+        ->with('success', 'Parameter berhasil diubah!');
+}
+
 
     public function input(Request $request)
     {
@@ -1377,7 +1386,7 @@ class SesiController extends Controller
     public function hutangdashboard(Request $request)
     {
         $year = $request->input('year', date('Y'));
-
+        $idMusim = $request->input('id_musim');
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
         $petaniInHutang = DB::table('hutang_2024')
@@ -1385,6 +1394,7 @@ class SesiController extends Controller
             ->get();
         
         return view('hutang_admin', [
+            'idmusim' => $idMusim,
             'selectedYear' => $year,
             'musim' => $musim,
             'currentMusim' => $musimList,

@@ -35,14 +35,28 @@ $petaniInHutang = [];
 while ($userRow = mysqli_fetch_assoc($petaniInHutangResult)) {
     $petaniInHutang[] = $userRow;
 }
-
+$idMusim = isset($_GET['id_musim']) ? intval($_GET['id_musim']) : 1;
 // Query to get hutang_2024 data
-$query = "SELECT hutang_2024.id_hutang, hutang_2024.id_petani, hutang_2024.tanggal_hutang, hutang_2024.bon, hutang_2024.cicilan, hutang_2024.tanggal_lunas, users.name 
-          FROM hutang_2024
-          JOIN users ON hutang_2024.id_petani = users.id
-          WHERE users.role = 'petani'";
+$query = "SELECT 
+        hutang_2024.id_hutang, 
+        hutang_2024.id_petani, 
+        hutang_2024.tanggal_hutang, 
+        hutang_2024.bon, 
+        hutang_2024.cicilan, 
+        hutang_2024.tanggal_lunas, 
+        users.name,
+        parameter_2024.* -- Select all columns from parameter_2024
+    FROM 
+        hutang_2024
+    JOIN 
+        users ON hutang_2024.id_petani = users.id
+    JOIN 
+        parameter_2024 ON parameter_2024.id_musim = $idMusim
+    WHERE 
+        users.role = 'petani'";
 
 $result = mysqli_query($con, $query);
+
 
 if (!$result) {
     die('Query Error: ' . mysqli_error($con));
@@ -98,7 +112,7 @@ if (!$result) {
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item d-none d-sm-inline-block">
+                {{-- <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
                         <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
                             {{ $selectedYear }}
@@ -112,7 +126,7 @@ if (!$result) {
                             @endforeach
                         </div>
                     </div>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                         <i class="fas fa-expand-arrows-alt"></i>
