@@ -218,6 +218,13 @@
                                                     required>
                                             </div>
 
+                                            <div class="form-group">
+                                                <label for="bunga_hutang">Bunga Hutang (%)</label>
+                                                <input type="number" name="bunga_hutang" class="form-control"
+                                                       id="bunga_hutang" value="{{ $parameter->bunga_hutang * 100 }}" step="0.01"
+                                                       required>
+                                            </div>
+
                                             <div class="form-group mb-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" name="terms" class="custom-control-input"

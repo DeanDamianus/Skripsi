@@ -269,6 +269,7 @@ class SesiController extends Controller
             ->update([
                 'biaya_jual' => $request->input('biaya_jual'),
                 'naik_turun' => $request->input('naik_turun'),
+                'bunga_hutang' => $request->input('bunga_hutang') / 100,
             ]);
 
         return redirect()
@@ -611,35 +612,38 @@ class SesiController extends Controller
         ->select('bon', 'cicilan', 'tanggal_hutang', 'tanggal_lunas')
         ->where('id_petani', $userId)
         ->first();
+        $bon = 0;
+        $cicilan = 0;
+        $formatted_tanggal_hutang = '-';
+        $tanggal_lunas = '-';
+        $totalbon = 0;
+        $sisahutang = 0;
+
+        // Proceed with calculations only if hutang is found
         if ($hutang) {
             // Extract values from the retrieved record
             $bon = $hutang->bon;
             $cicilan = $hutang->cicilan;
-        
+
             // Calculate the bunga hutang
             $tanggal_hutang = Carbon::createFromFormat('Y-m-d', $hutang->tanggal_hutang);
             $current_tanggal = Carbon::now(); // tanggal hari ini
             $bunga = 0.25; // 25%
-        
+
             // Calculate the difference in years and the interest (bunga hutang)
             $diff_in_years = $tanggal_hutang->diffInDays($current_tanggal) / 365;
             $bunga_hutang = $diff_in_years * $bunga * $bon; // Assuming interest applies to the 'bon' amount
-        
+
             // Calculate bunga hutang as a percentage
             $bunga_hutang_percentage = ($bunga_hutang / $bon) * 100;
-        
+
             // Formatting the dates
             $formatted_tanggal_hutang = $tanggal_hutang->format('d-m-Y');
             $tanggal_lunas = !empty($hutang->tanggal_lunas) ? Carbon::createFromFormat('Y-m-d', $hutang->tanggal_lunas)->format('d-m-Y') : '-';
-        
+
             // Calculate total bunga (including original 'bon' amount)
             $totalbon = $bon + $bon * ($bunga_hutang_percentage / 100); // Convert percentage to decimal for calculation
             $sisahutang = $totalbon - $cicilan;
-        
-            // Now you can use $formatted_tanggal_hutang, $tanggal_lunas, $totalbon, and $sisahutang as needed
-        } else {
-            // Handle the case where no records are found for the specified id_petani
-            return redirect()->back()->with('error', 'Data hutang tidak ditemukan.');
         }
         //ini diperbaiki, karena remainign adalah sisa, dan ga dynamis
 
