@@ -970,129 +970,166 @@ class SesiController extends Controller
             ->where('rekap_2024.id_musim', $musim->id)
             ->get();
 
-        $harga1_A = DB::table('rekap_2024')
+            $harga1_A = DB::table('rekap_2024')
             ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
             ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
             ->where('rekap_2024.periode', 'LIKE', '%1-A%')
             ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
         
-
         $harga1_B = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%1-B%')
-            ->sum(DB::raw('harga * netto'));
-    
-
+            ->where('rekap_2024.periode', 'LIKE', '%1-B%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga2_A = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%2-A%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%2-A%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga2_B = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%2-B%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%2-B%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga3_A = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%3-A%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%3-A%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga3_B = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%3-B%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%3-B%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga4_A = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%4-A%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%4-A%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga4_B = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%4-B%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%4-B%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga5_A = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%5-A%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%5-A%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga5_B = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%5-B%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%5-B%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga6_A = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%6-A%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%6-A%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga6_B = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%6-B%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%6-B%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga7_A = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%7-A%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%7-A%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga7_B = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%7-B%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%7-B%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga8_A = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%8-A%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%8-A%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
         $harga8_B = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%8-B%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%8-B%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
         $harga9_A = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%9-A%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%9-A%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
         $harga9_B = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%9-B%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%9-B%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
         $harga10_A = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%10-A%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%10-A%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
         $harga10_B = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%10-B%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%10-B%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
         $harga11_A = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%11-A%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%11-A%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
         $harga11_B = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%11-B%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%11-B%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
         $harga12_A = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%12-A%')
-            ->sum('harga');
-
+            ->where('rekap_2024.periode', 'LIKE', '%12-A%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
         $harga12_B = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('periode', 'LIKE', '%12-B%')
-            ->sum('harga');
+            ->where('rekap_2024.periode', 'LIKE', '%12-B%')
+            ->sum(DB::raw('rekap_2024.harga * rekap_2024.netto'));
+        
 
         return view('dashboard-admin', [
             'data' => $data,

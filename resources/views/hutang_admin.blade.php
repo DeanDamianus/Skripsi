@@ -87,7 +87,8 @@ if (!$result) {
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ url('/owner') }}" class="nav-link">Home</a>
@@ -104,10 +105,10 @@ if (!$result) {
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             @foreach ($currentMusim as $season)
-                            <div class="dropdown-divider"></div>
-                            <a href="{{ url('/hutang-admin?year=' . $season->tahun) }}" class="dropdown-item">
-                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
-                            </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ url('/hutang-admin?year=' . $season->tahun) }}" class="dropdown-item">
+                                    <i class="fas fa-calendar"></i> {{ $season->tahun }}
+                                </a>
                             @endforeach
                         </div>
                     </div>
@@ -138,9 +139,9 @@ if (!$result) {
                     </div>
                     <div class="info">
                         @if (Auth::check())
-                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                            <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                         @else
-                        <a href="#" class="d-block">Guest</a>
+                            <a href="#" class="d-block">Guest</a>
                         @endif
                     </div>
                 </div>
@@ -296,43 +297,42 @@ if (!$result) {
                                         <tbody>
                                             <?php
                                             use Carbon\Carbon;
-                                        
+                                            
                                             while ($row = mysqli_fetch_assoc($result)) {
                                                 // Formatting the date
                                                 $tanggal_hutang = Carbon::createFromFormat('Y-m-d', $row['tanggal_hutang']);
                                                 $current_tanggal = Carbon::now(); // tanggal hari ini
                                                 $bunga = 0.25; // 25%
-                                        
+                                            
                                                 // Calculate the difference in years and the interest (bunga hutang)
                                                 $diff_in_years = $tanggal_hutang->diffInDays($current_tanggal) / 365;
                                                 $bunga_hutang = $diff_in_years * $bunga * $row['bon']; // Assuming interest applies to the 'bon' amount
-                                        
+                                            
                                                 // Calculate bunga hutang as a percentage
                                                 $bunga_hutang_percentage = ($bunga_hutang / $row['bon']) * 100;
-
+                                            
                                                 // Formatting the dates
                                                 $formatted_tanggal_hutang = $tanggal_hutang->format('d-m-Y');
                                                 $tanggal_lunas = !empty($row['tanggal_lunas']) ? Carbon::createFromFormat('Y-m-d', $row['tanggal_lunas'])->format('d-m-Y') : '-';
-
+                                            
                                                 // Calculate total bunga (including original 'bon' amount)
-                                                $totalbon = $row['bon'] + ($row['bon'] * ($bunga_hutang_percentage / 100)); // Convert percentage to decimal for calculation
+                                                $totalbon = $row['bon'] + $row['bon'] * ($bunga_hutang_percentage / 100); // Convert percentage to decimal for calculation
                                                 $sisahutang = $totalbon - $row['cicilan'];
                                                 // Formatting numbers
                                                 $bonFormatted = number_format($row['bon'], 0, ',', '.');
                                                 $cicilanFormatted = number_format($row['cicilan'], 0, ',', '.');
                                                 $totalbonFormatted = number_format($totalbon, 0, ',', '.');
                                                 $sisahutangformatted = number_format($sisahutang, 0, ',', '.');
-                                                
+                                            
                                                 // Display bunga hutang percentage without comma and decimal
                                                 $bungaFormatted = ceil($bunga_hutang_percentage);
-                                                
-                                        
+                                            
                                                 echo '<tr>';
                                                 echo '<td>' . $row['id_hutang'] . '</td>';
                                                 echo '<td>' . htmlspecialchars($row['name']) . '</td>';
                                                 echo '<td>' . htmlspecialchars($formatted_tanggal_hutang) . '</td>';
                                                 echo '<td>Rp. ' . htmlspecialchars($bonFormatted) . '</td>';
-                                                echo '<td>' . htmlspecialchars($bungaFormatted) . ' %</td>'; 
+                                                echo '<td>' . htmlspecialchars($bungaFormatted) . ' %</td>';
                                                 echo '<td>Rp. ' . htmlspecialchars($totalbonFormatted) . '</td>';
                                                 echo '<td>Rp. ' . htmlspecialchars($cicilanFormatted) . '</td>';
                                                 echo '<td><strong>Rp. ' . htmlspecialchars($sisahutangformatted) . '</strong></td>';
@@ -347,11 +347,13 @@ if (!$result) {
                                                 //         </form>
                                                 //       </td>';
                                                 echo '<td>
-                                                    <a href="' . route('historyhutang', ['id_hutang' => $row['id_hutang']]) . '" class="btn btn-success btn-sm">
-                                                        <i class="fa fa-history"></i>
-                                                    </a>
-                                                </td>';
-
+                                                                                                <a href="' .
+                                                    route('historyhutang', ['id_hutang' => $row['id_hutang']]) .
+                                                    '" class="btn btn-success btn-sm">
+                                                                                                    <i class="fa fa-history"></i>
+                                                                                                </a>
+                                                                                            </td>';
+                                            
                                                 echo '</tr>';
                                             }
                                             ?>
@@ -398,8 +400,8 @@ if (!$result) {
                                                             <span class="input-group-text"><i
                                                                     class="far fa-calendar-alt"></i></span>
                                                         </div>
-                                                        <input type="date" name="tanggal_hutang" class="form-control"
-                                                            required>
+                                                        <input type="date" name="tanggal_hutang"
+                                                            class="form-control" required>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -409,8 +411,8 @@ if (!$result) {
                                                             <span class="input-group-text"><i
                                                                     class="nav-icon fas fa-hand-holding-usd"></i></span>
                                                         </div>
-                                                        <input type="number" name="bon" class="form-control"
-                                                            id='bon-input' required>
+                                                        <input type="text" name="bon" class="form-control"
+                                                            id="bon-input" required>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="width: 100%; justify-content: center;">
@@ -437,16 +439,14 @@ if (!$result) {
                                                     <label>ID Hutang:</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i
-                                                                    class="far fa-user"></i></span>
+                                                            <span class="input-group-text"><i class="far fa-user"></i></span>
                                                         </div>
                                                         <select name="id_hutang" class="form-control" required>
                                                             <option value="" selected disabled>Pilih Hutang</option>
                                                             @foreach ($petaniInHutang as $hutang)
-                                                            <option value="{{ $hutang['id_hutang'] }}">
-                                                                {{ $hutang['id_hutang'] . ' - ' . $hutang['id_petani'] .
-                                                                ' - ' . $hutang['name'] }}
-                                                            </option>
+                                                                <option value="{{ $hutang['id_hutang'] }}">
+                                                                    {{ $hutang['id_hutang'] . ' - ' . $hutang['id_petani'] . ' - ' . $hutang['name'] }}
+                                                                </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -455,17 +455,14 @@ if (!$result) {
                                                     <label>Jumlah Bayar</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i
-                                                                    class="nav-icon fas fa-hand-holding-usd"></i></span>
+                                                            <span class="input-group-text"><i class="nav-icon fas fa-hand-holding-usd"></i></span>
                                                         </div>
-                                                        <input type="number" name="jumlah_bayar" class="form-control"
-                                                            required>
+                                                        <input type="text" name="jumlah_bayar" class="form-control" id="jumlah-bayar-input" required>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="width: 100%; justify-content: center;">
                                                     <div class="col-12">
-                                                        <button type="submit"
-                                                            class="btn btn-success btn-block">Selesai</button>
+                                                        <button type="submit" class="btn btn-success btn-block">Selesai</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -534,15 +531,15 @@ if (!$result) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
     @endif
 
     @if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
     @endif
 
     <script>
@@ -564,6 +561,68 @@ if (!$result) {
             });
         });
     </script>
+    <script>
+        const bonInput = document.getElementById('bon-input');
+
+        bonInput.addEventListener('input', function(e) {
+            // Get the input value and remove all non-numeric characters except commas
+            let value = e.target.value.replace(/[^,\d]/g, '');
+
+            // Add thousands separators for better readability
+            const formatter = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+            });
+
+            // Format the value and set it back to the input field
+            e.target.value = value ? formatter.format(value.replace(/[^\d]/g, '')) : '';
+        });
+
+        // Convert the formatted value back to an integer before form submission
+        document.querySelector('form').addEventListener('submit', function() {
+            // Get the numeric value without currency symbols
+            let numericValue = bonInput.value.replace(/[^0-9]/g, '');
+
+            // Set the cleaned integer value back to the input
+            bonInput.value = numericValue;
+
+            // Log to verify the converted value
+            console.log('Value to be submitted:', bonInput.value);
+        });
+
+        
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('jumlah-bayar-input');
+    const form = input.closest('form'); // Find the closest form
+
+    input.addEventListener('input', function (e) {
+        // Remove non-numeric characters
+        let value = this.value.replace(/[^0-9]/g, '');
+
+        // Format as Rupiah
+        const formattedValue = formatRupiah(value);
+
+        // Update the input value with the formatted value
+        this.value = formattedValue;
+    });
+
+    form.addEventListener('submit', function (e) {
+        // Before submitting the form, remove the formatting
+        let rawValue = input.value.replace(/[^0-9]/g, ''); // Strip out non-numeric characters
+        input.value = rawValue; // Set the unformatted value to the input
+    });
+
+    function formatRupiah(value) {
+        // Convert to a number and format with commas
+        return 'Rp ' + value.replace(/\B(?=(\d{3})+(?!\d))/g, '.').replace(/^(Rp )?/, '');
+    }
+});
+
+    </script>
+    
 </body>
 
 </html>
