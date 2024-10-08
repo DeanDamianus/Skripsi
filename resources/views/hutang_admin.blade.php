@@ -316,7 +316,7 @@ if (!$result) {
                                                 // Formatting the date
                                                 $tanggal_hutang = Carbon::createFromFormat('Y-m-d', $row['tanggal_hutang']);
                                                 $current_tanggal = Carbon::now(); // tanggal hari ini
-                                                $bunga = 0.25; // 25%
+                                                $bunga = $row['bunga_hutang']; // 25%
                                             
                                                 // Calculate the difference in years and the interest (bunga hutang)
                                                 $diff_in_years = $tanggal_hutang->diffInDays($current_tanggal) / 365;
