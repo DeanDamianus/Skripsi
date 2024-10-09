@@ -311,8 +311,18 @@
                             <thead>
                                 <tr>
                                     <th>ID Keranjang</th>
-                                    <th>Periode</th>
-                                    <th>Status</th>
+                                    <th>
+                                        Periode
+                                        <a href="{{ url()->current() }}?sort=rekap_2024.periode&direction={{ request('direction') == 'asc' ? 'desc' : 'asc' }}&year={{ $selectedYear }}">
+                                            <i class="fas fa-sort"></i>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        Status 
+                                        <a href="{{ url()->current() }}?sort=distribusi_2024.status&direction={{ request('direction') == 'asc' ? 'desc' : 'asc' }}&year={{ $selectedYear }}">
+                                            <i class="fas fa-sort"></i>
+                                        </a>
+                                    </th>                                    
                                     <th>Diterima</th>
                                     <th>Diproses</th>
                                     <th>Ditolak</th>
@@ -347,8 +357,6 @@
                                 </tr>
                                 @endforeach
                             </tbody>
-                            
-                            
                             <tfoot>
                                 <th></th>
                                 <th></th>
@@ -361,8 +369,8 @@
                             </tfoot>
                         </table>
                     </div>
-                    <!-- /.table-responsive -->
                 </div>
+                
                 <!-- /.card-footer -->
             </div>
             <!-- /.container-fluid -->

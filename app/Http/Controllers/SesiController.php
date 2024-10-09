@@ -1449,110 +1449,98 @@ class SesiController extends Controller
     }
     //get untuk dashboard distribusi
     public function distribusidashboard(Request $request)
-    {
-        $year = $request->input('year', date('Y'));
-        $musim = DB::table('musim')->where('tahun', $year)->first();
-        $musimList = DB::table('musim')->get();
+{
+    $year = $request->input('year', date('Y'));
+    $musim = DB::table('musim')->where('tahun', $year)->first();
+    $musimList = DB::table('musim')->get();
 
-        $data = DB::table('users')
-    ->leftJoin('rekap_2024', function ($join) use ($musim) {
-        $join->on('users.id', '=', 'rekap_2024.id_petani')
-             ->where('rekap_2024.id_musim', $musim->id); // Filter by id_musim in the join
-    })
-    ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-    ->where('users.role', 'petani') // Filter users by role 'petani'
-    ->select(
-        'users.id',
-        'users.name',
-        DB::raw('SUM(rekap_2024.netto) as netto'),
-        DB::raw('MAX(rekap_2024.harga) as harga'),
-        DB::raw('SUM(rekap_2024.jual_luar) as jual_luar'),
-        'rekap_2024.id_rekap',
-        'rekap_2024.periode',
-        'distribusi_2024.tgl_diterima',
-        'distribusi_2024.tgl_diproses',
-        'distribusi_2024.tgl_ditolak',
-        'distribusi_2024.status',
-        'distribusi_2024.n_gudang',
-        'distribusi_2024.mobil_berangkat',
-        'distribusi_2024.mobil_pulang',
-        'distribusi_2024.nt_pabrik',
-        'distribusi_2024.kasut',
-        'distribusi_2024.transport_gudang',
-        'rekap_2024.id_petani',
-        'rekap_2024.id_musim'
-    )
-    ->where('rekap_2024.jual_luar', '!=', '1')
-    ->groupBy('users.id', 'users.name', 'rekap_2024.id_rekap', 'rekap_2024.periode', 'distribusi_2024.tgl_diterima', 'distribusi_2024.tgl_diproses', 'distribusi_2024.tgl_ditolak', 'distribusi_2024.status', 'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 'rekap_2024.id_petani', 'rekap_2024.id_musim') // Group by all necessary columns
-    ->orderByRaw("CASE WHEN rekap_2024.periode LIKE '%A%' THEN 0 ELSE 1 END, rekap_2024.periode ASC")
-    ->get();
+    // Get sorting parameters with default values for 'status' and 'asc'
+    $sort = $request->input('sort', 'distribusi_2024.status'); // Default sort by status
+    $direction = $request->input('direction', 'asc'); // Default direction is ascending
 
+    $data = DB::table('users')
+        ->leftJoin('rekap_2024', function ($join) use ($musim) {
+            $join->on('users.id', '=', 'rekap_2024.id_petani')
+                 ->where('rekap_2024.id_musim', $musim->id);
+        })
+        ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+        ->where('users.role', 'petani')
+        ->select(
+            'users.id',
+            'users.name',
+            DB::raw('SUM(rekap_2024.netto) as netto'),
+            DB::raw('MAX(rekap_2024.harga) as harga'),
+            DB::raw('SUM(rekap_2024.jual_luar) as jual_luar'),
+            'rekap_2024.id_rekap',
+            'rekap_2024.periode',
+            'distribusi_2024.tgl_diterima',
+            'distribusi_2024.tgl_diproses',
+            'distribusi_2024.tgl_ditolak',
+            'distribusi_2024.status',
+            'distribusi_2024.n_gudang',
+            'distribusi_2024.mobil_berangkat',
+            'distribusi_2024.mobil_pulang',
+            'distribusi_2024.nt_pabrik',
+            'distribusi_2024.kasut',
+            'distribusi_2024.transport_gudang',
+            'rekap_2024.id_petani',
+            'rekap_2024.id_musim'
+        )
+        ->where('rekap_2024.jual_luar', '!=', '1')
+        ->groupBy(
+            'users.id', 'users.name', 'rekap_2024.id_rekap', 'rekap_2024.periode', 
+            'distribusi_2024.tgl_diterima', 'distribusi_2024.tgl_diproses', 
+            'distribusi_2024.tgl_ditolak', 'distribusi_2024.status', 
+            'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 
+            'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 
+            'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 
+            'rekap_2024.id_petani', 'rekap_2024.id_musim'
+        )
+        ->orderBy($sort, $direction) // Apply sorting
+        ->get();
 
-
-        foreach ($data as $rekap) {
-            $rekap->pengeluaran = $rekap->n_gudang + $rekap->mobil_berangkat + $rekap->mobil_pulang + $rekap->nt_pabrik + $rekap->kasut + $rekap->transport_gudang;
-        }
-
-        $totalpengeluaran = $data->sum('pengeluaran');
-
-        $diterima = $data
-            ->filter(function ($rekap) {
-                return $rekap->status == 'Diterima';
-            })
-            ->count();
-
-        $diproses = $data
-            ->filter(function ($rekap) {
-                return $rekap->status == 'Diproses';
-            })
-            ->count();
-
-        $ditolak = $data
-            ->filter(function ($rekap) {
-                return $rekap->status == 'Dikembalikan';
-            })
-            ->count();
-
-        $dikirim = $data
-            ->filter(function ($rekap) {
-                return $rekap->status == '';
-            })
-            ->count();
-        $ulang = $data
-            ->filter(function ($rekap) {
-                return $rekap->status == 'Distribusi Ulang';
-            })
-            ->count();
-        
-        $belumproses = $dikirim + $ulang;
-
-        foreach ($data as $rekap) {
-            if ($rekap->status == 'Diterima') {
-                $rekap->status = '<span class="badge badge-success">Diterima</span>';
-            } elseif ($rekap->status == 'Diproses') {
-                $rekap->status = '<span class="badge badge-warning">Diproses</span>';
-            } elseif ($rekap->status == 'Dikembalikan') {
-                $rekap->status = '<span class="badge badge-danger">Dikembalikan</span>';
-            } elseif ($rekap->status == '') {
-                $rekap->status = '<span class="badge badge-info">Belum Diproses</span>';
-            } elseif ($rekap->status == 'Distribusi Ulang') {
-                $rekap->status = '<span class="badge badge-dark">Distribusi Ulang</span>';
-            }
-        }
-
-        return view('distribusi', [
-            'data' => $data,
-            'dikirim' => $dikirim,
-            'belumproses' => $belumproses,
-            'diterima' => $diterima,
-            'diproses' => $diproses,
-            'ditolak' => $ditolak,
-            'totalpengeluaran' => $totalpengeluaran,
-            'selectedYear' => $year,
-            'musim' => $musimList,
-            'currentMusim' => $musim,
-        ]);
+    // Calculate the pengeluaran for each rekap
+    foreach ($data as $rekap) {
+        $rekap->pengeluaran = $rekap->n_gudang + $rekap->mobil_berangkat + $rekap->mobil_pulang + $rekap->nt_pabrik + $rekap->kasut + $rekap->transport_gudang;
     }
+
+    $totalpengeluaran = $data->sum('pengeluaran');
+
+    $diterima = $data->filter(fn($rekap) => $rekap->status == 'Diterima')->count();
+    $diproses = $data->filter(fn($rekap) => $rekap->status == 'Diproses')->count();
+    $ditolak = $data->filter(fn($rekap) => $rekap->status == 'Dikembalikan')->count();
+    $dikirim = $data->filter(fn($rekap) => $rekap->status == '')->count();
+    $ulang = $data->filter(fn($rekap) => $rekap->status == 'Distribusi Ulang')->count();
+    $belumproses = $dikirim + $ulang;
+
+    // Format the status values with badges
+    foreach ($data as $rekap) {
+        $rekap->status = match ($rekap->status) {
+            'Diterima' => '<span class="badge badge-success">Diterima</span>',
+            'Diproses' => '<span class="badge badge-warning">Diproses</span>',
+            'Dikembalikan' => '<span class="badge badge-danger">Dikembalikan</span>',
+            'Distribusi Ulang' => '<span class="badge badge-dark">Distribusi Ulang</span>',
+            default => '<span class="badge badge-info">Belum Diproses</span>',
+        };
+    }
+
+    return view('distribusi', [
+        'data' => $data,
+        'dikirim' => $dikirim,
+        'belumproses' => $belumproses,
+        'diterima' => $diterima,
+        'diproses' => $diproses,
+        'ditolak' => $ditolak,
+        'totalpengeluaran' => $totalpengeluaran,
+        'selectedYear' => $year,
+        'musim' => $musimList,
+        'currentMusim' => $musim,
+        'sort' => $sort,
+        'direction' => $direction,
+    ]);
+}
+
+
 
     public function pelunasan(Request $request)
     {
