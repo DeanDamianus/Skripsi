@@ -310,6 +310,7 @@
                         <table class="table m-0">
                             <thead>
                                 <tr>
+                                    <th></th>
                                     <th>ID Keranjang</th>
                                     <th>
                                         Periode
@@ -322,7 +323,7 @@
                                         <a href="{{ url()->current() }}?sort=distribusi_2024.status&direction={{ request('direction') == 'asc' ? 'desc' : 'asc' }}&year={{ $selectedYear }}">
                                             <i class="fas fa-sort"></i>
                                         </a>
-                                    </th>                                    
+                                    </th>
                                     <th>Diterima</th>
                                     <th>Diproses</th>
                                     <th>Ditolak</th>
@@ -331,46 +332,57 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $rekap)
-                                <tr>
-                                    <td>
-                                        <a href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim) }}">
-                                            {{ $rekap->id_rekap }}
-                                        </a>
-                                    </td>
-                                    <td>{!! $rekap->periode !!}</td>
-                                    <td>{!! $rekap->status !!}</td>
-                                    <td>{{ $rekap->tgl_diterima ? \Carbon\Carbon::parse($rekap->tgl_diterima)->format('d-m-Y') : '' }}</td>
-                                    <td>{{ $rekap->tgl_diproses ? \Carbon\Carbon::parse($rekap->tgl_diproses)->format('d-m-Y') : '' }}</td>
-                                    <td>{{ $rekap->tgl_ditolak ? \Carbon\Carbon::parse($rekap->tgl_ditolak)->format('d-m-Y') : '' }}</td>
-                                    <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
-                                    <td>
-                                        <a href="{{ $rekap->tgl_ditolak ? url('/distribusitolak?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim. '&id_petani=' . $rekap->id) : url('/formdistribusi?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim. '&id_petani=' . $rekap->id) }}"
-                                            class="btn btn-block {{ $rekap->tgl_ditolak ? 'btn-danger' : 'btn-success' }}">
-                                             @if ($rekap->tgl_ditolak)
-                                                 <i class="nav-icon fas fa-undo"></i> 
-                                             @else
-                                                 <i class="nav-icon fas fa-edit"></i> 
-                                             @endif
-                                         </a>
-                                    </td>
-                                </tr>
+                                @foreach ($data->groupBy('periode') as $periode => $records)
+                                    <tr class="periode-header" data-target="periode-{{ $loop->index }}" style="cursor: pointer;">
+                                        <td>
+                                            <input type="checkbox" class="periode-checkbox" data-target="periode-{{ $loop->index }}">
+                                        </td>
+                                        <td colspan="8">
+                                            <strong>{{ $periode }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tbody id="periode-{{ $loop->index }}" class="periode-body">
+                                        @foreach ($records as $rekap)
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="child-checkbox periode-{{ $loop->parent->index }}">
+                                                </td>
+                                                <td>
+                                                    <a href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim) }}">
+                                                        {{ $rekap->id_rekap }}
+                                                    </a>
+                                                </td>
+                                                <td>{!! $rekap->periode !!}</td>
+                                                <td>{!! $rekap->status !!}</td>
+                                                <td>{{ $rekap->tgl_diterima ? \Carbon\Carbon::parse($rekap->tgl_diterima)->format('d-m-Y') : '' }}</td>
+                                                <td>{{ $rekap->tgl_diproses ? \Carbon\Carbon::parse($rekap->tgl_diproses)->format('d-m-Y') : '' }}</td>
+                                                <td>{{ $rekap->tgl_ditolak ? \Carbon\Carbon::parse($rekap->tgl_ditolak)->format('d-m-Y') : '' }}</td>
+                                                <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
+                                                <td>
+                                                    <a href="{{ $rekap->tgl_ditolak ? url('/distribusitolak?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim. '&id_petani=' . $rekap->id) : url('/formdistribusi?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim. '&id_petani=' . $rekap->id) }}"
+                                                        class="btn btn-block {{ $rekap->tgl_ditolak ? 'btn-danger' : 'btn-success' }}">
+                                                         @if ($rekap->tgl_ditolak)
+                                                             <i class="nav-icon fas fa-undo"></i> 
+                                                         @else
+                                                             <i class="nav-icon fas fa-edit"></i> 
+                                                         @endif
+                                                     </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
                                 @endforeach
                             </tbody>
                             <tfoot>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th>{{ 'Rp. ' . number_format($totalpengeluaran, 0, ',', '.') }}</th>
-                                <th></th>
+                                <tr>
+                                    <th colspan="6"></th>
+                                    <th>{{ 'Rp. ' . number_format($totalpengeluaran, 0, ',', '.') }}</th>
+                                    <th colspan="2"></th>
+                                </tr>
                             </tfoot>
                         </table>
                     </div>
-                </div>
-                
+                </div>         
                 <!-- /.card-footer -->
             </div>
             <!-- /.container-fluid -->
@@ -420,6 +432,33 @@
     <script src="dist/js/pages/dashboard3.js"></script>
     <script src="dist/js/pages/dashboard2.js"></script>
     <script src="plugins/chart.js/Chart.min.js"></script>
+    <script>
+        document.querySelectorAll('.periode-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const tbody = document.getElementById(targetId);
+                if (tbody) {
+                    tbody.classList.toggle('d-none'); // Toggle the 'd-none' class to hide/show
+                }
+            });
+        });
+    
+        // Ensure all bodies are expanded by default by removing 'd-none' class
+        document.querySelectorAll('.periode-body').forEach(body => {
+            body.classList.remove('d-none');
+        });
+    
+        // Handle checkbox functionality
+        document.querySelectorAll('.periode-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const targetClass = this.getAttribute('data-target');
+                const childCheckboxes = document.querySelectorAll('.child-checkbox.' + targetClass);
+                childCheckboxes.forEach(childCheckbox => {
+                    childCheckbox.checked = this.checked;
+                });
+            });
+        });
+    </script>
     
 </body>
 
