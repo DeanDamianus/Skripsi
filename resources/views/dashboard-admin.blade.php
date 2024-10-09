@@ -305,7 +305,7 @@
 
                         <!-- /.card -->
                     </div>
-                    <div class="col-6 lg-1">
+                    {{-- <div class="col-6 lg-1">
 
                         <div class="card card-info">
                             <div class="card-header border-0">
@@ -341,7 +341,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> --}}
                     <div class="col-md-6">
                         <div class="card card-success">
                             <div class="card-header">

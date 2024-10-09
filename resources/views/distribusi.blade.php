@@ -306,11 +306,6 @@
             <div class="card">
                 <!-- /.card-header -->
                 <div class="card-body p-0">
-                    <div class="card-header">
-                        <button onclick="window.location.href=''" class="btn btn-primary">
-                            <i class="nav-icon fas fa-plus"></i>
-                        </button>                                
-                    </div>
                     <div class="table-responsive">
                         <table class="table m-0">
                             <thead>
@@ -340,11 +335,14 @@
                                     <td>{{ $rekap->tgl_ditolak ? \Carbon\Carbon::parse($rekap->tgl_ditolak)->format('d-m-Y') : '' }}</td>
                                     <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
                                     <td>
-                                        <a href="{{ $rekap->tgl_ditolak ? '#' : url('/formdistribusi?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim) }}"
-                                        class="btn btn-block btn-success {{ $rekap->tgl_ditolak ? 'disabled' : '' }}"
-                                        onclick="{{ $rekap->tgl_ditolak ? 'event.preventDefault();' : '' }}">
-                                            <i class="nav-icon fas fa-edit"></i>
-                                        </a>
+                                        <a href="{{ $rekap->tgl_ditolak ? url('/distribusitolak?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim. '&id_petani=' . $rekap->id) : url('/formdistribusi?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim. '&id_petani=' . $rekap->id) }}"
+                                            class="btn btn-block {{ $rekap->tgl_ditolak ? 'btn-danger' : 'btn-success' }}">
+                                             @if ($rekap->tgl_ditolak)
+                                                 <i class="nav-icon fas fa-undo"></i> 
+                                             @else
+                                                 <i class="nav-icon fas fa-edit"></i> 
+                                             @endif
+                                         </a>
                                     </td>
                                 </tr>
                                 @endforeach

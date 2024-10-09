@@ -1462,14 +1462,40 @@ class SesiController extends Controller
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
 
-        $data = DB::table('rekap_2024')
-            ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-            ->where('rekap_2024.id_musim', $musim->id)
-            ->where('rekap_2024.jual_luar', '!=', '1')
-            ->select('rekap_2024.id_rekap', 'rekap_2024.periode', 'distribusi_2024.tgl_diterima', 'distribusi_2024.tgl_diproses', 'distribusi_2024.tgl_ditolak', 'distribusi_2024.status', 'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 'rekap_2024.id_petani', 'rekap_2024.id_musim')
-            ->orderByRaw("CASE WHEN rekap_2024.periode LIKE '%A%' THEN 0 ELSE 1 END, rekap_2024.periode ASC")
-            ->get();
-        
+        $data = DB::table('users')
+    ->leftJoin('rekap_2024', function ($join) use ($musim) {
+        $join->on('users.id', '=', 'rekap_2024.id_petani')
+             ->where('rekap_2024.id_musim', $musim->id); // Filter by id_musim in the join
+    })
+    ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+    ->where('users.role', 'petani') // Filter users by role 'petani'
+    ->select(
+        'users.id',
+        'users.name',
+        DB::raw('SUM(rekap_2024.netto) as netto'),
+        DB::raw('MAX(rekap_2024.harga) as harga'),
+        DB::raw('SUM(rekap_2024.jual_luar) as jual_luar'),
+        'rekap_2024.id_rekap',
+        'rekap_2024.periode',
+        'distribusi_2024.tgl_diterima',
+        'distribusi_2024.tgl_diproses',
+        'distribusi_2024.tgl_ditolak',
+        'distribusi_2024.status',
+        'distribusi_2024.n_gudang',
+        'distribusi_2024.mobil_berangkat',
+        'distribusi_2024.mobil_pulang',
+        'distribusi_2024.nt_pabrik',
+        'distribusi_2024.kasut',
+        'distribusi_2024.transport_gudang',
+        'rekap_2024.id_petani',
+        'rekap_2024.id_musim'
+    )
+    ->where('rekap_2024.jual_luar', '!=', '1')
+    ->groupBy('users.id', 'users.name', 'rekap_2024.id_rekap', 'rekap_2024.periode', 'distribusi_2024.tgl_diterima', 'distribusi_2024.tgl_diproses', 'distribusi_2024.tgl_ditolak', 'distribusi_2024.status', 'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 'rekap_2024.id_petani', 'rekap_2024.id_musim') // Group by all necessary columns
+    ->orderByRaw("CASE WHEN rekap_2024.periode LIKE '%A%' THEN 0 ELSE 1 END, rekap_2024.periode ASC")
+    ->get();
+
+
 
         foreach ($data as $rekap) {
             $rekap->pengeluaran = $rekap->n_gudang + $rekap->mobil_berangkat + $rekap->mobil_pulang + $rekap->nt_pabrik + $rekap->kasut + $rekap->transport_gudang;
@@ -1622,4 +1648,74 @@ class SesiController extends Controller
     {
         return view('error');
     }
+
+    public function distribusitolak(Request $request){
+
+        $year = $request->input('year', date('Y')); // Ensure 'tahun' is being set correctly
+        $userId = $request->input('id');
+        $idMusim = $request->input('id_musim');
+        $idrekap = $request->input('id_rekap');
+        $id_petani = $request->input('id_petani');
+        $grade = DB::table('rekap_2024')
+            ->where('id_rekap', $userId) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
+            ->select('grade')
+            ->first(); 
+        $data = DB::table('rekap_2024')->where('id_rekap', $userId)->first();
+
+
+        return view('distribusi_tolak',[
+            'selectedYear' => $year,
+            'idpetani' => $id_petani,
+            'grade' => $grade,
+            'data' => $data,
+            'userId' => $userId,
+            'idMusim' => $idMusim,
+            'idrekap' => $idrekap,
+
+        ]);
+    }
+    public function distribusiulang(Request $request)
+{
+    // Validate incoming data
+    // dd($request->all());
+    $request->validate([
+        'berat_gudang' => 'required|numeric',
+        'harga' => 'required|numeric',
+        'seri' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
+        'grade' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
+        'bruto' => 'required|numeric', 
+        'netto' => 'required|numeric',
+        'periode' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
+        'id_petani' => 'required|integer',
+        'id_musim' => 'required|integer',
+    ]);
+
+    // Retrieve necessary data from the request
+    $idMusim = $request->input('id_musim');
+    $year = $request->input('tahun', date('Y'));
+    $id_petani = $request->input('id_petani');
+
+
+    // Insert a new record into the 'rekap_2024' table
+    DB::table('rekap_2024')->insert([
+        'id_petani' => $id_petani,
+        'id_musim' => $idMusim,
+        'netto' => $request->input('netto'),
+        'jual_luar' => $request->input('jual_luar_value', 0), // Assuming this is a value you want to include
+        'harga' => $request->input('harga'),
+        'berat_gudang' => $request->input('berat_gudang'),
+        'grade' => $request->input('grade'),
+        'periode' => $request->input('periode'),
+        'seri' => $request->input('seri'),
+        'bruto' => $request->input('bruto'), // Assuming this is also included
+    ]);
+
+    // Redirect after successful insertion with a success message
+    return redirect()
+        ->to(url('/distribusi?year=' . $year))
+        ->with('success', 'Data successfully created!');
+}
+
+    
+
 }
