@@ -78,6 +78,7 @@
             <input type="hidden" name="jual_luar_value" id="jual_luar_value" value="0">
             <input type="hidden" name="id_petani" value="{{ $idpetani }}">
             <input type="hidden" name="id_musim" value="{{ $idMusim }}">
+            <input type="hidden" name="status" value="Distribusi Ulang">
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">

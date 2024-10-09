@@ -1526,6 +1526,13 @@ class SesiController extends Controller
                 return $rekap->status == '';
             })
             ->count();
+        $ulang = $data
+            ->filter(function ($rekap) {
+                return $rekap->status == 'Distribusi Ulang';
+            })
+            ->count();
+        
+        $belumproses = $dikirim + $ulang;
 
         foreach ($data as $rekap) {
             if ($rekap->status == 'Diterima') {
@@ -1536,12 +1543,15 @@ class SesiController extends Controller
                 $rekap->status = '<span class="badge badge-danger">Dikembalikan</span>';
             } elseif ($rekap->status == '') {
                 $rekap->status = '<span class="badge badge-info">Belum Diproses</span>';
+            } elseif ($rekap->status == 'Distribusi Ulang') {
+                $rekap->status = '<span class="badge badge-dark">Distribusi Ulang</span>';
             }
         }
 
         return view('distribusi', [
             'data' => $data,
             'dikirim' => $dikirim,
+            'belumproses' => $belumproses,
             'diterima' => $diterima,
             'diproses' => $diproses,
             'ditolak' => $ditolak,
@@ -1663,6 +1673,7 @@ class SesiController extends Controller
         $data = DB::table('rekap_2024')->where('id_rekap', $userId)->first();
 
 
+
         return view('distribusi_tolak',[
             'selectedYear' => $year,
             'idpetani' => $id_petani,
@@ -1677,7 +1688,6 @@ class SesiController extends Controller
     public function distribusiulang(Request $request)
 {
     // Validate incoming data
-    // dd($request->all());
     $request->validate([
         'berat_gudang' => 'required|numeric',
         'harga' => 'required|numeric',
@@ -1688,6 +1698,7 @@ class SesiController extends Controller
         'periode' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
         'id_petani' => 'required|integer',
         'id_musim' => 'required|integer',
+        'status' => 'required|string'
     ]);
 
     // Retrieve necessary data from the request
@@ -1695,9 +1706,8 @@ class SesiController extends Controller
     $year = $request->input('tahun', date('Y'));
     $id_petani = $request->input('id_petani');
 
-
-    // Insert a new record into the 'rekap_2024' table
-    DB::table('rekap_2024')->insert([
+    // Insert a new record into the 'rekap_2024' table and get the inserted id
+    $id_rekap = DB::table('rekap_2024')->insertGetId([
         'id_petani' => $id_petani,
         'id_musim' => $idMusim,
         'netto' => $request->input('netto'),
@@ -1710,11 +1720,18 @@ class SesiController extends Controller
         'bruto' => $request->input('bruto'), // Assuming this is also included
     ]);
 
+    // Insert a new record into the 'distribusi_2024' table
+    DB::table('distribusi_2024')->insert([
+        'id_rekap' => $id_rekap,
+        'status' => $request->input('status'),
+    ]);
+
     // Redirect after successful insertion with a success message
     return redirect()
         ->to(url('/distribusi?year=' . $year))
-        ->with('success', 'Data successfully created!');
+        ->with('success', 'Data successfully created in rekap_2024 and status in distribusi_2024!');
 }
+
 
     
 

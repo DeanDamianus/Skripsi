@@ -293,7 +293,7 @@
                     <!-- small card -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>{{ $dikirim }}</sup></h3>
+                            <h3>{{ $belumproses }}</sup></h3>
                             <p>Belum Diproses</p>
                         </div>
                         <div class="icon">
