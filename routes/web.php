@@ -21,7 +21,7 @@ Route::get('/error', function() {
 
 Route::post('/parameter', [SesiController::class, 'updateParameter'])->name('updateParameter');
  //input post rekap
-Route::post('/inputdistribusi', [SesiController::class, 'inputdistribusi'])->name('inputdistribusi.store');  //input post distribusi
+  //input post distribusi
 // Route::post('/hapuspetani', [PetaniController::class, 'delete'])->name('hapus-petani');
 Route::post('/editInput', [SesiController::class, 'update'])->name('editInput.update');
 
@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/distribusi', [SesiController::class, 'distribusidashboard']);//dashboard distribusi
 
         Route::get('/formdistribusi', [SesiController::class, 'formdistribusi']);
+        Route::post('/inputdistribusi', [SesiController::class, 'inputdistribusi'])->name('inputdistribusi.store');
         
         Route::get('/distribusitolak', [SesiController::class, 'distribusitolak']);
         Route::post('/distribusiulang', [SesiController::class, 'distribusiulang'])->name('distribusiulang');//formdistribusi

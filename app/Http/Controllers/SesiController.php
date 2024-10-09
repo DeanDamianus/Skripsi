@@ -344,68 +344,60 @@ class SesiController extends Controller
 
     //post controller
     public function inputDistribusi(Request $request)
-    {
-        // Validate the incoming request
-        $request->validate([
-            'id_rekap' => 'required|integer',
-            'id_musim' => 'required|integer',
-            'mobil_berangkat' => 'required|integer',
-            'mobil_pulang' => 'required|integer',
-            'status' => 'required|string|max:255',
-            'grade' => 'required|string|in:A,B,C,D', // Validate grade input
-        ]);
+{
+    // Validate the incoming request
+    $request->validate([
+        'id_rekap' => 'required|integer',
+        'id_musim' => 'required|integer',
+        'mobil_berangkat' => 'required|integer',
+        'mobil_pulang' => 'required|integer',
+        'status' => 'required|string|max:255',
+        'grade' => 'required|string|in:A,B,C,D',
+    ]);
 
-        // Get the year from the request or default to current year
-        $year = $request->input('year', date('Y'));
+    // Get the year from the request or default to current year
+    $year = $request->input('year', date('Y'));
 
-        $tgl_diterima = null;
-        $tgl_diproses = null;
-        $tgl_ditolak = null;
+    // Prepare the date fields based on status
+    $tgl_diterima = $request->input('status') === 'Diterima' ? date('Y-m-d') : null;
+    $tgl_diproses = $request->input('status') === 'Diproses' ? date('Y-m-d') : null;
+    $tgl_ditolak = $request->input('status') === 'Dikembalikan' ? date('Y-m-d') : null;
 
-        if ($request->input('status') === 'Diterima') {
-            $tgl_diterima = date('Y-m-d');
-        } elseif ($request->input('status') === 'Diproses') {
-            $tgl_diproses = date('Y-m-d');
-        } elseif ($request->input('status') === 'Dikembalikan') {
-            $tgl_ditolak = date('Y-m-d');
-        }
+    // Prepare the data for insertion/update in distribusi_2024 table
+    $distribusiData = [
+        'id_rekap' => $request->input('id_rekap'),
+        'id_musim' => $request->input('id_musim'),
+        'tgl_diterima' => $tgl_diterima,
+        'tgl_diproses' => $tgl_diproses,
+        'tgl_ditolak' => $tgl_ditolak,
+        'n_gudang' => $request->input('n_gudang', 5000),
+        'nt_pabrik' => $request->input('nt_pabrik', 10000),
+        'kasut' => $request->input('kasut', 10000),
+        'transport_gudang' => $request->input('transport_gudang', 5000),
+        'mobil_berangkat' => $request->input('mobil_berangkat'),
+        'mobil_pulang' => $request->input('mobil_pulang'),
+        'status' => $request->input('status'),
+    ];
 
-        // Prepare the data for insertion/update in distribusi_2024 table
-        $distribusiData = [
-            'id_rekap' => $request->input('id_rekap'),
-            'id_musim' => $request->input('id_musim'),
-            'tgl_diterima' => $tgl_diterima,
-            'tgl_diproses' => $tgl_diproses,
-            'tgl_ditolak' => $tgl_ditolak,
-            'n_gudang' => $request->input('n_gudang'),
-            'nt_pabrik' => $request->input('nt_pabrik'),
-            'kasut' => $request->input('kasut'),
-            'transport_gudang' => $request->input('transport_gudang'),
-            'mobil_berangkat' => $request->input('mobil_berangkat'),
-            'mobil_pulang' => $request->input('mobil_pulang'),
-            'status' => $request->input('status'),
-        ];
+    // Use the upsert method for automatic insert or update based on id_rekap and id_musim
+    DB::table('distribusi_2024')->upsert(
+        [$distribusiData],
+        ['id_rekap', 'id_musim'],
+        array_keys($distribusiData)
+    );
 
-        // Check if the record exists in distribusi_2024 based on id_rekap and id_musim
-        $existingDistribusi = DB::table('distribusi_2024')->where('id_rekap', $request->input('id_rekap'))->where('id_musim', $request->input('id_musim'))->first();
+    // Update the grade in rekap_2024 table for the corresponding id_rekap
+    DB::table('rekap_2024')
+        ->where('id_rekap', $request->input('id_rekap'))
+        ->update(['grade' => $request->input('grade')]);
 
-        // Insert or update distribusi_2024 table
-        if ($existingDistribusi) {
-            DB::table('distribusi_2024')->where('id_rekap', $request->input('id_rekap'))->where('id_musim', $request->input('id_musim'))->update($distribusiData);
-        } else {
-            DB::table('distribusi_2024')->insert($distribusiData);
-        }
+    // Redirect back with success message
+    return redirect()
+        ->to('http://127.0.0.1:8000/distribusi?year=' . $year)
+        ->with('success', 'Data updated successfully!');
+}
 
-        // Update the grade in rekap_2024 table for the corresponding id_rekap
-        DB::table('rekap_2024')
-            ->where('id_rekap', $request->input('id_rekap'))
-            ->update(['grade' => $request->input('grade')]);
 
-        // Redirect back with success message
-        return redirect()
-            ->to('http://127.0.0.1:8000/distribusi?year=' . $year)
-            ->with('success', 'Data updated successfully!');
-    }
 
     //untuk dashboard input distribusi get
     public function formdistribusi(Request $request)
