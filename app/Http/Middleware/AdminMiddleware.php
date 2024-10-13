@@ -21,6 +21,6 @@ class AdminMiddleware
             return $next($request);
         }
         else
-            return redirect('/error')->with('error', 'You do not have access to this page.');
+            return redirect('/login')->with('error', 'You do not have access to this page.');
     }
 }

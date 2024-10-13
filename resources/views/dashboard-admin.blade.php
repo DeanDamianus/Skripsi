@@ -320,7 +320,7 @@
                               </div>
                             </div>
                             <div class="card-body">
-                              <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                              <canvas id="pieChartjualluar" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                             </div>
                             <!-- /.card-body -->
                           </div>
@@ -450,6 +450,38 @@
     <script src="plugins/chart.js/Chart.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="dist/js/pages/dashboard2.js"></script>
+    <script>
+        //grade
+        $(function() {
+            var jualluar = {{ $jualLuar }};
+             var jualdalam = {{ $jualDalam }};
+            var pieData        = {
+            labels: [
+                'Jual Dalam',
+                'Jual Luar',
+            ],
+            datasets: [
+                {
+                data: [jualdalam,jualluar],
+                backgroundColor : [  '#00a65a','#f56954']
+                }
+            ]
+            }
+            var pieChartCanvas = $('#pieChartjualluar').get(0).getContext('2d')
+            var pieData        = pieData;
+            var pieOptions     = {
+            maintainAspectRatio : false,
+            responsive : true,
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: pieData,
+            options: pieOptions
+            });
+        });
+    </script>
     <script>
         $(function() {
 
@@ -671,6 +703,7 @@
             });
         });
     </script>
+    
     <script>
         //grade
         $(function() {

@@ -994,8 +994,14 @@ class SesiController extends Controller
         $periode12b = DB::table('rekap_2024')->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')->where('rekap_2024.periode', '12-B')->where('distribusi_2024.status', 'Diterima')->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
 
         $jualLuar = DB::table('rekap_2024')
-            ->where('id_musim', $musim->id)
-            ->sum('jual_luar');
+        ->where('id_musim', $musim->id)
+        ->where('jual_luar', '1')
+        ->count('jual_luar');
+    
+    $jualDalam = DB::table('rekap_2024')
+        ->where('id_musim', $musim->id)
+        ->where('jual_luar', '0')
+        ->count('jual_luar');
 
         $jumlahPetani = DB::table('users')->where('role', 'petani')->count('id'); // Pastikan menggunakan id_petani dari rekap_2024
 
@@ -1174,6 +1180,8 @@ class SesiController extends Controller
         return view('dashboard-admin', [
             'data' => $data,
             'diterima' => $diterima,
+            'jualLuar' => $jualLuar,
+            'jualDalam' => $jualDalam,
             'gradeA' => $gradeA,
             'gradeB' => $gradeB,
             'gradeC' => $gradeC,

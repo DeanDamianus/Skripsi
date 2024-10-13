@@ -12,9 +12,7 @@ use function Pest\Laravel\get;
 Route::get('/', [SesiController::class, 'index']);
 Route::post('/', [SesiController::class, 'login']);
 Route::get('/logout', [SesiController::class, 'logout']);
-Route::get('/error', function() {
-    return view('error');
-})->name('error');
+
 
 
 // Register routes
