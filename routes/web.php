@@ -67,11 +67,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/formdistribusi', [SesiController::class, 'formdistribusi']);
         Route::post('/inputdistribusi', [SesiController::class, 'inputdistribusi'])->name('inputdistribusi.store');
         
-        Route::get('/distribusitolak', [SesiController::class, 'distribusitolak']);
-        Route::post('/distribusiulang', [SesiController::class, 'distribusiulang'])->name('distribusiulang');//formdistribusi
-        
         Route::get('/uploadfoto', [SesiController::class, 'uploadfoto']);//halaman upload foto
         Route::post('/postfoto', [SesiController::class, 'postfoto'])->name('post.foto');
+
+        Route::get('/distribusibulk', [SesiController::class, 'distribusibulk']);
+        Route::post('/inputbulk', [SesiController::class, 'inputbulk'])->name('inputbulk');
+
+        Route::get('/distribusitolak', [SesiController::class, 'distribusitolak']);
+        Route::post('/distribusiulang', [SesiController::class, 'distribusiulang'])->name('distribusiulang');//formdistribusi
 
        
     });

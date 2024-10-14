@@ -345,10 +345,11 @@
                                         </td>
                                         <td></td>
                                         <td>
-                                            <a href="#" class="btn btn-info btn-block">
+                                            <a href="{{ url('/distribusibulk?periode=' . urlencode($periode)) }}" class="btn btn-info btn-block">
                                                 <i class="nav-icon fas fa-edit"></i> 
                                             </a>
                                         </td>
+
                                     </tr>
                                     <tbody id="periode-{{ $loop->index }}" class="periode-body">
                                         @foreach ($records as $rekap)

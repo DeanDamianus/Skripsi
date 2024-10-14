@@ -1516,7 +1516,7 @@ class SesiController extends Controller
         'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 
         'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 
         'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 
-        'distribusi_2024.rekap_lama', // Include rekap_lama here
+        'distribusi_2024.rekap_lama',
         'rekap_2024.id_petani', 'rekap_2024.id_musim'
     )
     ->orderBy($sort, $direction)
@@ -1738,6 +1738,19 @@ class SesiController extends Controller
         ->with('success', 'Data successfully created in rekap_2024 and status in distribusi_2024!');
 }
 
+public function distribusibulk(Request $request)
+{
+    // Retrieve the 'periode' from the request
+    $periode = $request->query('periode'); // Adjust the key if needed
+
+    // Pass the 'periode' to the view
+    return view('input_distribusi_bulk', compact('periode'));
+}
+
+    public function inputbulk (Request $request)
+    {
+        
+    }
 
     
 
