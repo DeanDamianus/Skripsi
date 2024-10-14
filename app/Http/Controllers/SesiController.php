@@ -1480,45 +1480,48 @@ class SesiController extends Controller
     $direction = $request->input('direction', 'asc'); // Default direction is ascending
 
     $data = DB::table('users')
-        ->leftJoin('rekap_2024', function ($join) use ($musim) {
-            $join->on('users.id', '=', 'rekap_2024.id_petani')
-                 ->where('rekap_2024.id_musim', $musim->id);
-        })
-        ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-        ->where('users.role', 'petani')
-        ->select(
-            'users.id',
-            'users.name',
-            DB::raw('SUM(rekap_2024.netto) as netto'),
-            DB::raw('MAX(rekap_2024.harga) as harga'),
-            DB::raw('SUM(rekap_2024.jual_luar) as jual_luar'),
-            'rekap_2024.id_rekap',
-            'rekap_2024.periode',
-            'distribusi_2024.tgl_diterima',
-            'distribusi_2024.tgl_diproses',
-            'distribusi_2024.tgl_ditolak',
-            'distribusi_2024.status',
-            'distribusi_2024.n_gudang',
-            'distribusi_2024.mobil_berangkat',
-            'distribusi_2024.mobil_pulang',
-            'distribusi_2024.nt_pabrik',
-            'distribusi_2024.kasut',
-            'distribusi_2024.transport_gudang',
-            'rekap_2024.id_petani',
-            'rekap_2024.id_musim'
-        )
-        ->where('rekap_2024.jual_luar', '!=', '1')
-        ->groupBy(
-            'users.id', 'users.name', 'rekap_2024.id_rekap', 'rekap_2024.periode', 
-            'distribusi_2024.tgl_diterima', 'distribusi_2024.tgl_diproses', 
-            'distribusi_2024.tgl_ditolak', 'distribusi_2024.status', 
-            'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 
-            'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 
-            'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 
-            'rekap_2024.id_petani', 'rekap_2024.id_musim'
-        )
-        ->orderBy($sort, $direction) // Apply sorting
-        ->get();
+    ->leftJoin('rekap_2024', function ($join) use ($musim) {
+        $join->on('users.id', '=', 'rekap_2024.id_petani')
+             ->where('rekap_2024.id_musim', $musim->id);
+    })
+    ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+    ->where('users.role', 'petani')
+    ->select(
+        'users.id',
+        'users.name',
+        DB::raw('SUM(rekap_2024.netto) as netto'),
+        DB::raw('MAX(rekap_2024.harga) as harga'),
+        DB::raw('SUM(rekap_2024.jual_luar) as jual_luar'),
+        'rekap_2024.id_rekap',
+        'rekap_2024.periode',
+        'distribusi_2024.tgl_diterima',
+        'distribusi_2024.tgl_diproses',
+        'distribusi_2024.tgl_ditolak',
+        'distribusi_2024.status',
+        'distribusi_2024.n_gudang',
+        'distribusi_2024.mobil_berangkat',
+        'distribusi_2024.mobil_pulang',
+        'distribusi_2024.nt_pabrik',
+        'distribusi_2024.kasut',
+        'distribusi_2024.transport_gudang',
+        'distribusi_2024.rekap_lama',
+        'rekap_2024.id_petani',
+        'rekap_2024.id_musim'
+    )
+    ->where('rekap_2024.jual_luar', '!=', '1')
+    ->groupBy(
+        'users.id', 'users.name', 'rekap_2024.id_rekap', 'rekap_2024.periode', 
+        'distribusi_2024.tgl_diterima', 'distribusi_2024.tgl_diproses', 
+        'distribusi_2024.tgl_ditolak', 'distribusi_2024.status', 
+        'distribusi_2024.n_gudang', 'distribusi_2024.mobil_berangkat', 
+        'distribusi_2024.mobil_pulang', 'distribusi_2024.nt_pabrik', 
+        'distribusi_2024.kasut', 'distribusi_2024.transport_gudang', 
+        'distribusi_2024.rekap_lama', // Include rekap_lama here
+        'rekap_2024.id_petani', 'rekap_2024.id_musim'
+    )
+    ->orderBy($sort, $direction)
+    ->get();
+
 
     // Calculate the pengeluaran for each rekap
     foreach ($data as $rekap) {
@@ -1689,6 +1692,7 @@ class SesiController extends Controller
     public function distribusiulang(Request $request)
 {
     // Validate incoming data
+    // dd($request->all());
     $request->validate([
         'berat_gudang' => 'required|numeric',
         'harga' => 'required|numeric',
@@ -1699,13 +1703,13 @@ class SesiController extends Controller
         'periode' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
         'id_petani' => 'required|integer',
         'id_musim' => 'required|integer',
-        'status' => 'required|string'
+        'status' => 'required|string',
+        'rekap_lama' => 'required|numeric'
     ]);
-
-    // Retrieve necessary data from the request
-    $idMusim = $request->input('id_musim');
-    $year = $request->input('tahun', date('Y'));
-    $id_petani = $request->input('id_petani');
+    $year = $request->input('year', date('Y')); // Ensure 'tahun' is being set correctly
+        $userId = $request->input('id');
+        $idMusim = $request->input('id_musim');
+        $id_petani = $request->input('id_petani');
 
     // Insert a new record into the 'rekap_2024' table and get the inserted id
     $id_rekap = DB::table('rekap_2024')->insertGetId([
@@ -1725,6 +1729,7 @@ class SesiController extends Controller
     DB::table('distribusi_2024')->insert([
         'id_rekap' => $id_rekap,
         'status' => $request->input('status'),
+        'rekap_lama' => $request->input('rekap_lama'), // Make sure this key matches the database column name
     ]);
 
     // Redirect after successful insertion with a success message

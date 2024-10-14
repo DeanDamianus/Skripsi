@@ -317,6 +317,7 @@
                             <thead>
                                 <tr>
                                     <th>ID Keranjang</th>
+                                    <th>ID Lama</th>
                                     <th>
                                         Periode
                                         <a href="{{ url()->current() }}?sort=rekap_2024.periode&direction={{ request('direction') == 'asc' ? 'desc' : 'asc' }}&year={{ $selectedYear }}">
@@ -342,6 +343,7 @@
                                         <td colspan="7">
                                             <strong>{{ $periode }}</strong>
                                         </td>
+                                        <td></td>
                                         <td>
                                             <a href="#" class="btn btn-info btn-block">
                                                 <i class="nav-icon fas fa-edit"></i> 
@@ -356,6 +358,7 @@
                                                         {{ $rekap->id_rekap }}
                                                     </a>
                                                 </td>
+                                                <td>{{ $rekap->rekap_lama }}</td>
                                                 <td>{!! $rekap->periode !!}</td>
                                                 <td>{!! $rekap->status !!}</td>
                                                 <td>{{ $rekap->tgl_diterima ? \Carbon\Carbon::parse($rekap->tgl_diterima)->format('d-m-Y') : '' }}</td>
