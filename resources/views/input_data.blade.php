@@ -104,8 +104,9 @@
                                             <th>Jumlah Bersih</th>
                                             <th>Gudang</th>
                                             <th>Grade</th>
-                                            <th>Info</th>
+                                            <th>Jual</th>
                                             <th>Cek Kilo</th>
+                                            <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -117,14 +118,15 @@
                                             <td>{{ number_format($item->netto, 0, ',', '.') . ' kg' }}</td>
                                             <td>{{ 'Rp. ' . number_format($harga, 0, ',', '.') }}</td>
                                             <td>{{ 'Rp. ' . number_format($item ->jumlah, 0, ',', '.') }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item->kj, 0, ',', '.') }}</td>
+                                            <td>{{ number_format($item->kj, 0, ',', '.') }}</td>
                                             <td>{{ 'Rp. ' . number_format($item->jumlahkotor, 0, ',', '.') }}</td>
                                             <td>{{ 'Rp. ' . number_format($item->komisi, 0, ',', '.') }}</td>
                                             <td>{{ 'Rp. ' . number_format($item->bersih, 0, ',', '.') }}</td>
-                                            <td>{{ $item->berat_gudang }}</td>
+                                            <td>{{ number_format($item->berat_gudang, 0, ',', '.') . ' kg' }}</td>
                                             <td>{{ $item->grade }}</td>
                                             <td>{!! $item->indicator !!}</td>
                                             <td>{{ $item->cek}}</td>
+                                            <td></td>
                                             <td>
                                                 <form action="{{ route('inputPetani.destroy', $item->id_rekap) }}" method="POST" style="display:inline;">
                                                     @csrf
@@ -152,6 +154,7 @@
                                             <th></th>
                                             <th></th>
                                             <th>{{ $cektotal }}</th>
+                                            <th></th>
                                             <th></th>
                                         </tr>
                                     </tfoot>

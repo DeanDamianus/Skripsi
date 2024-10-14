@@ -507,7 +507,18 @@ class SesiController extends Controller
 
         $gradeD = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%D%')->where('id_musim', $idMusim)->count();
 
+        //mengambil data jual luar
+        $jualLuar = DB::table('rekap_2024')
+        ->where('id_petani', $userId)
+        ->where('id_musim', $musim->id)
+        ->where('jual_luar', '1')
+        ->count('jual_luar');
     
+        $jualDalam = DB::table('rekap_2024')
+            ->where('id_petani', $userId)
+            ->where('id_musim', $musim->id)
+            ->where('jual_luar', '0')
+            ->count('jual_luar');
 
         // Get the username based on user ID
         $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
@@ -650,6 +661,8 @@ class SesiController extends Controller
 
         return view('dashboardpetani', [
             'selectedYear' => $year,
+            'jualLuar' => $jualLuar,
+            'jualDalam' => $jualDalam,
             'netto_d_a' => $netto_d_a,
             'sisahutang' => $sisahutang,
             'netto_d_b' => $netto_d_b,
@@ -1463,7 +1476,7 @@ class SesiController extends Controller
     $musimList = DB::table('musim')->get();
 
     // Get sorting parameters with default values for 'status' and 'asc'
-    $sort = $request->input('sort', 'distribusi_2024.status'); // Default sort by status
+    $sort = $request->input('sort', 'rekap_2024.periode'); // Default sort by status
     $direction = $request->input('direction', 'asc'); // Default direction is ascending
 
     $data = DB::table('users')

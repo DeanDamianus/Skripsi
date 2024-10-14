@@ -16,7 +16,13 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
+<style>
+    .periode-header {
+        background-color: #0000004d; /* Darker color */
+        color: #000000; /* White text for better contrast */
+    }
 
+</style>
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -310,7 +316,6 @@
                         <table class="table m-0">
                             <thead>
                                 <tr>
-                                    <th></th>
                                     <th>ID Keranjang</th>
                                     <th>
                                         Periode
@@ -334,19 +339,18 @@
                             <tbody>
                                 @foreach ($data->groupBy('periode') as $periode => $records)
                                     <tr class="periode-header" data-target="periode-{{ $loop->index }}" style="cursor: pointer;">
-                                        <td>
-                                            <input type="checkbox" class="periode-checkbox" data-target="periode-{{ $loop->index }}">
-                                        </td>
-                                        <td colspan="8">
+                                        <td colspan="7">
                                             <strong>{{ $periode }}</strong>
+                                        </td>
+                                        <td>
+                                            <a href="#" class="btn btn-info btn-block">
+                                                <i class="nav-icon fas fa-edit"></i> 
+                                            </a>
                                         </td>
                                     </tr>
                                     <tbody id="periode-{{ $loop->index }}" class="periode-body">
                                         @foreach ($records as $rekap)
                                             <tr>
-                                                <td>
-                                                    <input type="checkbox" class="child-checkbox periode-{{ $loop->parent->index }}">
-                                                </td>
                                                 <td>
                                                     <a href="{{ url('/dataInput?id=' . $rekap->id_petani . '&id_musim=' . $rekap->id_musim) }}">
                                                         {{ $rekap->id_rekap }}
@@ -361,12 +365,12 @@
                                                 <td>
                                                     <a href="{{ $rekap->tgl_ditolak ? url('/distribusitolak?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim. '&id_petani=' . $rekap->id) : url('/formdistribusi?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim. '&id_petani=' . $rekap->id) }}"
                                                         class="btn btn-block {{ $rekap->tgl_ditolak ? 'btn-danger' : 'btn-success' }}">
-                                                         @if ($rekap->tgl_ditolak)
-                                                             <i class="nav-icon fas fa-undo"></i> 
-                                                         @else
-                                                             <i class="nav-icon fas fa-edit"></i> 
-                                                         @endif
-                                                     </a>
+                                                        @if ($rekap->tgl_ditolak)
+                                                            <i class="nav-icon fas fa-undo"></i> 
+                                                        @else
+                                                            <i class="nav-icon fas fa-edit"></i> 
+                                                        @endif
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach

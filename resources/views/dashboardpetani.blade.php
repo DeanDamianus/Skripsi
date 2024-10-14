@@ -104,7 +104,7 @@
                             <span class="info-box-icon bg-danger"><i class="fas fa-hand-holding-usd"></i></span>
 
                             <div class="info-box-content">
-                                <span class="info-box-text">Hutang</span>
+                                <span class="info-box-text">Sisa Hutang</span>
                                 <span
                                     class="info-box-number">{{ 'Rp. ' . number_format($sisahutang, 0, ',', '.') }}</span>
                             </div>
@@ -217,6 +217,30 @@
                             <!-- /.card-body -->
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="card card-info">
+                            <div class="card-header">
+                              <h3 class="card-title">Perbandingan Jual Luar</h3>
+              
+                              <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                  <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                  <i class="fas fa-times"></i>
+                                </button>
+                              </div>
+                            </div>
+                            <div class="card-body">
+                              <canvas id="pieChartjualluar" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            </div>
+                            <!-- /.card-body -->
+                          </div>
+                        <!-- /.card -->
+
+
+                        <!-- /.card -->
+                    </div>
                     {{-- <div class="col-md-4">
                         <div class="card card-success">
                             <div class="card-header">
@@ -266,7 +290,38 @@
     <script src="../../dist/js/adminlte.min.js"></script>
     <script src="../../plugins/chart.js/Chart.min.js"></script>
 </body>
-
+<script>
+    //grade
+    $(function() {
+        var jualluar = {{ $jualLuar }};
+         var jualdalam = {{ $jualDalam }};
+        var pieData        = {
+        labels: [
+            'Jual Dalam',
+            'Jual Luar',
+        ],
+        datasets: [
+            {
+            data: [jualdalam,jualluar],
+            backgroundColor : [  '#00a65a','#f56954']
+            }
+        ]
+        }
+        var pieChartCanvas = $('#pieChartjualluar').get(0).getContext('2d')
+        var pieData        = pieData;
+        var pieOptions     = {
+        maintainAspectRatio : false,
+        responsive : true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        new Chart(pieChartCanvas, {
+        type: 'pie',
+        data: pieData,
+        options: pieOptions
+        });
+    });
+</script>
 <script>
     $(function() {
         var netto_d_a = {{ $netto_d_a }};

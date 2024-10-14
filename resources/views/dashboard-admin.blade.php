@@ -261,7 +261,7 @@
                     <div class="col-lg-12">
                         <div class="card card-info">
                             <div class="card-header">
-                                <h3 class="card-title">Tren Harga Keranjang Per-Periode</h3>
+                                <h3 class="card-title">Harga Per-Periode</h3>
 
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">

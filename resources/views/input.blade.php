@@ -194,9 +194,6 @@
                                         <tr>
                                             <th>ID Petani</th>
                                             <th>Nama Petani</th>
-                                            <th>Netto Total</th>
-                                            {{-- <th>Jumlah Bersih</th> --}}
-                                            <th>Jumlah Total</th>
                                             <th>Jual Luar</th>
                                             <th>Action</th>
                                         </tr>
@@ -206,8 +203,6 @@
                                         <tr>
                                             <td>{{ $item->id }}</td>
                                             <td>{{ $item->name }}</td>
-                                            <td>{{ number_format($item->netto, 0, ',', '.') . ' kg' }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item->jumlahtotal, 0, ',', '.') }}</td>
                                             <td>{{ $item->jual_luar != 0 ? $item->jual_luar : '-' }}</td>
                                             <td>
                                                 <a href="{{ url('/dataInput?id=' . $item->id . '&id_musim=' . $id_musim.'&year='.$selectedYears) }}"
@@ -221,8 +216,6 @@
                                         <tr>
                                             <th></th>
                                             <th></th>
-                                            <th>{{ number_format($total_netto, 0, ',', '.') . ' kg' }}</th>
-                                            <th>{{'Rp. ' . number_format($totaljumlahharga, 0, ',', '.') }}</th>
                                             <th>{{ $total_jual_luar != 0 ? $total_jual_luar : '-' }}</th>
                                             <th></th>
                                         </tr>
