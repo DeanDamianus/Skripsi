@@ -1562,10 +1562,10 @@ class SesiController extends Controller
     foreach ($data as $rekap) {
         $rekap->status = match ($rekap->status) {
             'Diterima' => '<span class="badge badge-success">Diterima</span>',
-            'Diproses' => '<span class="badge badge-warning">Diproses</span>',
+            'Diproses' => '<span class="badge badge-warning">Dikirim</span>',
             'Dikembalikan' => '<span class="badge badge-danger">Dikembalikan</span>',
             'Distribusi Ulang' => '<span class="badge badge-dark">Distribusi Ulang</span>',
-            default => '<span class="badge badge-info">Belum Diproses</span>',
+            default => '<span class="badge badge-info">Belum Dikirim</span>',
         };
     }
 

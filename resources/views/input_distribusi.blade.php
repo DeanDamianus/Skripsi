@@ -100,7 +100,7 @@
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="Diproses" name="status" value="Diproses"
                                     class="form-check-input" {{ $status === 'Diproses' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="Diproses">Diproses <i class="fas fa-truck"></i></label>
+                                <label class="form-check-label" for="Diproses">Dikirim <i class="fas fa-truck"></i></label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="Dikembalikan" name="status" value="Dikembalikan"

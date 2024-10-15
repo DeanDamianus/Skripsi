@@ -275,7 +275,7 @@
                     <div class="small-box bg-yellow">
                         <div class="inner">
                             <h3>{{ $diproses }}</sup></h3>
-                            <p>Diproses</p>
+                            <p>Dikirim</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-truck"></i> </i> <!-- Ikon koin -->
