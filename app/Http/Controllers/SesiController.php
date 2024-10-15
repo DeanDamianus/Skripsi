@@ -724,24 +724,33 @@ class SesiController extends Controller
             ->count();
 
         $gradeA = DB::table('rekap_2024')
-            ->where('id_musim', $musim->id)
-            ->where('grade', 'LIKE', '%A%')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->where('distribusi_2024.status','Diterima')
+            ->where('rekap_2024.grade', 'LIKE', '%A%')
             ->count();
 
         $gradeB = DB::table('rekap_2024')
-            ->where('id_musim', $musim->id)
-            ->where('grade', 'LIKE', '%B%')
-            ->count();
+        ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+        ->where('rekap_2024.id_musim', $musim->id)
+        ->where('distribusi_2024.status','Diterima')
+        ->where('rekap_2024.grade', 'LIKE', '%B%')
+        ->count();
 
         $gradeC = DB::table('rekap_2024')
-            ->where('id_musim', $musim->id)
-            ->where('grade', 'LIKE', '%C%')
-            ->count();
+        ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+        ->where('rekap_2024.id_musim', $musim->id)
+        ->where('distribusi_2024.status','Diterima')
+        ->where('rekap_2024.grade', 'LIKE', '%C%')
+        ->count();
 
         $gradeD = DB::table('rekap_2024')
-            ->where('id_musim', $musim->id)
-            ->where('grade', 'LIKE', '%D%')
-            ->count();
+        ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+        ->where('rekap_2024.id_musim', $musim->id)
+        ->where('distribusi_2024.status','Diterima')
+        ->where('rekap_2024.grade', 'LIKE', '%D%')
+        ->count();
+    
 
         $data = DB::table('rekap_2024')
             ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
