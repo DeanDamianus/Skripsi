@@ -751,20 +751,24 @@ class SesiController extends Controller
             ->orderByDesc('total_netto') // Sort by highest total_netto
             ->get();
         
-        $jumlahBesih = 
-        
+
+        //total omset + hasill bersih
         $jumlahkotor = DB::table('rekap_2024')
         ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
-        ->select('rekap_2024.id_petani', 'users.name', DB::raw('SUM(rekap_2024.netto * rekap_2024.harga) as omset'))
+        ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+        ->whereNotNull('distribusi_2024.tgl_diterima')
         ->where('rekap_2024.id_musim', $musim->id)
+        ->select('rekap_2024.id_petani', 'users.name', DB::raw('SUM(rekap_2024.netto * rekap_2024.harga) as omset'))
         ->groupBy('rekap_2024.id_petani', 'users.name')
         ->get();
 
-        $dataOmset = $jumlahkotor->pluck('omset');
+        $dataOmset = [];
+    foreach ($jumlahkotor as $record) {
+        $dataOmset[$record->name] = $record->omset;
+    }
 
-        $petani = DB::table('users')
-            ->where('role', 'petani')
-            ->pluck('name');
+    $petani = array_keys($dataOmset);
+    $dataOmset = array_values($dataOmset);
         
 
         $periode1 = DB::table('rekap_2024')

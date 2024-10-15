@@ -261,7 +261,7 @@
                     <div class="col-lg-12">
                         <div class="card card-success">
                             <div class="card-header">
-                                <h3 class="card-title">Omset + Hasil Bersih</h3>
+                                <h3 class="card-title">Total Omset + Hasil Bersih</h3>
 
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -612,7 +612,7 @@
                     pointStrokeColor: '#c1c7d1',
                     pointHighlightFill: '#fff',
                     pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data: [65, 59, 80, 81, 56, 55, 40]
+                    data: []
                 },
             ]
         }
