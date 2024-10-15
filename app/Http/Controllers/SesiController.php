@@ -523,6 +523,7 @@ class SesiController extends Controller
         // Get the username based on user ID
         $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
 
+
         $foto = DB::table('users')->where('id', $userId)->pluck('image')->first();
 
         $rekapcount = DB::table('rekap_2024')->where('id_petani', $userId)->count();
@@ -747,6 +748,11 @@ class SesiController extends Controller
             ->groupBy('rekap_2024.id_petani', 'users.name')
             ->orderByDesc('total_netto') // Sort by highest total_netto
             ->get();
+
+            $petani = DB::table('users')
+            ->where('role', 'petani')
+            ->pluck('name');
+        
 
         $periode1 = DB::table('rekap_2024')
             ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
@@ -1195,6 +1201,7 @@ class SesiController extends Controller
             'diterima' => $diterima,
             'jualLuar' => $jualLuar,
             'jualDalam' => $jualDalam,
+            'petani' => $petani,
             'gradeA' => $gradeA,
             'gradeB' => $gradeB,
             'gradeC' => $gradeC,

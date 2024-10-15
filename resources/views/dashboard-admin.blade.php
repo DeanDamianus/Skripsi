@@ -259,9 +259,9 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="card card-info">
+                        <div class="card card-success">
                             <div class="card-header">
-                                <h3 class="card-title">Harga Per-Periode</h3>
+                                <h3 class="card-title">Omset + Hasil Bersih</h3>
 
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -274,8 +274,8 @@
                             </div>
                             <div class="card-body">
                                 <div class="chart">
-                                    <canvas id="lineChart"
-                                        style="min-height: 250px; height: 250px; max-height: 300px; width: 100%; max-width: 1200px;"></canvas>
+                                    <canvas id="stackedBarChart"
+                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                                 </div>
                             </div>
                             <!-- /.card-body -->
@@ -284,22 +284,23 @@
                     <div class="col-md-6">
                         <div class="card card-info">
                             <div class="card-header">
-                              <h3 class="card-title">Grade Tembakau</h3>
-              
-                              <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                  <i class="fas fa-minus"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                  <i class="fas fa-times"></i>
-                                </button>
-                              </div>
+                                <h3 class="card-title">Grade Tembakau</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="card-body">
-                              <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                <canvas id="pieChart"
+                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                             </div>
                             <!-- /.card-body -->
-                          </div>
+                        </div>
                         <!-- /.card -->
 
 
@@ -308,22 +309,23 @@
                     <div class="col-md-6">
                         <div class="card card-info">
                             <div class="card-header">
-                              <h3 class="card-title">Perbandingan Jual Luar</h3>
-              
-                              <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                  <i class="fas fa-minus"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                  <i class="fas fa-times"></i>
-                                </button>
-                              </div>
+                                <h3 class="card-title">Perbandingan Jual Luar</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="card-body">
-                              <canvas id="pieChartjualluar" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                <canvas id="pieChartjualluar"
+                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                             </div>
                             <!-- /.card-body -->
-                          </div>
+                        </div>
                         <!-- /.card -->
 
 
@@ -454,35 +456,33 @@
         //grade
         $(function() {
             var jualluar = {{ $jualLuar }};
-             var jualdalam = {{ $jualDalam }};
-            var pieData        = {
-            labels: [
-                'Jual Dalam',
-                'Jual Luar',
-            ],
-            datasets: [
-                {
-                data: [jualdalam,jualluar],
-                backgroundColor : [  '#00a65a','#f56954']
-                }
-            ]
+            var jualdalam = {{ $jualDalam }};
+            var pieData = {
+                labels: [
+                    'Jual GG',
+                    'Jual Luar',
+                ],
+                datasets: [{
+                    data: [jualdalam, jualluar],
+                    backgroundColor: ['#00a65a', '#f56954']
+                }]
             }
             var pieChartCanvas = $('#pieChartjualluar').get(0).getContext('2d')
-            var pieData        = pieData;
-            var pieOptions     = {
-            maintainAspectRatio : false,
-            responsive : true,
+            var pieData = pieData;
+            var pieOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
             }
             //Create pie or douhnut chart
             // You can switch between pie and douhnut using the method below.
             new Chart(pieChartCanvas, {
-            type: 'pie',
-            data: pieData,
-            options: pieOptions
+                type: 'pie',
+                data: pieData,
+                options: pieOptions
             });
         });
     </script>
-    <script>
+    {{-- <script>
         $(function() {
 
             var ticksStyle = {
@@ -586,6 +586,57 @@
                 }
             })
         })
+    </script> --}}
+    <script>
+        var labels = @json($petani);
+        var barChartData = {
+      labels  : labels,
+      datasets: [
+        {
+          label               : 'Omset',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [28, 48, 40, 19, 86, 27, 90]
+        },
+        {
+          label               : 'Hasil Bersih',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [65, 59, 80, 81, 56, 55, 40]
+        },
+      ]
+    }
+        var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+        var stackedBarChartData = $.extend(true, {}, barChartData)
+
+        var stackedBarChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+
+        new Chart(stackedBarChartCanvas, {
+            type: 'bar',
+            data: stackedBarChartData,
+            options: stackedBarChartOptions
+        });
     </script>
     <script>
         $(function() {
@@ -703,7 +754,7 @@
             });
         });
     </script>
-    
+
     <script>
         //grade
         $(function() {
@@ -711,32 +762,30 @@
             var gradeB = {{ $gradeB }};
             var gradeC = {{ $gradeC }};
             var gradeD = {{ $gradeD }};
-            var pieData        = {
-            labels: [
-                'D',
-                'C',
-                'B',
-                'A',
-            ],
-            datasets: [
-                {
-                data: [gradeD,gradeC,gradeB,gradeA],
-                backgroundColor : [  '#00a65a','#f56954','#f39c12','#00c0ef',]
-                }
-            ]
+            var pieData = {
+                labels: [
+                    'D',
+                    'C',
+                    'B',
+                    'A',
+                ],
+                datasets: [{
+                    data: [gradeD, gradeC, gradeB, gradeA],
+                    backgroundColor: ['#00a65a', '#f56954', '#f39c12', '#00c0ef', ]
+                }]
             }
             var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-            var pieData        = pieData;
-            var pieOptions     = {
-            maintainAspectRatio : false,
-            responsive : true,
+            var pieData = pieData;
+            var pieOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
             }
             //Create pie or douhnut chart
             // You can switch between pie and douhnut using the method below.
             new Chart(pieChartCanvas, {
-            type: 'pie',
-            data: pieData,
-            options: pieOptions
+                type: 'pie',
+                data: pieData,
+                options: pieOptions
             });
         });
     </script>

@@ -73,7 +73,7 @@
             </div>
         </section>
         <!-- Main content -->
-        {{-- <form method="POST" action="{{ route('inputdistribusi.store') }}">
+        {{-- <form method="POST" action="{{ route('distribusiulang') }}">
             @csrf
             <input type="hidden" name="id_rekap" value="{{ $userId }}">
             <input type="hidden" name="id_musim" value="{{ $idMusim }}">

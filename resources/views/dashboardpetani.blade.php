@@ -90,7 +90,7 @@
                             <span class="info-box-icon bg-info"><i class="fa fa-coins"></i></span>
 
                             <div class="info-box-content">
-                                <span class="info-box-text">Omset</span>
+                                <span class="info-box-text">Omset Petani</span>
                                 <span
                                     class="info-box-number">{{ 'Rp. ' . number_format($totalbersih, 0, ',', '.') }}</span>
                             </div>
@@ -118,7 +118,7 @@
                             <span class="info-box-icon bg-success"><i class="fas fa-dollar-sign"></i></span>
 
                             <div class="info-box-content">
-                                <span class="info-box-text">Hasil Bersih</span>
+                                <span class="info-box-text">Hasil Bersih - Hutang</span>
                                 <span
                                     class="info-box-number">{{ 'Rp. ' . number_format($totalbersih - $sisahutang, 0, ',', '.') }}</span>
                             </div>
