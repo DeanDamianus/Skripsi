@@ -1034,7 +1034,7 @@ class SesiController extends Controller
         $totalHargaditerima = DB::table('rekap_2024')
             ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
             ->where('distribusi_2024.status', 'Diterima')
-            ->where('rekap_2024.id_musim', $musim->id) // Prefix table name
+            ->where('rekap_2024.id_musim', $musim->id)
             ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
 
         $periode12b = DB::table('rekap_2024')->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')->where('rekap_2024.periode', '12-B')->where('distribusi_2024.status', 'Diterima')->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
@@ -1045,9 +1045,11 @@ class SesiController extends Controller
         ->count('jual_luar');
     
     $jualDalam = DB::table('rekap_2024')
-        ->where('id_musim', $musim->id)
-        ->where('jual_luar', '0')
-        ->count('jual_luar');
+        ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+        ->where('distribusi_2024.status', 'Diterima')
+        ->where('rekap_2024.id_musim', $musim->id)
+        ->where('rekap_2024.jual_luar', '0')
+        ->count('rekap_2024.jual_luar');
 
         $jumlahPetani = DB::table('users')->where('role', 'petani')->count('id'); // Pastikan menggunakan id_petani dari rekap_2024
 
