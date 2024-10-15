@@ -590,6 +590,7 @@
     <script>
         var labels = @json($petani);
         var dataOmset = @json($dataomset);
+        var totalJumlahBersih = @json($totalJumlahBersih);
         var barChartData = {
             labels: labels,
             datasets: [{
@@ -612,7 +613,7 @@
                     pointStrokeColor: '#c1c7d1',
                     pointHighlightFill: '#fff',
                     pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data: []
+                    data: totalJumlahBersih
                 },
             ]
         }
