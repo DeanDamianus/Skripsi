@@ -245,7 +245,7 @@
                         <!-- small card -->
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                <h3>{{ $rekapsisa }}</h3>
+                                <h3>{{ $sisa }}</h3>
                                 <p>Keranjang sisa</p>
                             </div>
                             <div class="icon">
