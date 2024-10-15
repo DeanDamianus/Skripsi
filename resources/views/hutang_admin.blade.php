@@ -326,8 +326,9 @@ if (!$result) {
                                                 $bunga_hutang_percentage = ($bunga_hutang / $row['bon']) * 100;
                                             
                                                 // Formatting the dates
-                                                $formatted_tanggal_hutang = $tanggal_hutang->format('d-m-Y');
-                                                $tanggal_lunas = !empty($row['tanggal_lunas']) ? Carbon::createFromFormat('Y-m-d', $row['tanggal_lunas'])->format('d-m-Y') : '-';
+                                                $formatted_tanggal_hutang = $tanggal_hutang->format('d F Y');
+                                                $tanggal_lunas = !empty($row['tanggal_lunas']) ? Carbon::createFromFormat('Y-m-d', $row['tanggal_lunas'])->format('d F Y') : '-';
+
                                             
                                                 // Calculate total bunga (including original 'bon' amount)
                                                 $totalbon = $row['bon'] + $row['bon'] * ($bunga_hutang_percentage / 100); // Convert percentage to decimal for calculation

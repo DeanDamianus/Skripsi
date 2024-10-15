@@ -362,9 +362,9 @@
                                                 <td>{{ $rekap->rekap_lama }}</td>
                                                 <td>{!! $rekap->periode !!}</td>
                                                 <td>{!! $rekap->status !!}</td>
-                                                <td>{{ $rekap->tgl_diterima ? \Carbon\Carbon::parse($rekap->tgl_diterima)->format('d-m-Y') : '' }}</td>
-                                                <td>{{ $rekap->tgl_diproses ? \Carbon\Carbon::parse($rekap->tgl_diproses)->format('d-m-Y') : '' }}</td>
-                                                <td>{{ $rekap->tgl_ditolak ? \Carbon\Carbon::parse($rekap->tgl_ditolak)->format('d-m-Y') : '' }}</td>
+                                                <td>{{ $rekap->tgl_diterima ? \Carbon\Carbon::parse($rekap->tgl_diterima)->format('d F Y') : '' }}</td>
+                                                <td>{{ $rekap->tgl_diproses ? \Carbon\Carbon::parse($rekap->tgl_diproses)->format('d F Y') : '' }}</td>
+                                                <td>{{ $rekap->tgl_ditolak ? \Carbon\Carbon::parse($rekap->tgl_ditolak)->format('d F Y') : '' }}</td>
                                                 <td>{{ 'Rp. ' . number_format($rekap->pengeluaran, 0, ',', '.') }}</td>
                                                 <td>
                                                     <a href="{{ $rekap->tgl_ditolak ? url('/distribusitolak?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim. '&id_petani=' . $rekap->id) : url('/formdistribusi?id=' . $rekap->id_rekap . '&id_musim=' . $rekap->id_musim. '&id_petani=' . $rekap->id) }}"

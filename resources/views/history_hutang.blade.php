@@ -104,29 +104,30 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         <!-- Check if tanggal_lunas is not null before formatting -->
                                         <td>
                                             @if ($item->tanggal_hutang)
-                                                {{ \Carbon\Carbon::createFromFormat('Y-m-d', $item->tanggal_hutang)->format('d/m/Y') }}
+                                                {{ \Carbon\Carbon::createFromFormat('Y-m-d', $item->tanggal_hutang)->format('d F Y') }}
                                             @else
                                                 <em>-</em>
                                             @endif
                                         </td>
-                            
+                                        
                                         <!-- Check if tanggal_cicilan is not null before formatting -->
                                         <td>
                                             @if ($item->tanggal_cicilan)
-                                                {{ \Carbon\Carbon::createFromFormat('Y-m-d', $item->tanggal_cicilan)->format('d/m/Y') }}
+                                                {{ \Carbon\Carbon::createFromFormat('Y-m-d', $item->tanggal_cicilan)->format('d F Y') }}
                                             @else
                                                 <em>-</em>
                                             @endif
                                         </td>
-                            
+                                        
                                         <!-- Repeat the check for tanggal_lunas for display as a strong tag -->
                                         <td><strong>
                                             @if ($item->tanggal_lunas)
-                                                {{ \Carbon\Carbon::createFromFormat('Y-m-d', $item->tanggal_lunas)->format('d/m/Y') }}
+                                                {{ \Carbon\Carbon::createFromFormat('Y-m-d', $item->tanggal_lunas)->format('d F Y') }}
                                             @else
                                                 <em>-</em>
                                             @endif
                                         </strong></td>
+                                        
                             
                                         <!-- Format bon -->
                                         <td>{{ 'Rp. ' . number_format($item->bon, 0, ',', '.') }}</td>
@@ -178,7 +179,5 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="../../dist/js/demo.js"></script>
 </body>
 </html>
