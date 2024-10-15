@@ -709,6 +709,8 @@ class SesiController extends Controller
             abort(404, 'Year not found');
         }
 
+
+
         $rekapcount = DB::table('rekap_2024')
             ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
             ->where('distribusi_2024.status', 'LIKE', '%Diterima%')
@@ -748,8 +750,19 @@ class SesiController extends Controller
             ->groupBy('rekap_2024.id_petani', 'users.name')
             ->orderByDesc('total_netto') // Sort by highest total_netto
             ->get();
+        
+        $jumlahBesih = 
+        
+        $jumlahkotor = DB::table('rekap_2024')
+        ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
+        ->select('rekap_2024.id_petani', 'users.name', DB::raw('SUM(rekap_2024.netto * rekap_2024.harga) as omset'))
+        ->where('rekap_2024.id_musim', $musim->id)
+        ->groupBy('rekap_2024.id_petani', 'users.name')
+        ->get();
 
-            $petani = DB::table('users')
+        $dataOmset = $jumlahkotor->pluck('omset');
+
+        $petani = DB::table('users')
             ->where('role', 'petani')
             ->pluck('name');
         
@@ -1254,6 +1267,7 @@ class SesiController extends Controller
             'periode11b' => $periode11b,
             'periode12a' => $periode12a,
             'periode12b' => $periode12b,
+            'dataomset' => $dataOmset,
             'hargaditerima' => $totalHargaditerima,
             'belumproses' => $belumproses,
             'ditolak' => $ditolak,

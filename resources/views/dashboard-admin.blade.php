@@ -589,54 +589,78 @@
     </script> --}}
     <script>
         var labels = @json($petani);
+        var dataOmset = @json($dataomset);
         var barChartData = {
-      labels  : labels,
-      datasets: [
-        {
-          label               : 'Omset',
-          backgroundColor     : 'rgba(60,141,188,0.9)',
-          borderColor         : 'rgba(60,141,188,0.8)',
-          pointRadius          : false,
-          pointColor          : '#3b8bba',
-          pointStrokeColor    : 'rgba(60,141,188,1)',
-          pointHighlightFill  : '#fff',
-          pointHighlightStroke: 'rgba(60,141,188,1)',
-          data                : [28, 48, 40, 19, 86, 27, 90]
-        },
-        {
-          label               : 'Hasil Bersih',
-          backgroundColor     : 'rgba(210, 214, 222, 1)',
-          borderColor         : 'rgba(210, 214, 222, 1)',
-          pointRadius         : false,
-          pointColor          : 'rgba(210, 214, 222, 1)',
-          pointStrokeColor    : '#c1c7d1',
-          pointHighlightFill  : '#fff',
-          pointHighlightStroke: 'rgba(220,220,220,1)',
-          data                : [65, 59, 80, 81, 56, 55, 40]
-        },
-      ]
-    }
+            labels: labels,
+            datasets: [{
+                    label: 'Omset',
+                    backgroundColor: 'rgba(60,141,188,0.9)',
+                    borderColor: 'rgba(60,141,188,0.8)',
+                    pointRadius: false,
+                    pointColor: '#3b8bba',
+                    pointStrokeColor: 'rgba(60,141,188,1)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data: dataOmset
+                },
+                {
+                    label: 'Hasil Bersih',
+                    backgroundColor: 'rgba(210, 214, 222, 1)',
+                    borderColor: 'rgba(210, 214, 222, 1)',
+                    pointRadius: false,
+                    pointColor: 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data: [65, 59, 80, 81, 56, 55, 40]
+                },
+            ]
+        }
         var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
         var stackedBarChartData = $.extend(true, {}, barChartData)
 
         var stackedBarChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                xAxes: [{
-                    stacked: true,
-                }],
-                yAxes: [{
-                    stacked: true
-                }]
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+            stacked: true,
+            ticks: {
+                callback: function(value) {
+                    // Convert the value to Rupiah format
+                    return 'Rp ' + value.toLocaleString('id-ID');
+                }
+            }
+        }]
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                    if (label) {
+                        label += ': ';
+                    }
+                    // Format the value as Indonesian Rupiah (IDR)
+                    label += new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR'
+                    }).format(tooltipItem.yLabel);
+                    return label;
+                }
             }
         }
+    };
+
 
         new Chart(stackedBarChartCanvas, {
-            type: 'bar',
-            data: stackedBarChartData,
-            options: stackedBarChartOptions
-        });
+    type: 'bar',
+    data: stackedBarChartData,
+    options: stackedBarChartOptions
+});
+
     </script>
     <script>
         $(function() {
