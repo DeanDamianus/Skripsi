@@ -125,43 +125,47 @@
                             <div class="card">
                                 <!-- /.card-header -->
                                 <div class="card-body table-responsive p-0" style="height: 250px;">
-                                    <table class="table table-head-fixed text-nowrap">  
-                                <thead>
-                                  <tr>
-                                    <th>ID Keranjang</th>
-                                    <th>Grade</th>
-                                  </tr>
-                                </thead>
+                                    <table class="table table-head-fixed text-nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Keranjang</th>
+                                                <th>Grade</th>
+                                            </tr>
+                                        </thead>
                                         <tbody>
                                             @foreach ($data as $rekap)
-                                            <tr>
-                                                <td>{{ $rekap->id_rekap }}</td>
-                                                <td>
+                                                <tr>
+                                                    <td>{{ $rekap->id_rekap }}</td>
+                                                    <td>
                                                         <div class="form-check form-check-inline">
-                                                            <input type="radio" id="gradeA" name="grade" value="A" class="form-check-input" 
-                                                                   {{ ($grade == 'A') ? 'checked' : '' }} required>
-                                                            <label class="form-check-label" for="gradeA">A</label>
+                                                            <input type="radio" id="gradeA_{{ $rekap->id_rekap }}" name="grade_{{ $rekap->id_rekap }}"
+                                                                value="A" class="form-check-input"
+                                                                {{ $rekap->grade == 'A' ? 'checked' : '' }} required>
+                                                            <label class="form-check-label" for="gradeA_{{ $rekap->id_rekap }}">A</label>
                                                         </div>
                                                         <div class="form-check form-check-inline">
-                                                            <input type="radio" id="gradeB" name="grade" value="B" class="form-check-input" 
-                                                                   {{ ($grade == 'B') ? 'checked' : '' }} required>
-                                                            <label class="form-check-label" for="gradeB">B</label>
+                                                            <input type="radio" id="gradeB_{{ $rekap->id_rekap }}" name="grade_{{ $rekap->id_rekap }}"
+                                                                value="B" class="form-check-input"
+                                                                {{ $rekap->grade == 'B' ? 'checked' : '' }} required>
+                                                            <label class="form-check-label" for="gradeB_{{ $rekap->id_rekap }}">B</label>
                                                         </div>
                                                         <div class="form-check form-check-inline">
-                                                            <input type="radio" id="gradeC" name="grade" value="C" class="form-check-input" 
-                                                                   {{ ($grade == 'C') ? 'checked' : '' }} required>
-                                                            <label class="form-check-label" for="gradeC">C</label>
+                                                            <input type="radio" id="gradeC_{{ $rekap->id_rekap }}" name="grade_{{ $rekap->id_rekap }}"
+                                                                value="C" class="form-check-input"
+                                                                {{ $rekap->grade == 'C' ? 'checked' : '' }} required>
+                                                            <label class="form-check-label" for="gradeC_{{ $rekap->id_rekap }}">C</label>
                                                         </div>
                                                         <div class="form-check form-check-inline">
-                                                            <input type="radio" id="gradeD" name="grade" value="D" class="form-check-input" 
-                                                                   {{ ($grade == 'D') ? 'checked' : '' }} required>
-                                                            <label class="form-check-label" for="gradeD">D</label>
+                                                            <input type="radio" id="gradeD_{{ $rekap->id_rekap }}" name="grade_{{ $rekap->id_rekap }}"
+                                                                value="D" class="form-check-input"
+                                                                {{ $rekap->grade == 'D' ? 'checked' : '' }} required>
+                                                            <label class="form-check-label" for="gradeD_{{ $rekap->id_rekap }}">D</label>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                    </td>
+                                                </tr>
                                             @endforeach
                                         </tbody>
+                                        
                                     </table>
                                 </div>
                                 <!-- /.card-body -->
