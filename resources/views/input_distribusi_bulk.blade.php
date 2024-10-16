@@ -10,6 +10,7 @@
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <!-- IonIcons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
@@ -73,10 +74,8 @@
             </div>
         </section>
         <!-- Main content -->
-        {{-- <form method="POST" action="{{ route('distribusiulang') }}">
+        <form method="POST" action="{{ route('inputbulk') }}">
             @csrf
-            <input type="hidden" name="id_rekap" value="{{ $userId }}">
-            <input type="hidden" name="id_musim" value="{{ $idMusim }}">
             <input type="hidden" name="n_gudang" value="5000">
             <input type="hidden" name="nt_pabrik" value="10000">
             <input type="hidden" name="kasut" value="10000">
@@ -85,9 +84,11 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Mobil Berangkat <i class="fas fa-road"> </i> <i class="fas fa-arrow-right"></i></label>
+                            <label>Mobil Berangkat <i class="fas fa-road"> </i> <i
+                                    class="fas fa-arrow-right"></i></label>
                             <input type="number" name="mobil_berangkat" class="form-control" required
-                                placeholder="{{ $mobil_berangkat ?? 'Masukkan Harga Berangkat' }}" value="{{ old('mobil_berangkat', $mobil_berangkat ?? '') }}">
+                                placeholder="{{ $mobil_berangkat ?? 'Masukkan Harga Berangkat' }}"
+                                value="{{ old('mobil_berangkat', $mobil_berangkat ?? '') }}">
                         </div>
                         <div class="form-group">
                             <label>Status <i class="fas fa-info-circle"></i></label>
@@ -95,17 +96,20 @@
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="Diterima" name="status" value="Diterima"
                                     class="form-check-input" {{ $status === 'Diterima' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="Diterima">Diterima <i class="fas fa-check-circle"></i></label>
+                                <label class="form-check-label" for="Diterima">Diterima <i
+                                        class="fas fa-check-circle"></i></label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="Diproses" name="status" value="Diproses"
                                     class="form-check-input" {{ $status === 'Diproses' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="Diproses">Diproses <i class="fas fa-truck"></i></label>
+                                <label class="form-check-label" for="Diproses">Diproses <i
+                                        class="fas fa-truck"></i></label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="Dikembalikan" name="status" value="Dikembalikan"
                                     class="form-check-input" {{ $status === 'Dikembalikan' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="Dikembalikan">Dikembalikan <i class="fas fa-times"></i></label>
+                                <label class="form-check-label" for="Dikembalikan">Dikembalikan <i
+                                        class="fas fa-times"></i></label>
                             </div>
                         </div>
                     </div>
@@ -113,42 +117,67 @@
                         <div class="form-group">
                             <label>Mobil Pulang <i class="fas fa-road"> </i> <i class="fas fa-arrow-left"></i></label>
                             <input type="number" name="mobil_pulang" class="form-control" required
-                                placeholder="{{ $mobil_pulang ?? 'Masukkan Harga pulang' }}" value="{{ old('mobil_pulang', $mobil_pulang ?? '') }}">
+                                placeholder="{{ $mobil_pulang ?? 'Masukkan Harga pulang' }}"
+                                value="{{ old('mobil_pulang', $mobil_pulang ?? '') }}">
                         </div>
-                        <div class="form-group">
+                        <div class="col-13">
                             <label>Grade <i class="fas fa-star-half-alt"></i></label>
-                            <br>
-                            <div class="form-check form-check-inline">
-                                <input type="radio" id="gradeA" name="grade" value="A" class="form-check-input" 
-                                       {{ ($grade == 'A') ? 'checked' : '' }} required>
-                                <label class="form-check-label" for="gradeA">A</label>
+                            <div class="card">
+                                <!-- /.card-header -->
+                                <div class="card-body table-responsive p-0" style="height: 250px;">
+                                    <table class="table table-head-fixed text-nowrap">  
+                                <thead>
+                                  <tr>
+                                    <th>ID Keranjang</th>
+                                    <th>Grade</th>
+                                  </tr>
+                                </thead>
+                                        <tbody>
+                                            @foreach ($data as $rekap)
+                                            <tr>
+                                                <td>{{ $rekap->id_rekap }}</td>
+                                                <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <input type="radio" id="gradeA" name="grade" value="A" class="form-check-input" 
+                                                                   {{ ($grade == 'A') ? 'checked' : '' }} required>
+                                                            <label class="form-check-label" for="gradeA">A</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input type="radio" id="gradeB" name="grade" value="B" class="form-check-input" 
+                                                                   {{ ($grade == 'B') ? 'checked' : '' }} required>
+                                                            <label class="form-check-label" for="gradeB">B</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input type="radio" id="gradeC" name="grade" value="C" class="form-check-input" 
+                                                                   {{ ($grade == 'C') ? 'checked' : '' }} required>
+                                                            <label class="form-check-label" for="gradeC">C</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input type="radio" id="gradeD" name="grade" value="D" class="form-check-input" 
+                                                                   {{ ($grade == 'D') ? 'checked' : '' }} required>
+                                                            <label class="form-check-label" for="gradeD">D</label>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
                             </div>
-                            <div class="form-check form-check-inline">
-                                <input type="radio" id="gradeB" name="grade" value="B" class="form-check-input" 
-                                       {{ ($grade == 'B') ? 'checked' : '' }} required>
-                                <label class="form-check-label" for="gradeB">B</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input type="radio" id="gradeC" name="grade" value="C" class="form-check-input" 
-                                       {{ ($grade == 'C') ? 'checked' : '' }} required>
-                                <label class="form-check-label" for="gradeC">C</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input type="radio" id="gradeD" name="grade" value="D" class="form-check-input" 
-                                       {{ ($grade == 'D') ? 'checked' : '' }} required>
-                                <label class="form-check-label" for="gradeD">D</label>
-                            </div>
+                            <!-- /.card -->
                         </div>
-                        
+
                     </div>
-                    
+
                 </div>
             </div>
             <div class="card-footer text-center">
                 <button type="submit" class="btn btn-primary">Ubah</button>
             </div>
-        </form> --}}
-        
+        </form>
+
 
 
         <!-- /.content-wrapper -->
@@ -168,7 +197,9 @@
     <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../../dist/js/adminlte.min.js"></script>
-    
+    <script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
 </body>
 
 </html>

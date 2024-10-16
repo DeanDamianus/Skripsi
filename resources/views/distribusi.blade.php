@@ -345,7 +345,7 @@
                                         </td>
                                         <td></td>
                                         <td>
-                                            <a href="{{ url('/distribusibulk?periode=' . urlencode($periode)) }}" class="btn btn-info btn-block">
+                                            <a href="{{ url('/distribusibulk?periode=' . urlencode($periode). '&id_musim=' . $records->first()->id_musim) }}" class="btn btn-info btn-block">
                                                 <i class="nav-icon fas fa-edit"></i> 
                                             </a>
                                         </td>

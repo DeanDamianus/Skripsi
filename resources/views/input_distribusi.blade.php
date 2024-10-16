@@ -82,7 +82,7 @@
             <input type="hidden" name="kasut" value="10000">
             <input type="hidden" name="transport_gudang" value="5000">
             <div class="card-body">
-                <div class="row">
+                <div class="row"> 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Mobil Berangkat <i class="fas fa-road"> </i> <i class="fas fa-arrow-right"></i></label>

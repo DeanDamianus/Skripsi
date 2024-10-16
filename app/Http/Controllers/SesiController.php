@@ -1593,6 +1593,7 @@ class SesiController extends Controller
 
         return view('distribusi', [
             'data' => $data,
+            'musimList' => $musimList,
             'dikirim' => $dikirim,
             'belumproses' => $belumproses,
             'diterima' => $diterima,
@@ -1730,7 +1731,7 @@ class SesiController extends Controller
     public function distribusiulang(Request $request)
     {
         // Validate incoming data
-        // dd($request->all());
+
         $request->validate([
             'berat_gudang' => 'required|numeric',
             'harga' => 'required|numeric',
@@ -1739,7 +1740,6 @@ class SesiController extends Controller
             'bruto' => 'required|numeric',
             'netto' => 'required|numeric',
             'periode' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
-            'id_petani' => 'required|integer',
             'id_musim' => 'required|integer',
             'status' => 'required|string',
             'rekap_lama' => 'required|numeric',
@@ -1751,7 +1751,6 @@ class SesiController extends Controller
 
         // Insert a new record into the 'rekap_2024' table and get the inserted id
         $id_rekap = DB::table('rekap_2024')->insertGetId([
-            'id_petani' => $id_petani,
             'id_musim' => $idMusim,
             'netto' => $request->input('netto'),
             'jual_luar' => $request->input('jual_luar_value', 0), // Assuming this is a value you want to include
@@ -1777,15 +1776,97 @@ class SesiController extends Controller
     }
 
     public function distribusibulk(Request $request)
-    {
-        // Retrieve the 'periode' from the request
-        $periode = $request->query('periode'); // Adjust the key if needed
+{
+    // Retrieve input values with default values if not provided
+    $year = $request->input('year', date('Y'));
+    $userId = $request->input('id');
+    $idMusim = $request->input('id_musim');
+    $periode = $request->query('periode', '1-A'); // Default to '1-A' if not provided
 
-        // Pass the 'periode' to the view
-        return view('input_distribusi_bulk', compact('periode'));
-    }
+    // Retrieve status from `rekap_2024` where `periode` matches
+    $status = DB::table('rekap_2024')
+        ->where('periode', $periode)
+        ->where('id_musim', $idMusim)
+        ->select('status')
+        ->first();
+
+    // Retrieve additional data as needed (you might need to adjust this part)
+    $data = DB::table('rekap_2024')
+        ->where('periode', $periode)
+        ->where('id_musim', $idMusim)
+        ->get();
+
+    
+
+    // Assuming `grade` and `idrekap` should also be retrieved or calculated:
+    $grade = $data->pluck('grade')->unique(); // Adjust based on how you want to handle grade
+    $idrekap = $data->pluck('id_rekap');
+
+    // Pass data to the view
+    return view('input_distribusi_bulk', [
+        'selectedYear' => $year,
+        'status' => $status,
+        'grade' => $grade,
+        'data' => $data,
+        'userId' => $userId,
+        'idMusim' => $idMusim,
+        'idrekap' => $idrekap,
+        'periode' => $periode,
+    ]);
+}
+
 
     public function inputbulk(Request $request)
     {
+        // Validate the incoming request to ensure it is an array of records
+        $request->validate([
+            'records' => 'required|array',
+            'records.*.id_rekap' => 'required|integer',
+            'records.*.id_musim' => 'required|integer',
+            'records.*.mobil_berangkat' => 'required|integer',
+            'records.*.mobil_pulang' => 'required|integer',
+            'records.*.status' => 'required|string|max:255',
+            'records.*.grade' => 'required|string|in:A,B,C,D',
+        ]);
+    
+        // Loop through each record to prepare data for bulk insertion
+        $bulkData = [];
+        $gradeUpdates = [];
+        foreach ($request->input('records') as $record) {
+            $tgl_diterima = $record['status'] === 'Diterima' ? date('Y-m-d') : null;
+            $tgl_diproses = $record['status'] === 'Diproses' ? date('Y-m-d') : null;
+            $tgl_ditolak = $record['status'] === 'Dikembalikan' ? date('Y-m-d') : null;
+    
+            $bulkData[] = [
+                'id_rekap' => $record['id_rekap'],
+                'id_musim' => $record['id_musim'],
+                'tgl_diterima' => $tgl_diterima,
+                'tgl_diproses' => $tgl_diproses,
+                'tgl_ditolak' => $tgl_ditolak,
+                'n_gudang' => $record['n_gudang'] ?? 5000,
+                'nt_pabrik' => $record['nt_pabrik'] ?? 10000,
+                'kasut' => $record['kasut'] ?? 10000,
+                'transport_gudang' => $record['transport_gudang'] ?? 5000,
+                'mobil_berangkat' => $record['mobil_berangkat'],
+                'mobil_pulang' => $record['mobil_pulang'],
+                'status' => $record['status'],
+            ];
+    
+            // Prepare grade updates for each id_rekap
+            $gradeUpdates[$record['id_rekap']] = ['grade' => $record['grade']];
+        }
+    
+        // Perform bulk upsert for distribusi_2024 table
+        DB::table('distribusi_2024')->upsert($bulkData, ['id_rekap', 'id_musim'], array_keys($bulkData[0]));
+    
+        // Perform bulk updates for grades in rekap_2024 table
+        foreach ($gradeUpdates as $id_rekap => $update) {
+            DB::table('rekap_2024')->where('id_rekap', $id_rekap)->update($update);
+        }
+    
+        // Redirect back with a success message
+        return redirect()
+            ->to('http://127.0.0.1:8000/distribusi-bulk')
+            ->with('success', 'Bulk data updated successfully!');
     }
 }
