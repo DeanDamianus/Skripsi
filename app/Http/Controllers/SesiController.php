@@ -756,26 +756,27 @@ class SesiController extends Controller
             ->where('id_musim', $musim->id)
             ->first();
 
-        $harganetto = DB::table('rekap_2024')
+            $harganetto = DB::table('rekap_2024')
             ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->join('users', 'rekap_2024.id_petani', '=', 'users.id') // Join users to get the name
             ->where('rekap_2024.id_musim', $musim->id)
             ->whereNotNull('distribusi_2024.tgl_diterima')
-            ->select('rekap_2024.id_rekap', 'rekap_2024.harga', 'rekap_2024.netto')
+            ->select('rekap_2024.id_rekap', 'rekap_2024.harga', 'rekap_2024.netto', 'users.name') // Select the necessary fields, including users.name
             ->get();
-
+        
         // Define arrays to store the calculated values per user
         $userJumlahBersih = [];
         $userNames = [];
-
+        
         // Iterate through each data row to calculate values for each user
         foreach ($harganetto as $item) {
-            $id_rekap = $item->id_rekap;
+            $id_petani = $item->id_rekap; // Assuming 'id_petani' corresponds to 'id_rekap'
             $netto = $item->netto;
             $harga = $item->harga;
-
+        
             // Calculate netto * harga for each row
             $total = $netto * $harga;
-
+        
             // Calculate kj based on harga
             if ($harga <= 50000) {
                 $kj = 1000 * $netto;
@@ -790,28 +791,34 @@ class SesiController extends Controller
             } else {
                 $kj = 6000 * $netto;
             }
-
+        
             // Calculate jumlahKotor
             $jumlahKotor = $total - $kj - $parameter->biaya_jual - $parameter->naik_turun;
-
+        
             // Calculate komisi
             $komisi = $jumlahKotor * $parameter->kepala_petani;
-
+        
             // Calculate jumlahBersih
             $jumlahBersih = $jumlahKotor - $komisi;
-
-            // Sum jumlahBersih for each user
-            if (!isset($userJumlahBersih[$id_rekap])) {
-                $userJumlahBersih[$id_rekap] = 0;
+        
+            // Use the petani's name instead of id_petani for the keys
+            $petaniName = $item->name; // Get the petani's name
+        
+            // Add jumlahBersih to the corresponding petani name
+            if (!isset($userJumlahBersih[$petaniName])) {
+                $userJumlahBersih[$petaniName] = []; // Initialize an array for each petani
             }
-            $userJumlahBersih[$id_rekap] += $jumlahBersih;
+        
+            // Push each jumlahBersih value for this petani into the array
+            $userJumlahBersih[$petaniName][] = $jumlahBersih;
         }
-
-        // Extract the user names or labels and the totalJumlahBersih values for the chart
-        $petani = array_keys($userJumlahBersih);
-        $totalJumlahBersih = array_values($userJumlahBersih);
-
-
+        
+        // Calculate the total of all jumlahBersih values for each petani
+        $totalBersihPerPetani = [];
+        foreach ($userJumlahBersih as $bersihArray) {
+            $totalBersihPerPetani[] = array_sum($bersihArray); // Just push the total value
+        }
+        
         $dataOmset = [];
         foreach ($jumlahkotor as $data) {
             $dataOmset[$data->name] = $data->omset;
@@ -1339,7 +1346,7 @@ class SesiController extends Controller
             'rekapcount' => $rekapcount,
             'sisa' => $sisa,
             'userJumlahBersih' => $userJumlahBersih,
-            'totalJumlahBersih' => $totalJumlahBersih,
+            'totalBersihPerPetani' => $totalBersihPerPetani
         ]);
     }
 

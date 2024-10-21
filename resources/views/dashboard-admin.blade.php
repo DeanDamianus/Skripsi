@@ -590,7 +590,7 @@
     <script>
         var labels = @json($petani);
         var dataOmset = @json($dataomset);
-        var totalJumlahBersih = @json($totalJumlahBersih);
+        var totalJumlahBersih = @json($totalBersihPerPetani);
         var barChartData = {
             labels: labels,
             datasets: [{
