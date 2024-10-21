@@ -130,7 +130,7 @@
                                             <td>{{ $item->grade }}</td>
                                             <td>{!! $item->indicator !!}</td>
                                             <td>{{ $item->cek}}</td>
-                                            <td></td>
+                                            <td>{!! $item->status !!}</td>
                                             <td>
                                                 <form action="{{ route('inputPetani.destroy', $item->id_rekap) }}" method="POST" style="display:inline;">
                                                     @csrf

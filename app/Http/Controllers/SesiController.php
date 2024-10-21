@@ -198,10 +198,11 @@ class SesiController extends Controller
         // Fetch data for rekap based on the current id_musim and selected year
         $data = DB::table('rekap_2024')
             ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
-            ->join('users', 'rekap_2024.id_petani', '=', 'users.id') // Join with users table
+            ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')// Join with users table
             ->where('rekap_2024.id_petani', $userId)
             ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim from the request
-            ->select('rekap_2024.*', 'parameter_2024.*', 'users.image') // Select the image field from users table
+            ->select('rekap_2024.*', 'parameter_2024.*', 'distribusi_2024.*') // Select the image field from users table
             ->get();
 
         // Fetch parameter data
@@ -211,6 +212,16 @@ class SesiController extends Controller
         $netto = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('netto')->first();
         $harga = DB::table('rekap_2024')->where('id_petani', $userId)->pluck('harga')->first();
         $petani = DB::table('users')->where('role', 'petani')->get();
+
+        foreach ($data as $rekap) {
+            $rekap->status = match ($rekap->status) {
+                'Diterima' => '<span class="badge badge-success">Diterima</span>',
+                'Diproses' => '<span class="badge badge-warning">Dikirim</span>',
+                'Dikembalikan' => '<span class="badge badge-danger">Dikembalikan</span>',
+                'Distribusi Ulang' => '<span class="badge badge-dark">Distribusi Ulang</span>',
+                default => '<span class="badge badge-info">Belum Dikirim</span>',
+            };
+        }
 
         // Calculate KJ and other fields dynamically
         foreach ($data as $rekap) {
