@@ -107,7 +107,6 @@
                                             <th>Jual</th>
                                             <th>Cek Kilo</th>
                                             <th>Status</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -131,7 +130,7 @@
                                             <td>{!! $item->indicator !!}</td>
                                             <td>{{ $item->cek}}</td>
                                             <td>{!! $item->status !!}</td>
-                                            <td>
+                                            {{-- <td>
                                                 <form action="{{ route('inputPetani.destroy', $item->id_rekap) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
@@ -139,7 +138,7 @@
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -158,7 +157,6 @@
                                             <th></th>
                                             <th></th>
                                             <th>{{ $cektotal }}</th>
-                                            <th></th>
                                             <th></th>
                                         </tr>
                                     </tfoot>

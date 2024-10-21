@@ -199,10 +199,10 @@ class SesiController extends Controller
         $data = DB::table('rekap_2024')
             ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
             ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
-            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')// Join with users table
+            ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')// Join with users table
             ->where('rekap_2024.id_petani', $userId)
             ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim from the request
-            ->select('rekap_2024.*', 'parameter_2024.*', 'distribusi_2024.*') // Select the image field from users table
+            ->select('rekap_2024.*', 'parameter_2024.*', 'distribusi_2024.status') // Select the image field from users table
             ->get();
 
         // Fetch parameter data
@@ -1049,7 +1049,7 @@ class SesiController extends Controller
             'harga' => 'required|numeric',
             'seri' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
             'grade' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
-            'bruto' => 'required|numeric', // Include bruto in validation
+            'bruto' => 'required|numeric',
             'netto' => 'required|numeric',
             'periode' => $request->input('jual_luar_value') ? 'nullable|string' : 'required|string',
             'id_petani' => 'required|integer',
@@ -1060,6 +1060,7 @@ class SesiController extends Controller
         $idMusim = $request->input('id_musim');
         $year = $request->input('tahun', date('Y'));
         $id_petani = $request->input('id_petani');
+        
 
         // Insert a new record in the rekap_2024 table
         DB::table('rekap_2024')->insert([
@@ -1074,6 +1075,7 @@ class SesiController extends Controller
             'seri' => $request->input('seri'),
             'bruto' => $request->input('bruto'),
         ]);
+
 
         // Redirect after successful insertion
         return redirect()

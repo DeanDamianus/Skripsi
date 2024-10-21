@@ -155,9 +155,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Tipe </label> <i class="fas fa-exchange-alt"></i><br>
-                                            <input type="checkbox" id="jual_luar_checkbox" name="jual_luar_checkbox">
-                                            <label for="jual_luar_checkbox"> <span class="badge badge-warning">Jual
-                                                    Luar</span></label>
+                                            <input type="checkbox" id="jual_luar_checkbox" name="jual_luar_value" value="1">
+                                            <label for="jual_luar_checkbox"> <span class="badge badge-warning">Jual Luar</span></label>
                                         </div>
                                         <!-- /.form-group -->
                                     </div>
@@ -199,6 +198,7 @@
     <!-- AdminLTE App -->
     <script src="../../dist/js/adminlte.min.js"></script>
 </body>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
     var jualLuarCheckbox = document.getElementById('jual_luar_checkbox');
