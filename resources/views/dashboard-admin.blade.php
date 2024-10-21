@@ -213,7 +213,7 @@
                                 <h3><sup
                                         style="font-size: 20px">Rp.</sup>{{ number_format($totalHarga, 0, ',', '.') }}
                                 </h3>
-                                <p>Harga Keranjang diterima</p>
+                                <p>Omset diterima</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-coins"></i> <!-- Ikon koin -->
@@ -591,7 +591,7 @@
         var labels = @json($petani);
         var dataOmset = @json($dataomset);
         var totalJumlahBersih = @json($totalBersihPerPetani);
-        var sisahutang = @json(array_values($sisahutangPerPetani)); 
+        // var sisahutang = @json($sisahutangPerPetani); 
         var barChartData = {
             labels: labels,
             datasets: [
@@ -617,17 +617,17 @@
                     pointHighlightStroke: 'rgba(220,220,220,1)',
                     data: totalJumlahBersih
                 },
-                {
-                label: 'Hutang',
-                backgroundColor: 'rgba(255, 99, 71, 0.9)', // Tomato red
-                borderColor: 'rgba(255, 99, 71, 1)',        // Solid tomato red for border
-                pointRadius: false,
-                pointColor: 'rgba(255, 99, 71, 1)',         // Red for points
-                pointStrokeColor: '#c1c7d1',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(220,220,220,1)',
-                data: sisahutang
-            },
+            //     {
+            //     label: 'Hutang',
+            //     backgroundColor: 'rgba(255, 99, 71, 0.9)', // Tomato red
+            //     borderColor: 'rgba(255, 99, 71, 1)',        // Solid tomato red for border
+            //     pointRadius: false,
+            //     pointColor: 'rgba(255, 99, 71, 1)',         // Red for points
+            //     pointStrokeColor: '#c1c7d1',
+            //     pointHighlightFill: '#fff',
+            //     pointHighlightStroke: 'rgba(220,220,220,1)',
+            //     data: sisahutang
+            // },
             ]
         }
         var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')

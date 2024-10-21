@@ -761,48 +761,7 @@ class SesiController extends Controller
             ->get()
             ->toArray();
 
-        $tanggal_hutang = DB::table('hutang_2024')->select('tanggal_hutang')->get()->toArray();
 
-        $bungahutang = DB::table('parameter_2024')->select('bunga_hutang')->first();
-
-        // dd($bon);
-        $current_tanggal = Carbon::now(); // Get the current date
-
-        $bonhutang_with_bunga = [];
-
-        // Loop through each bon entry and calculate the bunga hutang for each one
-        $bunga = (float) $bungahutang->bunga_hutang;
-
-        $sisahutangPerPetani = [];
-
-        // Loop through each bon entry and calculate the sisahutang
-        foreach ($bon as $entry) {
-            // Convert the tanggal_hutang for each entry to a Carbon date
-            $tanggal_hutang = Carbon::createFromFormat('Y-m-d', $entry->tanggal_hutang);
-            
-            // Ensure that 'bon' is accessed as a numeric value (not an object)
-            $bon_value = (float) $entry->bon;
-            
-            // Calculate the difference in years
-            $diff_in_years = $tanggal_hutang->diffInDays($current_tanggal) / 365;
-            
-            // Calculate bunga hutang
-            $bunga_hutang = $diff_in_years * $bunga * $bon_value; 
-            $bunga_hutang_percentage = ($bunga_hutang / $bon_value) * 100;
-            
-            // Calculate total bon including bunga
-            $totalbon = $bon_value + $bon_value * ($bunga_hutang_percentage / 100);
-            
-            // Access cicilan from the entry
-            $cicilan = (float) $entry->cicilan;
-            
-            // Calculate sisahutang
-            $sisahutang = $totalbon - $cicilan;
-            
-            // Store the result in the array using id_petani as the key
-            $sisahutangPerPetani[$entry->id_petani] = $sisahutang; // Store sisahutang for each petani
-        }     
-        
 
         // Fetch harga and netto values together from rekap_2024
         $parameter = DB::table('parameter_2024')
@@ -821,6 +780,7 @@ class SesiController extends Controller
         // Define arrays to store the calculated values per user
         $userJumlahBersih = [];
         $userNames = [];
+        
 
         // Iterate through each data row to calculate values for each user
         foreach ($harganetto as $item) {
@@ -867,10 +827,10 @@ class SesiController extends Controller
             $userJumlahBersih[$petaniName][] = $jumlahBersih;
         }
 
-        // Calculate the total of all jumlahBersih values for each petani
+
         $totalBersihPerPetani = [];
         foreach ($userJumlahBersih as $bersihArray) {
-            $totalBersihPerPetani[] = array_sum($bersihArray); // Just push the total value
+            $totalBersihPerPetani[] = array_sum($bersihArray);
         }
 
         $dataOmset = [];
@@ -878,13 +838,47 @@ class SesiController extends Controller
             $dataOmset[$data->name] = $data->omset;
         }
 
+        $tanggal_hutang = DB::table('hutang_2024')->select('tanggal_hutang')->get()->toArray();
+        $bungahutang = DB::table('parameter_2024')->select('bunga_hutang')->first();
+        $current_tanggal = Carbon::now(); 
+        $bunga = (float) $bungahutang->bunga_hutang;
+        $sisahutangPerPetani = [];
+        foreach ($bon as $entry) {
+            // Convert the tanggal_hutang for each entry to a Carbon date
+            $tanggal_hutang = Carbon::createFromFormat('Y-m-d', $entry->tanggal_hutang);
+            
+            // Ensure that 'bon' is accessed as a numeric value (not an object)
+            $bon_value = (float) $entry->bon;
+            
+            // Calculate the difference in years
+            $diff_in_years = $tanggal_hutang->diffInDays($current_tanggal) / 365;
+            
+            // Calculate bunga hutang
+            $bunga_hutang = $diff_in_years * $bunga * $bon_value; 
+            $bunga_hutang_percentage = ($bunga_hutang / $bon_value) * 100;
+            
+            // Calculate total bon including bunga
+            $totalbon = $bon_value + $bon_value * ($bunga_hutang_percentage / 100);
+            
+            // Access cicilan from the entry
+            $cicilan = (float) $entry->cicilan;
+            
+            // Calculate sisahutang
+            $sisahutang = $totalbon - $cicilan;
+            
+            // Store the result in the array using id_petani as the key
+            $sisahutangPerPetani[$entry->id_petani] = $sisahutang; // Store sisahutang for each petani
+        }
+
+
 
         $petani = array_keys($dataOmset);
         $dataOmset = array_values($dataOmset);
+        $sisahutangPerPetani = array_values($sisahutangPerPetani);
+
+        // dd($sisahutangPerPetani);
         
 
-    
-        //NOTA A
         $diterima = DB::table('distribusi_2024')
             ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
             ->where('distribusi_2024.status', 'Diterima')
@@ -1029,7 +1023,7 @@ class SesiController extends Controller
             'sisa' => $sisa,
             'userJumlahBersih' => $userJumlahBersih,
             'totalBersihPerPetani' => $totalBersihPerPetani,
-            'sisahutangPerPetani' => $sisahutangPerPetani,
+            'sisahutangPerPetani' => $sisahutangPerPetani
         ]);
         
     }
