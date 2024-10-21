@@ -696,7 +696,11 @@ class SesiController extends Controller
             abort(404, 'Year not found');
         }
 
-        $sisa = DB::table('rekap_2024')->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')->whereNull('distribusi_2024.id_rekap')->select('rekap_2024.*')->count();
+        $sisa = DB::table('rekap_2024')
+        ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+        ->where('rekap_2024.id_musim', $musim->id)
+        ->whereNull('distribusi_2024.id_rekap')->select('rekap_2024.*')
+        ->count();
 
         $rekapcount = DB::table('rekap_2024')
             ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
