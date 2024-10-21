@@ -113,7 +113,11 @@
                                     <tbody>
                                         @foreach ($data as $item)
                                         <tr>
-                                            <td>{{ $item->id_rekap }}</td>
+                                            <td>
+                                                <a href="{{ url('/formdistribusi?id=' . $item->id_rekap . '&id_musim=' . $item->id_musim) }}">
+                                                    {{ $item->id_rekap }}
+                                                </a>
+                                            </td>
                                             <td>{{ number_format($item->bruto, 0, ',', '.') . ' kg' }}</td>
                                             <td>{{ number_format($item->netto, 0, ',', '.') . ' kg' }}</td>
                                             <td>{{ 'Rp. ' . number_format($harga, 0, ',', '.') }}</td>

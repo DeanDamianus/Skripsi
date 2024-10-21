@@ -162,10 +162,10 @@
                                                             <label class="form-check-label" for="gradeD_{{ $rekap->id_rekap }}">D</label>
                                                         </div>
                                                     </td>
+                                                    <td></td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
-                                        
                                     </table>
                                 </div>
                                 <!-- /.card-body -->
