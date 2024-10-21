@@ -320,7 +320,7 @@ if (!$result) {
                                             
                                                 // Calculate the difference in years and the interest (bunga hutang)
                                                 $diff_in_years = $tanggal_hutang->diffInDays($current_tanggal) / 365;
-                                                $bunga_hutang = $diff_in_years * $bunga * $row['bon']; // Assuming interest applies to the 'bon' amount
+                                                $bunga_hutang = $diff_in_years * $bunga * $row['bon']; 
                                             
                                                 // Calculate bunga hutang as a percentage
                                                 $bunga_hutang_percentage = ($bunga_hutang / $row['bon']) * 100;

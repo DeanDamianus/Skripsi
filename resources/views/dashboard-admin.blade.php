@@ -591,6 +591,7 @@
         var labels = @json($petani);
         var dataOmset = @json($dataomset);
         var totalJumlahBersih = @json($totalBersihPerPetani);
+        var sisahutang = @json(array_values($sisahutangPerPetani)); 
         var barChartData = {
             labels: labels,
             datasets: [
@@ -625,7 +626,7 @@
                 pointStrokeColor: '#c1c7d1',
                 pointHighlightFill: '#fff',
                 pointHighlightStroke: 'rgba(220,220,220,1)',
-                data: totalJumlahBersih
+                data: sisahutang
             },
             ]
         }
@@ -674,122 +675,6 @@
     options: stackedBarChartOptions
 });
 
-    </script>
-    <script>
-        $(function() {
-            var harga1a = {{ $harga1_A }};
-            var harga1b = {{ $harga1_B }};
-            var harga2a = {{ $harga2_A }};
-            var harga2b = {{ $harga2_B }};
-            var harga3a = {{ $harga3_A }};
-            var harga3b = {{ $harga3_B }};
-            var harga4a = {{ $harga4_A }};
-            var harga4b = {{ $harga4_B }};
-            var harga5a = {{ $harga5_A }};
-            var harga5b = {{ $harga5_B }};
-            var harga6a = {{ $harga6_A }};
-            var harga6b = {{ $harga6_B }};
-            var harga7a = {{ $harga7_A }};
-            var harga7b = {{ $harga7_B }};
-            var harga8a = {{ $harga8_A }};
-            var harga8b = {{ $harga8_B }};
-            var harga9a = {{ $harga9_A }};
-            var harga9b = {{ $harga9_B }};
-            var harga10a = {{ $harga10_A }};
-            var harga10b = {{ $harga10_B }};
-            var harga11a = {{ $harga11_A }};
-            var harga11b = {{ $harga11_B }};
-            var harga12a = {{ $harga12_A }};
-            var harga12b = {{ $harga12_B }};
-
-            // Formatter for Rupiah
-            var rupiahFormatter = new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0
-            });
-
-            // Line chart data
-            var lineChartData = {
-                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-                datasets: [{
-                        label: 'Nota A',
-                        backgroundColor: 'rgba(60,141,188,0.9)',
-                        borderColor: 'rgba(60,141,188,0.8)',
-                        pointRadius: false,
-                        pointColor: '#3b8bba',
-                        pointStrokeColor: 'rgba(60,141,188,1)',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(60,141,188,1)',
-                        data: [harga1a, harga2a, harga3a, harga4a, harga5a, harga6a, harga7a, harga8a,
-                            harga9a, harga10a, harga11a, harga12a
-                        ]
-                    },
-                    {
-                        label: 'Nota B',
-                        backgroundColor: '#ced4da',
-                        borderColor: '#ced4da',
-                        pointRadius: false,
-                        pointColor: '#ced4da',
-                        pointStrokeColor: '#c1c7d1',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(220,220,220,1)',
-                        data: [harga1b, harga2b, harga3b, harga4b, harga5b, harga6b, harga7b, harga8b,
-                            harga9b, harga10b, harga11b, harga12b
-                        ]
-                    },
-                ]
-            };
-
-            // Disable fill for the datasets
-            lineChartData.datasets[0].fill = false;
-            lineChartData.datasets[1].fill = false;
-
-            // Chart options
-            var lineChartOptions = {
-                maintainAspectRatio: false,
-                responsive: true,
-                legend: {
-                    display: true
-                },
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItem, data) {
-                            var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-                            return datasetLabel + ': ' + rupiahFormatter.format(tooltipItem.yLabel);
-                        }
-                    }
-                },
-                scales: {
-                    xAxes: [{
-                        gridLines: {
-                            display: true,
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            callback: function(value) {
-                                return rupiahFormatter.format(value);
-                            }
-                        },
-                        gridLines: {
-                            display: true,
-                        }
-                    }]
-                }
-            };
-
-            // Ensure no dataset fill
-            lineChartOptions.datasetFill = false;
-
-            // Create the line chart
-            var lineChartCanvas = $('#lineChart').get(0).getContext('2d');
-            var lineChart = new Chart(lineChartCanvas, {
-                type: 'line',
-                data: lineChartData,
-                options: lineChartOptions
-            });
-        });
     </script>
 
     <script>
