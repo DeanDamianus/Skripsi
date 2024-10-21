@@ -259,7 +259,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="card card-success">
+                        <div class="card card-info">
                             <div class="card-header">
                                 <h3 class="card-title">Total Omset + Hasil Bersih</h3>
 
@@ -369,7 +369,7 @@
 
                     </div> --}}
                     <div class="col-md-6">
-                        <div class="card card-success">
+                        <div class="card card-info">
                             <div class="card-header">
                                 <h3 class="card-title">Status Distribusi Nota A</h3>
                                 <div class="card-tools">
@@ -391,7 +391,7 @@
                     </div>
                     <div class="col-md-6">
                         <!-- Nota B -->
-                        <div class="card card-success">
+                        <div class="card card-info">
                             <div class="card-header">
                                 <h3 class="card-title">Status Distribusi Nota B</h3>
                                 <div class="card-tools">
@@ -593,7 +593,8 @@
         var totalJumlahBersih = @json($totalBersihPerPetani);
         var barChartData = {
             labels: labels,
-            datasets: [{
+            datasets: [
+                {
                     label: 'Omset',
                     backgroundColor: 'rgba(60,141,188,0.9)',
                     borderColor: 'rgba(60,141,188,0.8)',
@@ -615,6 +616,17 @@
                     pointHighlightStroke: 'rgba(220,220,220,1)',
                     data: totalJumlahBersih
                 },
+                {
+                label: 'Hutang',
+                backgroundColor: 'rgba(255, 99, 71, 0.9)', // Tomato red
+                borderColor: 'rgba(255, 99, 71, 1)',        // Solid tomato red for border
+                pointRadius: false,
+                pointColor: 'rgba(255, 99, 71, 1)',         // Red for points
+                pointStrokeColor: '#c1c7d1',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(220,220,220,1)',
+                data: totalJumlahBersih
+            },
             ]
         }
         var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')

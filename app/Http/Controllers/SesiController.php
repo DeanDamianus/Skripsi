@@ -753,6 +753,12 @@ class SesiController extends Controller
             ->select('rekap_2024.id_petani', 'users.name', DB::raw('SUM(rekap_2024.netto * rekap_2024.harga) as omset'))
             ->groupBy('rekap_2024.id_petani', 'users.name')
             ->get();
+        
+            $hutanglist = DB::table('hutang_2024')
+            ->select('bon', 'cicilan', DB::raw('(bon - cicilan) as sisahutang'))
+            ->get()
+            ->toArray(); // Convert the collection to an array
+        
 
         // Fetch harga and netto values together from rekap_2024
         $parameter = DB::table('parameter_2024')
@@ -771,6 +777,7 @@ class SesiController extends Controller
         // Define arrays to store the calculated values per user
         $userJumlahBersih = [];
         $userNames = [];
+        
         
         // Iterate through each data row to calculate values for each user
         foreach ($harganetto as $item) {
@@ -824,6 +831,10 @@ class SesiController extends Controller
         }
         
         $dataOmset = [];
+        foreach ($jumlahkotor as $data) {
+            $dataOmset[$data->name] = $data->omset;
+        }
+        $hutangdashboard = [];
         foreach ($jumlahkotor as $data) {
             $dataOmset[$data->name] = $data->omset;
         }
