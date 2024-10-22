@@ -199,7 +199,7 @@ class SesiController extends Controller
         $data = DB::table('rekap_2024')
             ->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')
             ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
-            ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')// Join with users table
+            ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap') // Join with users table
             ->where('rekap_2024.id_petani', $userId)
             ->where('rekap_2024.id_musim', $idMusim) // Filter by id_musim from the request
             ->select('rekap_2024.*', 'parameter_2024.*', 'distribusi_2024.status') // Select the image field from users table
@@ -766,13 +766,11 @@ class SesiController extends Controller
             ->groupBy('rekap_2024.id_petani', 'users.name')
             ->get();
 
-            $bon = DB::table('hutang_2024')
-            ->select('id_petani', 'bon', 'tanggal_hutang','cicilan') // Include tanggal_hutang for each entry
-            ->groupBy('id_petani', 'bon', 'tanggal_hutang','cicilan')
+        $bon = DB::table('hutang_2024')
+            ->select('id_petani', 'bon', 'tanggal_hutang', 'cicilan') // Include tanggal_hutang for each entry
+            ->groupBy('id_petani', 'bon', 'tanggal_hutang', 'cicilan')
             ->get()
             ->toArray();
-
-
 
         // Fetch harga and netto values together from rekap_2024
         $parameter = DB::table('parameter_2024')
@@ -789,15 +787,13 @@ class SesiController extends Controller
             ->get();
 
         // Define arrays to store the calculated values per user
-        $userJumlahBersih = [];
-        $userNames = [];
-        
+        $userJumlahBersih = []; // Store jumlah bersih keyed by petani name
 
         // Iterate through each data row to calculate values for each user
         foreach ($harganetto as $item) {
-            $id_petani = $item->id_rekap; // Assuming 'id_petani' corresponds to 'id_rekap'
             $netto = $item->netto;
             $harga = $item->harga;
+            $petaniName = $item->name; // Get the petani's name
 
             // Calculate netto * harga for each row
             $total = $netto * $harga;
@@ -826,23 +822,17 @@ class SesiController extends Controller
             // Calculate jumlahBersih
             $jumlahBersih = $jumlahKotor - $komisi;
 
-            // Use the petani's name instead of id_petani for the keys
-            $petaniName = $item->name; // Get the petani's name
-
             // Add jumlahBersih to the corresponding petani name
             if (!isset($userJumlahBersih[$petaniName])) {
-                $userJumlahBersih[$petaniName] = []; // Initialize an array for each petani
+                $userJumlahBersih[$petaniName] = 0; // Initialize with 0 if not set
             }
 
-            // Push each jumlahBersih value for this petani into the array
-            $userJumlahBersih[$petaniName][] = $jumlahBersih;
+            // Accumulate jumlahBersih for this petani
+            $userJumlahBersih[$petaniName] += $jumlahBersih;
         }
 
-
-        $totalBersihPerPetani = [];
-        foreach ($userJumlahBersih as $bersihArray) {
-            $totalBersihPerPetani[] = array_sum($bersihArray);
-        }
+        // Now $userJumlahBersih contains the total bersih values for each petani
+        // Extract only the values
 
         $dataOmset = [];
         foreach ($jumlahkotor as $data) {
@@ -851,44 +841,50 @@ class SesiController extends Controller
 
         $tanggal_hutang = DB::table('hutang_2024')->select('tanggal_hutang')->get()->toArray();
         $bungahutang = DB::table('parameter_2024')->select('bunga_hutang')->first();
-        $current_tanggal = Carbon::now(); 
+        $current_tanggal = Carbon::now();
         $bunga = (float) $bungahutang->bunga_hutang;
         $sisahutangPerPetani = [];
         foreach ($bon as $entry) {
             // Convert the tanggal_hutang for each entry to a Carbon date
             $tanggal_hutang = Carbon::createFromFormat('Y-m-d', $entry->tanggal_hutang);
-            
+
             // Ensure that 'bon' is accessed as a numeric value (not an object)
             $bon_value = (float) $entry->bon;
-            
+
             // Calculate the difference in years
             $diff_in_years = $tanggal_hutang->diffInDays($current_tanggal) / 365;
-            
+
             // Calculate bunga hutang
-            $bunga_hutang = $diff_in_years * $bunga * $bon_value; 
+            $bunga_hutang = $diff_in_years * $bunga * $bon_value;
             $bunga_hutang_percentage = ($bunga_hutang / $bon_value) * 100;
-            
+
             // Calculate total bon including bunga
             $totalbon = $bon_value + $bon_value * ($bunga_hutang_percentage / 100);
-            
+
             // Access cicilan from the entry
             $cicilan = (float) $entry->cicilan;
-            
+
             // Calculate sisahutang
             $sisahutang = $totalbon - $cicilan;
-            
+
             // Store the result in the array using id_petani as the key
             $sisahutangPerPetani[$entry->id_petani] = $sisahutang; // Store sisahutang for each petani
         }
 
-
-
         $petani = array_keys($dataOmset);
         $dataOmset = array_values($dataOmset);
-        $sisahutangPerPetani = array_values($sisahutangPerPetani);
+        $totalBersihPerPetani = array_values($userJumlahBersih);
+        $totalBersihPerPetani = $userJumlahBersih;
+        $totalBersihPerPetani = [];
+        foreach ($petani as $petaniName) {
+            if (isset($userJumlahBersih[$petaniName])) {
+                $totalBersihPerPetani[] = $userJumlahBersih[$petaniName];
+            } else {
+                $totalBersihPerPetani[] = 0; // If no data is found, set 0
+            }
+        }
 
-        // dd($sisahutangPerPetani);
-        
+        // dd($totalBersihPerPetani);
 
         $diterima = DB::table('distribusi_2024')
             ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
@@ -1034,9 +1030,8 @@ class SesiController extends Controller
             'sisa' => $sisa,
             'userJumlahBersih' => $userJumlahBersih,
             'totalBersihPerPetani' => $totalBersihPerPetani,
-            'sisahutangPerPetani' => $sisahutangPerPetani
+            'sisahutangPerPetani' => $sisahutangPerPetani,
         ]);
-        
     }
 
     //input registrasi petani baru
@@ -1060,7 +1055,6 @@ class SesiController extends Controller
         $idMusim = $request->input('id_musim');
         $year = $request->input('tahun', date('Y'));
         $id_petani = $request->input('id_petani');
-        
 
         // Insert a new record in the rekap_2024 table
         DB::table('rekap_2024')->insert([
@@ -1075,7 +1069,6 @@ class SesiController extends Controller
             'seri' => $request->input('seri'),
             'bruto' => $request->input('bruto'),
         ]);
-
 
         // Redirect after successful insertion
         return redirect()
