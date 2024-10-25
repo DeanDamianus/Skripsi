@@ -76,6 +76,10 @@
         <!-- Main content -->
         <form method="POST" action="{{ route('inputbulk') }}">
             @csrf
+            @foreach ($idrekap as $id)
+                <input type="hidden" name="id_rekap[]" value="{{ $id }}">
+            @endforeach
+            <input type="hidden" name="id_musim" value="{{ $idMusim }}">
             <input type="hidden" name="n_gudang" value="5000">
             <input type="hidden" name="nt_pabrik" value="10000">
             <input type="hidden" name="kasut" value="10000">

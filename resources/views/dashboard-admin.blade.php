@@ -368,10 +368,10 @@
                         </div>
 
                     </div> --}}
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="card card-info">
                             <div class="card-header">
-                                <h3 class="card-title">Status Distribusi Nota A</h3>
+                                <h3 class="card-title">Status Distribusi Nota</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
@@ -388,26 +388,6 @@
                             <!-- /.card-body -->
                         </div>
                         <!--nota A -->
-                    </div>
-                    <div class="col-md-6">
-                        <!-- Nota B -->
-                        <div class="card card-info">
-                            <div class="card-header">
-                                <h3 class="card-title">Status Distribusi Nota B</h3>
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="donutChart2"
-                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -669,11 +649,11 @@
     };
 
 
-        new Chart(stackedBarChartCanvas, {
-    type: 'bar',
-    data: stackedBarChartData,
-    options: stackedBarChartOptions
-});
+            new Chart(stackedBarChartCanvas, {
+        type: 'bar',
+        data: stackedBarChartData,
+        options: stackedBarChartOptions
+    });
 
     </script>
 
@@ -742,31 +722,6 @@
             new Chart(ctxDonutA, {
                 type: 'doughnut',
                 data: donutDataA,
-                options: donutOptions
-            });
-
-            // Create the second donut chart
-            var ctxDonutB = $('#donutChart2').get(0).getContext('2d');
-
-            // Use Blade to pass the PHP variable to JavaScript
-            var diterimaB = {{ $diterima_B }};
-            var diprosesB = {{ $diproses_B }};
-            var ditolakB = {{ $ditolak_B }};
-            var belumprosesB = {{ $belumproses_B }};
-
-            // Prepare the data for the second chart
-            var donutDataB = {
-                labels: ['Diterima', 'Diproses', 'Ditolak', 'Belum Diproses'],
-                datasets: [{
-                    data: [diterimaB, diprosesB, ditolakB, belumprosesB],
-                    backgroundColor: ['#00a65a', '#ffeb3b', '#dc3545', '#00c0ef'],
-                }]
-            };
-
-            // Create the second doughnut chart
-            new Chart(ctxDonutB, {
-                type: 'doughnut',
-                data: donutDataB,
                 options: donutOptions
             });
         });

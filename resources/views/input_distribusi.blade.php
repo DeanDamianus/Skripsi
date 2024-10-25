@@ -67,7 +67,7 @@
                         <i class="fas fa-arrow-left" style="font-size: 20px; color: black;"></i>
                     </a>
                     <div class="col-sm-6">
-                        <h1>Input Distribusi Nomor Rekap {{ $userId }}</h1>
+                        <h1>Input Distribusi Nomor Rekap {{ $id_rekap }}</h1>
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
         <!-- Main content -->
         <form method="POST" action="{{ route('inputdistribusi.store') }}">
             @csrf
-            <input type="hidden" name="id_rekap" value="{{ $userId }}">
+            <input type="hidden" name="id_rekap" value="{{ $id_rekap }}">
             <input type="hidden" name="id_musim" value="{{ $idMusim }}">
             <input type="hidden" name="n_gudang" value="5000">
             <input type="hidden" name="nt_pabrik" value="10000">

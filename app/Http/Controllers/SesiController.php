@@ -354,6 +354,7 @@ class SesiController extends Controller
     //post controller
     public function inputDistribusi(Request $request)
     {
+        // dd($request->all());
         // Validate the incoming request
         $request->validate([
             'id_rekap' => 'required|integer',
@@ -364,7 +365,6 @@ class SesiController extends Controller
             'grade' => 'required|string|in:A,B,C,D',
         ]);
 
-        // Get the year from the request or default to current year
         $year = $request->input('year', date('Y'));
 
         // Prepare the date fields based on status
@@ -406,30 +406,30 @@ class SesiController extends Controller
     public function formdistribusi(Request $request)
     {
         $year = $request->input('year', date('Y'));
-        $userId = $request->input('id');
+        $id_rekap = $request->input('id');
         $idMusim = $request->input('id_musim');
 
-        $username = DB::table('users')->where('id', $userId)->pluck('name')->first();
+        $username = DB::table('users')->where('id', $id_rekap)->pluck('name')->first();
 
-        $data = DB::table('rekap_2024')->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')->where('rekap_2024.id_petani', $userId)->where('rekap_2024.id_musim', $idMusim)->select('rekap_2024.*', 'parameter_2024.*')->first();
+        $data = DB::table('rekap_2024')->join('parameter_2024', 'rekap_2024.id_musim', '=', 'parameter_2024.id_musim')->where('rekap_2024.id_petani', $id_rekap)->where('rekap_2024.id_musim', $idMusim)->select('rekap_2024.*', 'parameter_2024.*')->first();
 
         $mobil_berangkat = DB::table('distribusi_2024')
-            ->where('id_rekap', $userId) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
+            ->where('id_rekap', $id_rekap) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
             ->select('mobil_berangkat')
             ->first();
 
         $mobil_pulang = DB::table('distribusi_2024')
-            ->where('id_rekap', $userId) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
+            ->where('id_rekap', $id_rekap) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
             ->select('mobil_pulang')
             ->first();
 
         $status = DB::table('distribusi_2024')
-            ->where('id_rekap', $userId) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
+            ->where('id_rekap', $id_rekap) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
             ->select('status')
             ->first();
 
         $grade = DB::table('rekap_2024')
-            ->where('id_rekap', $userId) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
+            ->where('id_rekap', $id_rekap) // Adjust the condition if id_petani belongs to distribusi_2024 // Adjust the condition if id_musim belongs to distribusi_2024
             ->select('grade')
             ->first(); // Retrieve the first record
 
@@ -440,7 +440,7 @@ class SesiController extends Controller
             'mobil_berangkat' => $mobil_berangkat ? $mobil_berangkat->mobil_berangkat : null,
             'username' => $username,
             'selectedYear' => $year,
-            'userId' => $userId,
+            'id_rekap' => $id_rekap,
             'idMusim' => $idMusim,
             'grade' => $grade ? $grade->grade : null,
         ]);
@@ -789,16 +789,12 @@ class SesiController extends Controller
         // Define arrays to store the calculated values per user
         $userJumlahBersih = []; // Store jumlah bersih keyed by petani name
 
-        // Iterate through each data row to calculate values for each user
         foreach ($harganetto as $item) {
             $netto = $item->netto;
             $harga = $item->harga;
-            $petaniName = $item->name; // Get the petani's name
-
-            // Calculate netto * harga for each row
+            $petaniName = $item->name;
             $total = $netto * $harga;
 
-            // Calculate kj based on harga
             if ($harga <= 50000) {
                 $kj = 1000 * $netto;
             } elseif ($harga <= 75000) {
@@ -813,26 +809,19 @@ class SesiController extends Controller
                 $kj = 6000 * $netto;
             }
 
-            // Calculate jumlahKotor
             $jumlahKotor = $total - $kj - $parameter->biaya_jual - $parameter->naik_turun;
 
-            // Calculate komisi
             $komisi = $jumlahKotor * $parameter->kepala_petani;
 
-            // Calculate jumlahBersih
             $jumlahBersih = $jumlahKotor - $komisi;
 
-            // Add jumlahBersih to the corresponding petani name
             if (!isset($userJumlahBersih[$petaniName])) {
-                $userJumlahBersih[$petaniName] = 0; // Initialize with 0 if not set
+                $userJumlahBersih[$petaniName] = 0; 
             }
 
-            // Accumulate jumlahBersih for this petani
+
             $userJumlahBersih[$petaniName] += $jumlahBersih;
         }
-
-        // Now $userJumlahBersih contains the total bersih values for each petani
-        // Extract only the values
 
         $dataOmset = [];
         foreach ($jumlahkotor as $data) {
@@ -845,30 +834,22 @@ class SesiController extends Controller
         $bunga = (float) $bungahutang->bunga_hutang;
         $sisahutangPerPetani = [];
         foreach ($bon as $entry) {
-            // Convert the tanggal_hutang for each entry to a Carbon date
             $tanggal_hutang = Carbon::createFromFormat('Y-m-d', $entry->tanggal_hutang);
 
-            // Ensure that 'bon' is accessed as a numeric value (not an object)
             $bon_value = (float) $entry->bon;
 
-            // Calculate the difference in years
             $diff_in_years = $tanggal_hutang->diffInDays($current_tanggal) / 365;
 
-            // Calculate bunga hutang
             $bunga_hutang = $diff_in_years * $bunga * $bon_value;
             $bunga_hutang_percentage = ($bunga_hutang / $bon_value) * 100;
 
-            // Calculate total bon including bunga
             $totalbon = $bon_value + $bon_value * ($bunga_hutang_percentage / 100);
 
-            // Access cicilan from the entry
             $cicilan = (float) $entry->cicilan;
 
-            // Calculate sisahutang
             $sisahutang = $totalbon - $cicilan;
 
-            // Store the result in the array using id_petani as the key
-            $sisahutangPerPetani[$entry->id_petani] = $sisahutang; // Store sisahutang for each petani
+            $sisahutangPerPetani[$entry->id_petani] = $sisahutang;
         }
 
         $petani = array_keys($dataOmset);
@@ -876,35 +857,32 @@ class SesiController extends Controller
         $totalBersihPerPetani = array_values($userJumlahBersih);
         $totalBersihPerPetani = $userJumlahBersih;
         $totalBersihPerPetani = [];
+
+        //untuk menandai index tiap nama petanidengan hasil bersih
         foreach ($petani as $petaniName) {
             if (isset($userJumlahBersih[$petaniName])) {
                 $totalBersihPerPetani[] = $userJumlahBersih[$petaniName];
             } else {
-                $totalBersihPerPetani[] = 0; // If no data is found, set 0
+                $totalBersihPerPetani[] = 0; //mengganti menjadi 0 jika tidak ada hasil bersih.
             }
         }
-
         // dd($totalBersihPerPetani);
 
         $diterima = DB::table('distribusi_2024')
             ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
             ->where('distribusi_2024.status', 'Diterima')
-            ->where('rekap_2024.periode', 'LIKE', '%A%') // Replace 'periode' with the appropriate column name from rekap_2024
             ->where('rekap_2024.id_musim', $musim->id)
             ->count();
 
         $diproses = DB::table('distribusi_2024')
             ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
             ->where('distribusi_2024.status', 'Diproses')
-            ->where('rekap_2024.periode', 'LIKE', '%A%') // Replace 'periode' with the appropriate column name from rekap_2024
             ->where('rekap_2024.id_musim', $musim->id)
             ->count();
 
         $ditolak = DB::table('distribusi_2024')
             ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-            ->where('distribusi_2024.status', 'Dikembalikan')
-            ->where('rekap_2024.periode', 'LIKE', '%A%') // Replace 'periode' with the appropriate column name from rekap_2024
-            ->where('rekap_2024.id_musim', $musim->id)
+            ->where('distribusi_2024.status', 'Dikembalikan') 
             ->count();
 
         $belumproses = DB::table('rekap_2024')
@@ -915,42 +893,8 @@ class SesiController extends Controller
                     ->from('distribusi_2024')
                     ->where('id_musim', $musim->id);
             })
-            ->where('periode', 'LIKE', '%A%')
             ->count();
 
-        //NOTA B
-
-        $diterima_B = DB::table('distribusi_2024')
-            ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-            ->where('distribusi_2024.status', 'Diterima')
-            ->where('rekap_2024.periode', 'LIKE', '%B%') // Replace 'periode' with the appropriate column name from rekap_2024
-            ->where('rekap_2024.id_musim', $musim->id)
-            ->count();
-
-        $diproses_B = DB::table('distribusi_2024')
-            ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-            ->where('distribusi_2024.status', 'Diproses')
-            ->where('rekap_2024.periode', 'LIKE', '%B%') // Replace 'periode' with the appropriate column name from rekap_2024
-            ->where('rekap_2024.id_musim', $musim->id)
-            ->count();
-
-        $ditolak_B = DB::table('distribusi_2024')
-            ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-            ->where('distribusi_2024.status', 'Dikembalikan')
-            ->where('rekap_2024.periode', 'LIKE', '%B%') // Replace 'periode' with the appropriate column name from rekap_2024
-            ->where('rekap_2024.id_musim', $musim->id)
-            ->count();
-
-        $belumproses_B = DB::table('rekap_2024')
-            ->where('id_musim', $musim->id)
-            ->whereNotIn('id_rekap', function ($query) use ($musim) {
-                $query
-                    ->select('id_rekap')
-                    ->from('distribusi_2024')
-                    ->where('id_musim', $musim->id);
-            })
-            ->where('periode', 'LIKE', '%B%')
-            ->count();
 
         $musimList = DB::table('musim')->get();
 
@@ -1014,10 +958,6 @@ class SesiController extends Controller
             'belumproses' => $belumproses,
             'ditolak' => $ditolak,
             'diproses' => $diproses,
-            'diterima_B' => $diterima_B,
-            'belumproses_B' => $belumproses_B,
-            'ditolak_B' => $ditolak_B,
-            'diproses_B' => $diproses_B,
             'selectedYear' => $year,
             'musim' => $musimList,
             'id_musim' => $musim->id,
@@ -1472,7 +1412,7 @@ class SesiController extends Controller
         $year = $request->input('year', date('Y'));
         $userId = $request->input('id');
         $idMusim = $request->input('id_musim');
-        $periode = $request->query('periode'); // Default to '1-A' if not provided
+        $periode = $request->query('periode'); 
 
         // Retrieve status from `rekap_2024` where `periode` matches
         $status = DB::table('rekap_2024')->where('periode', $periode)->where('id_musim', $idMusim)->select('status')->first();
@@ -1499,57 +1439,65 @@ class SesiController extends Controller
 
     public function inputbulk(Request $request)
     {
-        $request->validate([
-            'records' => 'required|array',
-            'records.*.id_rekap' => 'required|integer',
-            'records.*.id_musim' => 'required|integer',
-            'records.*.mobil_berangkat' => 'required|integer',
-            'records.*.mobil_pulang' => 'required|integer',
-            'records.*.status' => 'required|string|max:255',
-            'records.*.grade' => 'required|string|in:A,B,C,D',
-        ]);
 
-        // Prepare data for bulk insertion and grade updates
+        // dd($request->all());
+        // Validate the incoming data
+        $request->validate([
+            'id_rekap' => 'required|array',
+            'id_musim' => 'required|integer',
+            'n_gudang' => 'required|integer',
+            'nt_pabrik' => 'required|integer',
+            'kasut' => 'required|integer',
+            'transport_gudang' => 'required|integer',
+            'mobil_berangkat' => 'required|integer',
+            'mobil_pulang' => 'required|integer',
+            'status' => 'required|string|max:255',
+        ]);
+    
+        // Prepare data for bulk insertion and updates
         $bulkData = [];
         $gradeUpdates = [];
-        $periode = $request->query('periode');
-
-        foreach ($request->input('records') as $record) {
-            $tgl_diterima = $record['status'] === 'Diterima' ? date('Y-m-d') : null;
-            $tgl_diproses = $record['status'] === 'Diproses' ? date('Y-m-d') : null;
-            $tgl_ditolak = $record['status'] === 'Dikembalikan' ? date('Y-m-d') : null;
-
+        
+        foreach ($request->input('id_rekap') as $idRekap) {
+            // Map grade field dynamically
+            $grade = $request->input("grade_{$idRekap}");
+    
+            // Set dates based on status
+            $tgl_diterima = $request->input('status') === 'Diterima' ? date('Y-m-d') : null;
+            $tgl_diproses = $request->input('status') === 'Diproses' ? date('Y-m-d') : null;
+            $tgl_ditolak = $request->input('status') === 'Dikembalikan' ? date('Y-m-d') : null;
+    
+            // Build each record entry for distribusi_2024
             $bulkData[] = [
-                'id_rekap' => $record['id_rekap'],
-                'id_musim' => $record['id_musim'],
+                'id_rekap' => $idRekap,
+                'id_musim' => $request->input('id_musim'),
                 'tgl_diterima' => $tgl_diterima,
                 'tgl_diproses' => $tgl_diproses,
                 'tgl_ditolak' => $tgl_ditolak,
-                'n_gudang' => $record['n_gudang'] ?? 5000,
-                'nt_pabrik' => $record['nt_pabrik'] ?? 10000,
-                'kasut' => $record['kasut'] ?? 10000,
-                'transport_gudang' => $record['transport_gudang'] ?? 5000,
-                'mobil_berangkat' => $record['mobil_berangkat'],
-                'mobil_pulang' => $record['mobil_pulang'],
-                'status' => $record['status'],
-                'periode' => $periode,
+                'n_gudang' => $request->input('n_gudang'),
+                'nt_pabrik' => $request->input('nt_pabrik'),
+                'kasut' => $request->input('kasut'),
+                'transport_gudang' => $request->input('transport_gudang'),
+                'mobil_berangkat' => $request->input('mobil_berangkat'),
+                'mobil_pulang' => $request->input('mobil_pulang'),
+                'status' => $request->input('status'),
             ];
-
-            // Prepare grade updates for each `id_rekap`
-            $gradeUpdates[$record['id_rekap']] = ['grade' => $record['grade']];
+    
+            // Prepare grade update for each id_rekap
+            $gradeUpdates[$idRekap] = ['grade' => $grade];
         }
-
-        // Perform bulk upsert for `distribusi_2024` table
+    
+        // Upsert operation for distribusi_2024
         DB::table('distribusi_2024')->upsert($bulkData, ['id_rekap', 'id_musim'], array_keys($bulkData[0]));
-
-        // Perform bulk updates for grades in `rekap_2024` table
+    
+        // Perform bulk updates for grades in rekap_2024 table
         foreach ($gradeUpdates as $id_rekap => $update) {
             DB::table('rekap_2024')->where('id_rekap', $id_rekap)->update($update);
         }
-
-        // Redirect back with a success message
+    
+        // Redirect with a success message
         return redirect()
-            ->to('http://127.0.0.1:8000/distribusi-bulk?periode=' . $request->query('periode') . '&id_musim=' . $request->input('id_musim'))
+            ->to('http://127.0.0.1:8000/distribusi?yeare='. $request->input('id_musim'))
             ->with('success', 'Bulk data updated successfully!');
     }
 }
