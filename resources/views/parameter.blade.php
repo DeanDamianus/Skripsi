@@ -156,7 +156,7 @@
                             </ul>
                         </li>
                         <li class="nav-item menu-open">
-                            <a href="" class="nav-link active">
+                            <a href="#" class="nav-link active" style="background-color: #dda446;">
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     <strong>PARAMETER</strong>
@@ -235,8 +235,9 @@
                                             </div>
 
                                             <div class="card-footer">
-                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                <button type="submit" class="btn btn" style="background-color: #dda446;">Submit</button>
                                             </div>
+                                            
                                         </form>
                                     </div>
                                 </div>

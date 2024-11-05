@@ -85,7 +85,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href='{{ url('/owner?tahun=' . $selectedYears) }}' class="nav-link">
+                                    <a href='{{ url('/owner?tahun=' . $selectedYears) }}' class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Global</p>
                                     </a>
@@ -99,7 +99,7 @@
                             </ul>
                         </li>
                         <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                            <a href="#" class="nav-link active" style="background-color: #dda446;">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     <strong>INPUT NOTA</strong>

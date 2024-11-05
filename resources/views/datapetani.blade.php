@@ -22,8 +22,7 @@
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ url('/owner') }}" class="nav-link">Home</a>
@@ -53,9 +52,9 @@
                     </div>
                     <div class="info">
                         @if (Auth::check())
-                            <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                         @else
-                            <a href="#" class="d-block">Guest</a>
+                        <a href="#" class="d-block">Guest</a>
                         @endif
                     </div>
                 </div>
@@ -73,13 +72,14 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href='{{ url('/owner?tahun=' . $selectedYear) }}' class="nav-link">
+                                    <a href='{{ url(' /owner?tahun=' . $selectedYear) }}' class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Global</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a a href='{{ url('/dashboardindividual?year=' . $selectedYear) }}'class="nav-link">
+                                    <a a href='{{ url(' /dashboardindividual?year=' . $selectedYear) }}'
+                                        class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Individual</p>
                                     </a>
@@ -105,7 +105,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                            <a href="#" class="nav-link active" style="background-color: #dda446;">
                                 <i class="nav-icon fas fa-tractor"></i>
                                 <p><strong>PETANI</strong><i class="fas fa-angle-left right"></i></p>
                             </a>
@@ -153,8 +153,8 @@
                         <div class="col-sm-6 text-right">
                             <form action="{{ url('/datapetani/search') }}" method="GET">
                                 <div class="input-group mb-3">
-                                    <input type="text" name="search" class="form-control"
-                                        placeholder="Cari Petani..." value="{{ request()->query('search') }}">
+                                    <input type="text" name="search" class="form-control" placeholder="Cari Petani..."
+                                        value="{{ request()->query('search') }}">
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" type="submit">
                                             <i class="fas fa-search"></i>
@@ -171,21 +171,20 @@
                 <div class="container-fluid">
                     <div class="row card-container">
                         @foreach ($data as $users)
-                            <div class="col-md-3">
-                                <div class="card fixed-card">
-                                    <div style="position: relative; display: inline-block;">
-                                        <a href="{{ url('/uploadfoto?id=' . $users->id) }}" style="text-decoration: none;">
-                                            <!-- Display user's uploaded image or fallback to a default image -->
-                                            <img class="card-img-top"
-                                                src="{{ $users->image ? asset('uploads/' . $users->image) : asset('dist/img/blank.png') }}"
-                                                alt="Petani image"
-                                                style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.3s;"
-                                                onmouseenter="this.style.transform='scale(1.05)'; this.nextElementSibling.style.display='block';"
-                                                onmouseleave="this.style.transform='scale(1)'; this.nextElementSibling.style.display='none';">
-            
-                                            <!-- Edit icon -->
-                                            <span
-                                                style="
+                        <div class="col-md-3">
+                            <div class="card fixed-card">
+                                <div style="position: relative; display: inline-block;">
+                                    <a href="{{ url('/uploadfoto?id=' . $users->id) }}" style="text-decoration: none;">
+                                        <!-- Display user's uploaded image or fallback to a default image -->
+                                        <img class="card-img-top"
+                                            src="{{ $users->image ? asset('uploads/' . $users->image) : asset('dist/img/blank.png') }}"
+                                            alt="Petani image"
+                                            style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.3s;"
+                                            onmouseenter="this.style.transform='scale(1.05)'; this.nextElementSibling.style.display='block';"
+                                            onmouseleave="this.style.transform='scale(1)'; this.nextElementSibling.style.display='none';">
+
+                                        <!-- Edit icon -->
+                                        <span style="
                                                 position: absolute;
                                                 top: 50%;
                                                 left: 50%;
@@ -194,24 +193,24 @@
                                                 display: none;
                                                 font-size: 20px; /* Adjust size as needed */
                                             ">
-                                                <i class="fas fa-edit"></i> <!-- Font Awesome edit icon -->
-                                            </span>
-                                        </a>
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">ID Petani: <strong>{{ $users->id }}</strong></h5>
-                                        <p class="card-text">
-                                            Nama Petani: <strong>{{ $users->name }}</strong><br>
-                                            Dibuat Tanggal: <strong>{{ $users->formatted_created_at }}</strong>
-                                        </p>
-                                    </div>
+                                            <i class="fas fa-edit"></i> <!-- Font Awesome edit icon -->
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">ID Petani: <strong>{{ $users->id }}</strong></h5>
+                                    <p class="card-text">
+                                        Nama Petani: <strong>{{ $users->name }}</strong><br>
+                                        Dibuat Tanggal: <strong>{{ $users->formatted_created_at }}</strong>
+                                    </p>
                                 </div>
                             </div>
+                        </div>
                         @endforeach
                     </div>
                 </div>
             </div>
-            
+
         </div>
 
         <footer class="main-footer">

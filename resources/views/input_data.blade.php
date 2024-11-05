@@ -30,7 +30,7 @@
                 </a>
                 <ul class="navbar-nav">
                     <li class="nav-item d-none d-sm-inline-block">
-                        <a href="{{url('/input')}}" class="nav-link">Home</a>
+                        <a href="{{ url('/input') }}" class="nav-link">Home</a>
                     </li>
                 </ul>
                 <button class="navbar-toggler order-1" type="button" data-toggle="collapse"
@@ -71,7 +71,7 @@
                         <i class="fas fa-arrow-left" style="font-size: 20px; color: black;"></i>
                     </a>
                     <div class="col-sm-6">
-                        <h1>List Rekap <label> {{ $username}} </label></h1>
+                        <h1>List Rekap <label> {{ $username }} </label></h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
@@ -84,9 +84,11 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button onclick="window.location.href='{{ url('/inputform?id=' . $idPetani . '&id_musim=' . $id . '&year=' . $selectedYear ) }}'" class="btn btn-primary">
-                                    <i class="nav-icon fas fa-plus"></i>
-                                </button>                                
+                                <button
+                                    onclick="window.location.href='{{ url('/inputform?id=' . $idPetani . '&id_musim=' . $id . '&year=' . $selectedYear) }}'"
+                                    style="background-color: #dda446; border: 2px solid black;" class="btn btn-primary">
+                                    <i class="nav-icon fas fa-plus" style="color: white;"></i>
+                                </button>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0">
@@ -107,30 +109,32 @@
                                             <th>Jual</th>
                                             <th>Cek Kilo</th>
                                             <th>Status</th>
+                                            <th>Cetak</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($data as $item)
-                                        <tr>
-                                            <td>
-                                                <a href="{{ url('/formdistribusi?id=' . $item->id_rekap . '&id_musim=' . $item->id_musim) }}">
-                                                    {{ $item->id_rekap }}
-                                                </a>
-                                            </td>
-                                            <td>{{ number_format($item->bruto, 0, ',', '.') . ' kg' }}</td>
-                                            <td>{{ number_format($item->netto, 0, ',', '.') . ' kg' }}</td>
-                                            <td>{{ 'Rp. ' . number_format($harga, 0, ',', '.') }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item ->jumlah, 0, ',', '.') }}</td>
-                                            <td>{{ number_format($item->kj, 0, ',', '.') }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item->jumlahkotor, 0, ',', '.') }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item->komisi, 0, ',', '.') }}</td>
-                                            <td>{{ 'Rp. ' . number_format($item->bersih, 0, ',', '.') }}</td>
-                                            <td>{{ number_format($item->berat_gudang, 0, ',', '.') . ' kg' }}</td>
-                                            <td>{{ $item->grade }}</td>
-                                            <td>{!! $item->indicator !!}</td>
-                                            <td>{{ $item->cek}}</td>
-                                            <td>{!! $item->status !!}</td>
-                                            {{-- <td>
+                                            <tr>
+                                                <td>
+                                                    <a
+                                                        href="{{ url('/formdistribusi?id=' . $item->id_rekap . '&id_musim=' . $item->id_musim) }}">
+                                                        {{ $item->id_rekap }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ number_format($item->bruto, 0, ',', '.') . ' kg' }}</td>
+                                                <td>{{ number_format($item->netto, 0, ',', '.') . ' kg' }}</td>
+                                                <td>{{ 'Rp. ' . number_format($harga, 0, ',', '.') }}</td>
+                                                <td>{{ 'Rp. ' . number_format($item->jumlah, 0, ',', '.') }}</td>
+                                                <td>{{ number_format($item->kj, 0, ',', '.') }}</td>
+                                                <td>{{ 'Rp. ' . number_format($item->jumlahkotor, 0, ',', '.') }}</td>
+                                                <td>{{ 'Rp. ' . number_format($item->komisi, 0, ',', '.') }}</td>
+                                                <td>{{ 'Rp. ' . number_format($item->bersih, 0, ',', '.') }}</td>
+                                                <td>{{ number_format($item->berat_gudang, 0, ',', '.') . ' kg' }}</td>
+                                                <td>{{ $item->grade }}</td>
+                                                <td>{!! $item->indicator !!}</td>
+                                                <td>{{ $item->cek }}</td>
+                                                <td>{!! $item->status !!}</td>
+                                                {{-- <td>
                                                 <form action="{{ route('inputPetani.destroy', $item->id_rekap) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
@@ -139,7 +143,12 @@
                                                     </button>
                                                 </form>
                                             </td> --}}
-                                        </tr>
+                                                <td>
+                                                    <button class="badge badge-success" onclick="window.print()">
+                                                        <i class="fa fa-print"> Print</i>
+                                                    </button>
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
@@ -157,6 +166,7 @@
                                             <th></th>
                                             <th></th>
                                             <th>{{ $cektotal }}</th>
+                                            <th></th>
                                             <th></th>
                                         </tr>
                                     </tfoot>

@@ -767,10 +767,12 @@ class SesiController extends Controller
             ->get();
 
         $bon = DB::table('hutang_2024')
-            ->select('id_petani', 'bon', 'tanggal_hutang', 'cicilan') // Include tanggal_hutang for each entry
-            ->groupBy('id_petani', 'bon', 'tanggal_hutang', 'cicilan')
+            ->join('users', 'hutang_2024.id_petani', '=', 'users.id')
+            ->select('users.name','hutang_2024.id_petani', 'hutang_2024.bon', 'hutang_2024.tanggal_hutang', 'hutang_2024.cicilan') // Include tanggal_hutang for each entry
+            ->groupBy('hutang_2024.id_petani', 'users.name','hutang_2024.bon', 'hutang_2024.tanggal_hutang', 'hutang_2024.cicilan')
             ->get()
             ->toArray();
+        
 
         // Fetch harga and netto values together from rekap_2024
         $parameter = DB::table('parameter_2024')
@@ -834,6 +836,7 @@ class SesiController extends Controller
         $bunga = (float) $bungahutang->bunga_hutang;
         $sisahutangPerPetani = [];
         foreach ($bon as $entry) {
+            $petaniName = $entry->name;
             $tanggal_hutang = Carbon::createFromFormat('Y-m-d', $entry->tanggal_hutang);
 
             $bon_value = (float) $entry->bon;
@@ -849,15 +852,20 @@ class SesiController extends Controller
 
             $sisahutang = $totalbon - $cicilan;
 
-            $sisahutangPerPetani[$entry->id_petani] = $sisahutang;
+            $sisahutangPerPetani[$petaniName] = $sisahutang;
         }
 
         $petani = array_keys($dataOmset);
         $dataOmset = array_values($dataOmset);
         $totalBersihPerPetani = array_values($userJumlahBersih);
+        $sisahutangpetani = array_values($sisahutangPerPetani);
+
+        // dd($sisahutangPerPetani);
+
         $totalBersihPerPetani = $userJumlahBersih;
         $totalBersihPerPetani = [];
 
+       
         //untuk menandai index tiap nama petanidengan hasil bersih
         foreach ($petani as $petaniName) {
             if (isset($userJumlahBersih[$petaniName])) {
@@ -866,7 +874,21 @@ class SesiController extends Controller
                 $totalBersihPerPetani[] = 0; //mengganti menjadi 0 jika tidak ada hasil bersih.
             }
         }
-        // dd($totalBersihPerPetani);
+        
+
+        $sisahutangpetani = $sisahutangPerPetani;
+        $sisahutangpetani = [];
+
+        foreach($petani as $petaniName){
+            if(isset($sisahutangPerPetani[$petaniName])){
+                $sisahutangpetani[] = $sisahutangPerPetani[$petaniName];
+            }else{
+                $sisahutangpetani[] = 0;
+            }
+        }
+
+        // dd($sisahutangpetani);
+
 
         $diterima = DB::table('distribusi_2024')
             ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
@@ -970,7 +992,7 @@ class SesiController extends Controller
             'sisa' => $sisa,
             'userJumlahBersih' => $userJumlahBersih,
             'totalBersihPerPetani' => $totalBersihPerPetani,
-            'sisahutangPerPetani' => $sisahutangPerPetani,
+            'sisahutangpetani' => $sisahutangpetani,
         ]);
     }
 

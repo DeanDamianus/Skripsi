@@ -22,8 +22,7 @@
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ url('/owner') }}" class="nav-link">Home</a>
@@ -38,11 +37,10 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             @foreach ($currentMusim as $season)
-                                <div class="dropdown-divider"></div>
-                                <a href="{{ url('/dashboardindividual?year=' . $season->tahun) }}"
-                                    class="dropdown-item">
-                                    <i class="fas fa-calendar"></i> {{ $season->tahun }}
-                                </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url('/dashboardindividual?year=' . $season->tahun) }}" class="dropdown-item">
+                                <i class="fas fa-calendar"></i> {{ $season->tahun }}
+                            </a>
                             @endforeach
                         </div>
                     </div>
@@ -69,9 +67,9 @@
                     </div>
                     <div class="info">
                         @if (Auth::check())
-                            <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        <a href="#" class="d-block">{{ Auth::user()->name }}</a>
                         @else
-                            <a href="#" class="d-block">Guest</a>
+                        <a href="#" class="d-block">Guest</a>
                         @endif
                     </div>
                 </div>
@@ -80,7 +78,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                            <a href="#" class="nav-link active" style="background-color: #dda446;">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -169,8 +167,8 @@
                         <div class="col-sm-6 text-right">
                             <form action="{{ url('/datapetani/search') }}" method="GET">
                                 <div class="input-group mb-3">
-                                    <input type="text" name="search" class="form-control"
-                                        placeholder="Cari Petani..." value="{{ request()->query('search') }}">
+                                    <input type="text" name="search" class="form-control" placeholder="Cari Petani..."
+                                        value="{{ request()->query('search') }}">
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" type="submit">
                                             <i class="fas fa-search"></i>
@@ -189,8 +187,8 @@
                     <div class="card-body pb-0">
                         <div class="row">
                             @foreach ($data as $user)
-                                <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
-                                    <a href="{{ url('/dashboardpetani?id=' . $user->id . '&tahun=' . $selectedYear) }}">
+                            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+                                <a href="{{ url('/dashboardpetani?id=' . $user->id . '&tahun=' . $selectedYear) }}">
                                     <div class="card bg-light d-flex flex-fill">
                                         <div class="card-header text-muted border-bottom-0">
                                             {{ $user->id }}
@@ -199,7 +197,8 @@
                                             <div class="row">
                                                 <div class="col-7">
                                                     <h2 class="lead"><strong>{{ $user->name }}</strong></h2>
-                                                    <p class="text-muted text-sm"><b>Sejak: </b>{{ \Carbon\Carbon::parse($user->created_at)->format('d/m/y') }}</p>
+                                                    <p class="text-muted text-sm"><b>Sejak: </b>{{
+                                                        \Carbon\Carbon::parse($user->created_at)->format('d/m/y') }}</p>
                                                     <!-- Added about field -->
                                                 </div>
                                                 <div class="col-5 text-center">
@@ -219,7 +218,7 @@
                                             </div>
                                         </div> --}}
                                     </div>
-                                </div>
+                            </div>
                             @endforeach
 
                         </div>

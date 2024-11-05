@@ -158,7 +158,7 @@ mysqli_close($con);
               </a>
             </li>
             <li class="nav-item menu-open">
-              <a href="#" class="nav-link active">
+              <a href="#" class="nav-link active" style="background-color: #dda446;">
                 <i class="nav-icon fas fa-tractor"></i>
                 <p>
                   <strong>PETANI</strong>

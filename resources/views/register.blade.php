@@ -93,13 +93,14 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href='{{ url('/owner?tahun=' . $selectedYear) }}' class="nav-link">
+                                    <a href='{{ url(' /owner?tahun=' . $selectedYear) }}' class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Global</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a a href='{{ url('/dashboardindividual?year=' . $selectedYear) }}'class="nav-link">
+                                    <a a href='{{ url(' /dashboardindividual?year=' . $selectedYear) }}'
+                                        class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Individual</p>
                                     </a>
@@ -134,7 +135,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                            <a href="#" class="nav-link active" style="background-color: #dda446;">
                                 <i class="nav-icon fas fa-tractor"></i>
                                 <p>
                                     <strong>PETANI</strong>
@@ -242,8 +243,8 @@
                                     </div>
                                 </div> --}}
                                 <div class="row" style="width: 100%; justify-content: center;">
-                                    <div class="col-12">
-                                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                                    <div class="col-12" >
+                                        <button style="background-color: #dda446; type="submit" class="btn btn-block" >Register</button>
                                     </div>
                                 </div>
                             </form>

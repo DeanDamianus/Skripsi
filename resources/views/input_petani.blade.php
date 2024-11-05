@@ -165,7 +165,9 @@
                                 <!-- /.row -->
                             </div>
                             <div class="card-footer text-center">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn" style="background-color: #dda446; color: white; border: 2px solid black;">
+                                    Submit
+                                </button>
                             </div>
                         </form>
                     </div>

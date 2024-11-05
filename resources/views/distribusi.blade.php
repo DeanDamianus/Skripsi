@@ -133,7 +133,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-open">
-                            <a href="{{ url('/distribusi?year=' . $selectedYear) }}" class="nav-link active">
+                            <a href="#" class="nav-link active" style="background-color: #dda446;">
                                 <i class="nav-icon fas fa-truck"></i>
                                 <p>
                                     <strong>DISTRIBUSI</strong>

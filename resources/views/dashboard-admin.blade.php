@@ -88,7 +88,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                            <a href="#" class="nav-link active" style="background-color: #dda446;">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     <strong>DASHBOARD</strong>
@@ -103,7 +103,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a a href='{{ url('/dashboardindividual?year=' . $selectedYear) }}'class="nav-link">
+                                    <a a href='{{ url('/dashboardindividual?years=' . $selectedYear) }}'class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Individual</p>
                                     </a>
@@ -261,7 +261,7 @@
                     <div class="col-lg-12">
                         <div class="card card-info">
                             <div class="card-header">
-                                <h3 class="card-title">Total Omset + Hasil Bersih</h3>
+                                <h3 class="card-title">Total Hasil Bersih + Hutang</h3>
 
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -570,16 +570,14 @@
     <script>
         var labels = @json($petani);
         var dataOmset = @json($dataomset);
-        var totalJumlahBersih = @json($totalBersihPerPetani);
-        // var sisahutang = @json($sisahutangPerPetani); 
+        var sisahutang = @json($sisahutangpetani); 
         var barChartData = {
             labels: labels,
-            datasets: [
-                {
+            datasets: [{
                     label: 'Omset',
                     backgroundColor: 'rgba(60,141,188,0.9)',
                     borderColor: 'rgba(60,141,188,0.8)',
-                    pointRadius: false,
+                    pointRadius: false, 
                     pointColor: '#3b8bba',
                     pointStrokeColor: 'rgba(60,141,188,1)',
                     pointHighlightFill: '#fff',
@@ -587,7 +585,7 @@
                     data: dataOmset
                 },
                 {
-                    label: 'Hasil Bersih',
+                    label: 'Hutang',
                     backgroundColor: 'rgba(210, 214, 222, 1)',
                     borderColor: 'rgba(210, 214, 222, 1)',
                     pointRadius: false,
@@ -595,66 +593,65 @@
                     pointStrokeColor: '#c1c7d1',
                     pointHighlightFill: '#fff',
                     pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data: totalJumlahBersih
+                    data: sisahutang
                 },
-            //     {
-            //     label: 'Hutang',
-            //     backgroundColor: 'rgba(255, 99, 71, 0.9)', // Tomato red
-            //     borderColor: 'rgba(255, 99, 71, 1)',        // Solid tomato red for border
-            //     pointRadius: false,
-            //     pointColor: 'rgba(255, 99, 71, 1)',         // Red for points
-            //     pointStrokeColor: '#c1c7d1',
-            //     pointHighlightFill: '#fff',
-            //     pointHighlightStroke: 'rgba(220,220,220,1)',
-            //     data: sisahutang
-            // },
+                //     {
+                //     label: 'Hutang',
+                //     backgroundColor: 'rgba(255, 99, 71, 0.9)', // Tomato red
+                //     borderColor: 'rgba(255, 99, 71, 1)',        // Solid tomato red for border
+                //     pointRadius: false,
+                //     pointColor: 'rgba(255, 99, 71, 1)',         // Red for points
+                //     pointStrokeColor: '#c1c7d1',
+                //     pointHighlightFill: '#fff',
+                //     pointHighlightStroke: 'rgba(220,220,220,1)',
+                //     data: sisahutang
+                // },
             ]
         }
         var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
         var stackedBarChartData = $.extend(true, {}, barChartData)
 
         var stackedBarChartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            xAxes: [{
-                stacked: true,
-            }],
-            yAxes: [{
-            stacked: true,
-            ticks: {
-                callback: function(value) {
-                    // Convert the value to Rupiah format
-                    return 'Rp ' + value.toLocaleString('id-ID');
-                }
-            }
-        }]
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tooltipItem, data) {
-                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
-                    if (label) {
-                        label += ': ';
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true,
+                    ticks: {
+                        callback: function(value) {
+                            // Convert the value to Rupiah format
+                            return 'Rp ' + value.toLocaleString('id-ID');
+                        }
                     }
-                    // Format the value as Indonesian Rupiah (IDR)
-                    label += new Intl.NumberFormat('id-ID', {
-                        style: 'currency',
-                        currency: 'IDR'
-                    }).format(tooltipItem.yLabel);
-                    return label;
+                }]
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        // Format the value as Indonesian Rupiah (IDR)
+                        label += new Intl.NumberFormat('id-ID', {
+                            style: 'currency',
+                            currency: 'IDR'
+                        }).format(tooltipItem.yLabel);
+                        return label;
+                    }
                 }
             }
-        }
-    };
+        };
 
 
-            new Chart(stackedBarChartCanvas, {
-        type: 'bar',
-        data: stackedBarChartData,
-        options: stackedBarChartOptions
-    });
-
+        new Chart(stackedBarChartCanvas, {
+            type: 'bar',
+            data: stackedBarChartData,
+            options: stackedBarChartOptions
+        });
     </script>
 
     <script>

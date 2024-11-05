@@ -26,8 +26,10 @@
 
 <div class="login-box" style="width: 100%; max-width: 400px;">
   <!-- /.login-logo -->
-  <div class="card card-outline card-primary">
+  <div class="card card-outline" style="border-color: #dda446;">
     <div class="card-header text-center">
+      <img src="dist/img/simbakologo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+                  style="opacity: .8; width: 60px; height: 60px;"><br>
       <a href="{{url('/')}}" class="h1"><b>SIMBAKO</b></a>
     </div>
     <div class="card-body" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
@@ -61,7 +63,7 @@
         </div>
         <div class="row" style="width: 100%; justify-content: center;">
           <div class="col-12">
-            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            <button type="submit" class="btn btn-block" style="background-color: #dda446; border-color: #dda446; color: #fff;">Sign In</button>
           </div>
         </div>
       </form>
