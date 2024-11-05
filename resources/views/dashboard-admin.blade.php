@@ -103,7 +103,8 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a a href='{{ url('/dashboardindividual?years=' . $selectedYear) }}'class="nav-link">
+                                    <a a
+                                        href='{{ url('/dashboardindividual?years=' . $selectedYear) }}'class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Individual</p>
                                     </a>
@@ -191,9 +192,9 @@
                 <div class="row">
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
-                        <div class="small-box bg-info">
+                        <div class="small-box bg-success">
                             <div class="inner">
-                                <h3>{{ $totalNetto }} Kg</sup></h3>
+                                <h3>{{ $totalNetto }} Kg</h3>
                                 <p>Netto Keranjang diterima</p>
                             </div>
                             <div class="icon">
@@ -203,9 +204,8 @@
                                 More info <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
-
                     </div>
-                    <!--NETO-->
+                    <!-- Netto -->
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
                         <div class="small-box bg-success">
@@ -216,14 +216,14 @@
                                 <p>Omset diterima</p>
                             </div>
                             <div class="icon">
-                                <i class="fas fa-coins"></i> <!-- Ikon koin -->
+                                <i class="fas fa-coins"></i> <!-- Coin icon -->
                             </div>
                             <a href="{{ url('/input?year=' . $selectedYear) }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
                     </div>
-                    <!-- Jumlah Kotor-->
+                    <!-- Jumlah Kotor -->
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
                         <div class="small-box bg-purple">
@@ -239,7 +239,6 @@
                             </a>
                         </div>
                     </div>
-
                     <!-- Jumlah Bersih -->
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
@@ -257,10 +256,33 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-lg-12">
+                        <div class="card card-success">
+                            <div class="card-header" style="background-color: #dda446">
+                                <h3 class="card-title">Perbandingan Keranjang</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <canvas id="barChartkeranjang"
+                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
                         <div class="card card-info">
-                            <div class="card-header">
+                            <div class="card-header" style="background-color: #dda446">
                                 <h3 class="card-title">Total Hasil Bersih + Hutang</h3>
 
                                 <div class="card-tools">
@@ -283,7 +305,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="card card-info">
-                            <div class="card-header">
+                            <div class="card-header" style="background-color: #dda446">
                                 <h3 class="card-title">Grade Tembakau</h3>
 
                                 <div class="card-tools">
@@ -308,7 +330,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="card card-info">
-                            <div class="card-header">
+                            <div class="card-header" style="background-color: #dda446">
                                 <h3 class="card-title">Perbandingan Jual Luar</h3>
 
                                 <div class="card-tools">
@@ -370,7 +392,7 @@
                     </div> --}}
                     <div class="col-md-12">
                         <div class="card card-info">
-                            <div class="card-header">
+                            <div class="card-header" style="background-color: #dda446">
                                 <h3 class="card-title">Status Distribusi Nota</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -404,7 +426,7 @@
         <div class="float-right d-none d-sm-block">
             <b>Version</b> 3.2.0
         </div>
-        <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">SIMBAKO</strong> All rights reserved.
+        <strong>Copyright &copy; 2014-2021 SIMBAKO</strong> All rights reserved.
     </footer>
 
     <!-- Control Sidebar -->
@@ -461,6 +483,53 @@
                 options: pieOptions
             });
         });
+    </script>
+    <script>
+    var areaChartData = {
+      labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      datasets: [
+        {
+          label               : 'Diterima',
+          backgroundColor: 'rgb(111,66,193)', // Purple background color
+            borderColor: 'rgb(111,66,193)', // Purple border color
+            pointRadius: false,
+            pointColor: '#6f42c1', // Dark purple point color
+            pointStrokeColor: 'rgb(111,66,193)', // Purple point stroke color
+            pointHighlightFill: '#fff', // Highlight fill color (white)
+            pointHighlightStroke: 'rgb(111,66,193)',
+          data                : [28, 48, 40, 19, 86, 27, 90]
+        },
+        {
+          label               : 'Sisa',
+          backgroundColor     : 'rgb(220,53,69)',
+          borderColor         : 'rgb(220,53,69)',
+          pointRadius         : false,
+          pointColor          : 'rgb(220,53,69)',
+          pointStrokeColor    : 'rgb(220,53,69)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgb(220,53,69)',
+          data                : [65, 59, 80, 81, 56, 55, 40]
+        },
+      ]
+    }
+    var barChartCanvas = $('#barChartkeranjang').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData)
+    var temp0 = areaChartData.datasets[0]
+    var temp1 = areaChartData.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    })
     </script>
     {{-- <script>
         $(function() {
@@ -570,42 +639,31 @@
     <script>
         var labels = @json($petani);
         var dataOmset = @json($dataomset);
-        var sisahutang = @json($sisahutangpetani); 
+        var sisahutang = @json($sisahutangpetani);
         var barChartData = {
             labels: labels,
             datasets: [{
                     label: 'Omset',
-                    backgroundColor: 'rgba(60,141,188,0.9)',
-                    borderColor: 'rgba(60,141,188,0.8)',
-                    pointRadius: false, 
-                    pointColor: '#3b8bba',
-                    pointStrokeColor: 'rgba(60,141,188,1)',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    backgroundColor: 'rgba(76, 175, 80, 0.9)', // Green background color
+                    borderColor: 'rgba(76, 175, 80, 0.8)', // Green border color
+                    pointRadius: false,
+                    pointColor: '#4caf50', // Green point color
+                    pointStrokeColor: 'rgba(76, 175, 80, 1)', // Green point stroke color
+                    pointHighlightFill: '#fff', // Highlight fill color (white)
+                    pointHighlightStroke: 'rgba(76, 175, 80, 1)', // Green point highlight stroke
                     data: dataOmset
                 },
                 {
                     label: 'Hutang',
-                    backgroundColor: 'rgba(210, 214, 222, 1)',
-                    borderColor: 'rgba(210, 214, 222, 1)',
+                    backgroundColor: 'rgba(244, 67, 54, 0.9)', // Red background color
+                    borderColor: 'rgba(244, 67, 54, 0.8)', // Red border color
                     pointRadius: false,
-                    pointColor: 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor: '#c1c7d1',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data: sisahutang
+                    pointColor: '#f44336', // Red point color
+                    pointStrokeColor: 'rgba(244, 67, 54, 1)', // Red point stroke color
+                    pointHighlightFill: '#fff', // Highlight fill color (white)
+                    pointHighlightStroke: 'rgba(244, 67, 54, 1)', // Red point highlight stroke
+                    data: sisahutang // Use different data if necessary
                 },
-                //     {
-                //     label: 'Hutang',
-                //     backgroundColor: 'rgba(255, 99, 71, 0.9)', // Tomato red
-                //     borderColor: 'rgba(255, 99, 71, 1)',        // Solid tomato red for border
-                //     pointRadius: false,
-                //     pointColor: 'rgba(255, 99, 71, 1)',         // Red for points
-                //     pointStrokeColor: '#c1c7d1',
-                //     pointHighlightFill: '#fff',
-                //     pointHighlightStroke: 'rgba(220,220,220,1)',
-                //     data: sisahutang
-                // },
             ]
         }
         var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
