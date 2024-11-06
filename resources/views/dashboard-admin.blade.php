@@ -485,51 +485,53 @@
         });
     </script>
     <script>
-    var areaChartData = {
-      labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [
-        {
-          label               : 'Diterima',
-          backgroundColor: 'rgb(111,66,193)', // Purple background color
-            borderColor: 'rgb(111,66,193)', // Purple border color
-            pointRadius: false,
-            pointColor: '#6f42c1', // Dark purple point color
-            pointStrokeColor: 'rgb(111,66,193)', // Purple point stroke color
-            pointHighlightFill: '#fff', // Highlight fill color (white)
-            pointHighlightStroke: 'rgb(111,66,193)',
-          data                : [28, 48, 40, 19, 86, 27, 90]
-        },
-        {
-          label               : 'Sisa',
-          backgroundColor     : 'rgb(220,53,69)',
-          borderColor         : 'rgb(220,53,69)',
-          pointRadius         : false,
-          pointColor          : 'rgb(220,53,69)',
-          pointStrokeColor    : 'rgb(220,53,69)',
-          pointHighlightFill  : '#fff',
-          pointHighlightStroke: 'rgb(220,53,69)',
-          data                : [65, 59, 80, 81, 56, 55, 40]
-        },
-      ]
-    }
-    var barChartCanvas = $('#barChartkeranjang').get(0).getContext('2d')
-    var barChartData = $.extend(true, {}, areaChartData)
-    var temp0 = areaChartData.datasets[0]
-    var temp1 = areaChartData.datasets[1]
-    barChartData.datasets[0] = temp1
-    barChartData.datasets[1] = temp0
+        var label = @json($labelPeriode);
+        var totalKeranjang = @json($totalKeranjang);
+        var sisakeranjang = @json($sisaKeranjangGrouped);
+        var areaChartData = {
+            labels: label,
+            datasets: [{
+                    label: 'Diterima',
+                    backgroundColor: 'rgb(111,66,193)', // Purple background color
+                    borderColor: 'rgb(111,66,193)', // Purple border color
+                    pointRadius: false,
+                    pointColor: '#6f42c1', // Dark purple point color
+                    pointStrokeColor: 'rgb(111,66,193)', // Purple point stroke color
+                    pointHighlightFill: '#fff', // Highlight fill color (white)
+                    pointHighlightStroke: 'rgb(111,66,193)',
+                    data: totalKeranjang 
+                },
+                {
+                    label: 'Sisa',
+                    backgroundColor: 'rgb(220,53,69)',
+                    borderColor: 'rgb(220,53,69)',
+                    pointRadius: false,
+                    pointColor: 'rgb(220,53,69)',
+                    pointStrokeColor: 'rgb(220,53,69)',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: 'rgb(220,53,69)',
+                    data: sisakeranjang
+                },
+            ]
+        }
+        var barChartCanvas = $('#barChartkeranjang').get(0).getContext('2d')
+        var barChartData = $.extend(true, {}, areaChartData)
+        var temp0 = areaChartData.datasets[0]
+        var temp1 = areaChartData.datasets[1]
+        barChartData.datasets[0] = temp1
+        barChartData.datasets[1] = temp0
 
-    var barChartOptions = {
-      responsive              : true,
-      maintainAspectRatio     : false,
-      datasetFill             : false
-    }
+        var barChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            datasetFill: false
+        }
 
-    new Chart(barChartCanvas, {
-      type: 'bar',
-      data: barChartData,
-      options: barChartOptions
-    })
+        new Chart(barChartCanvas, {
+            type: 'bar',
+            data: barChartData,
+            options: barChartOptions
+        })
     </script>
     {{-- <script>
         $(function() {

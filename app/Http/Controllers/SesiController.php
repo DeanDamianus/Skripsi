@@ -768,11 +768,10 @@ class SesiController extends Controller
 
         $bon = DB::table('hutang_2024')
             ->join('users', 'hutang_2024.id_petani', '=', 'users.id')
-            ->select('users.name','hutang_2024.id_petani', 'hutang_2024.bon', 'hutang_2024.tanggal_hutang', 'hutang_2024.cicilan') // Include tanggal_hutang for each entry
-            ->groupBy('hutang_2024.id_petani', 'users.name','hutang_2024.bon', 'hutang_2024.tanggal_hutang', 'hutang_2024.cicilan')
+            ->select('users.name', 'hutang_2024.id_petani', 'hutang_2024.bon', 'hutang_2024.tanggal_hutang', 'hutang_2024.cicilan') // Include tanggal_hutang for each entry
+            ->groupBy('hutang_2024.id_petani', 'users.name', 'hutang_2024.bon', 'hutang_2024.tanggal_hutang', 'hutang_2024.cicilan')
             ->get()
             ->toArray();
-        
 
         // Fetch harga and netto values together from rekap_2024
         $parameter = DB::table('parameter_2024')
@@ -818,9 +817,8 @@ class SesiController extends Controller
             $jumlahBersih = $jumlahKotor - $komisi;
 
             if (!isset($userJumlahBersih[$petaniName])) {
-                $userJumlahBersih[$petaniName] = 0; 
+                $userJumlahBersih[$petaniName] = 0;
             }
-
 
             $userJumlahBersih[$petaniName] += $jumlahBersih;
         }
@@ -865,7 +863,6 @@ class SesiController extends Controller
         $totalBersihPerPetani = $userJumlahBersih;
         $totalBersihPerPetani = [];
 
-       
         //untuk menandai index tiap nama petanidengan hasil bersih
         foreach ($petani as $petaniName) {
             if (isset($userJumlahBersih[$petaniName])) {
@@ -874,20 +871,39 @@ class SesiController extends Controller
                 $totalBersihPerPetani[] = 0; //mengganti menjadi 0 jika tidak ada hasil bersih.
             }
         }
-        
 
         $sisahutangpetani = $sisahutangPerPetani;
         $sisahutangpetani = [];
 
-        foreach($petani as $petaniName){
-            if(isset($sisahutangPerPetani[$petaniName])){
+        foreach ($petani as $petaniName) {
+            if (isset($sisahutangPerPetani[$petaniName])) {
                 $sisahutangpetani[] = $sisahutangPerPetani[$petaniName];
-            }else{
+            } else {
                 $sisahutangpetani[] = 0;
             }
         }
 
-        // dd($sisahutangpetani);
+     
+
+        $dataDiterima = DB::table('distribusi_2024')->join('rekap_2024', 'distribusi_2024.id_rekap', '=', 'rekap_2024.id_rekap')->select('rekap_2024.periode', DB::raw('COUNT(distribusi_2024.id_rekap) as total'))->where('distribusi_2024.status', 'Diterima')->groupBy('rekap_2024.periode')->orderBy('rekap_2024.periode', 'asc')->get();
+
+        $labelPeriode = $dataDiterima->pluck('periode')->toArray();
+        $totalKeranjang = $dataDiterima->pluck('total')->toArray();
+
+
+        $dataSisaKeranjang = DB::table('rekap_2024')
+            ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->whereNull('distribusi_2024.id_rekap') // Select only where id_rekap is NULL in distribusi_2024
+            ->select('rekap_2024.periode', 'rekap_2024.id_rekap')
+            ->orderBy('rekap_2024.periode', 'asc')
+            ->get();
+
+
+        $sisaKeranjangGrouped = $dataSisaKeranjang->groupBy('periode')->map(function ($items) {
+            return $items->count();
+        });
+
+        $sisaKeranjang = $sisaKeranjangGrouped->values()->toArray();
 
 
         $diterima = DB::table('distribusi_2024')
@@ -902,10 +918,7 @@ class SesiController extends Controller
             ->where('rekap_2024.id_musim', $musim->id)
             ->count();
 
-        $ditolak = DB::table('distribusi_2024')
-            ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-            ->where('distribusi_2024.status', 'Dikembalikan') 
-            ->count();
+        $ditolak = DB::table('distribusi_2024')->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')->where('distribusi_2024.status', 'Dikembalikan')->count();
 
         $belumproses = DB::table('rekap_2024')
             ->where('id_musim', $musim->id)
@@ -916,7 +929,6 @@ class SesiController extends Controller
                     ->where('id_musim', $musim->id);
             })
             ->count();
-
 
         $musimList = DB::table('musim')->get();
 
@@ -937,8 +949,6 @@ class SesiController extends Controller
             ->where('distribusi_2024.status', 'Diterima')
             ->where('rekap_2024.id_musim', $musim->id)
             ->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
-
-        $periode12b = DB::table('rekap_2024')->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')->where('rekap_2024.periode', '12-B')->where('distribusi_2024.status', 'Diterima')->sum(DB::raw('rekap_2024.netto * rekap_2024.harga'));
 
         $jualLuar = DB::table('rekap_2024')
             ->where('id_musim', $musim->id)
@@ -993,6 +1003,9 @@ class SesiController extends Controller
             'userJumlahBersih' => $userJumlahBersih,
             'totalBersihPerPetani' => $totalBersihPerPetani,
             'sisahutangpetani' => $sisahutangpetani,
+            'labelPeriode' => $labelPeriode,
+            'totalKeranjang' => $totalKeranjang,
+            'sisaKeranjangGrouped' => $sisaKeranjang
         ]);
     }
 
@@ -1434,7 +1447,7 @@ class SesiController extends Controller
         $year = $request->input('year', date('Y'));
         $userId = $request->input('id');
         $idMusim = $request->input('id_musim');
-        $periode = $request->query('periode'); 
+        $periode = $request->query('periode');
 
         // Retrieve status from `rekap_2024` where `periode` matches
         $status = DB::table('rekap_2024')->where('periode', $periode)->where('id_musim', $idMusim)->select('status')->first();
@@ -1461,7 +1474,6 @@ class SesiController extends Controller
 
     public function inputbulk(Request $request)
     {
-
         // dd($request->all());
         // Validate the incoming data
         $request->validate([
@@ -1475,20 +1487,20 @@ class SesiController extends Controller
             'mobil_pulang' => 'required|integer',
             'status' => 'required|string|max:255',
         ]);
-    
+
         // Prepare data for bulk insertion and updates
         $bulkData = [];
         $gradeUpdates = [];
-        
+
         foreach ($request->input('id_rekap') as $idRekap) {
             // Map grade field dynamically
             $grade = $request->input("grade_{$idRekap}");
-    
+
             // Set dates based on status
             $tgl_diterima = $request->input('status') === 'Diterima' ? date('Y-m-d') : null;
             $tgl_diproses = $request->input('status') === 'Diproses' ? date('Y-m-d') : null;
             $tgl_ditolak = $request->input('status') === 'Dikembalikan' ? date('Y-m-d') : null;
-    
+
             // Build each record entry for distribusi_2024
             $bulkData[] = [
                 'id_rekap' => $idRekap,
@@ -1504,22 +1516,22 @@ class SesiController extends Controller
                 'mobil_pulang' => $request->input('mobil_pulang'),
                 'status' => $request->input('status'),
             ];
-    
+
             // Prepare grade update for each id_rekap
             $gradeUpdates[$idRekap] = ['grade' => $grade];
         }
-    
+
         // Upsert operation for distribusi_2024
         DB::table('distribusi_2024')->upsert($bulkData, ['id_rekap', 'id_musim'], array_keys($bulkData[0]));
-    
+
         // Perform bulk updates for grades in rekap_2024 table
         foreach ($gradeUpdates as $id_rekap => $update) {
             DB::table('rekap_2024')->where('id_rekap', $id_rekap)->update($update);
         }
-    
+
         // Redirect with a success message
         return redirect()
-            ->to('http://127.0.0.1:8000/distribusi?yeare='. $request->input('id_musim'))
+            ->to('http://127.0.0.1:8000/distribusi?yeare=' . $request->input('id_musim'))
             ->with('success', 'Bulk data updated successfully!');
     }
 }
