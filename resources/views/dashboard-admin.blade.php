@@ -487,7 +487,7 @@
     <script>
         var label = @json($labelPeriode);
         var totalKeranjang = @json($totalKeranjang);
-        var sisakeranjang = @json($sisaKeranjangGrouped);
+        var sisakeranjang = @json($sisaKeranjang);
         var areaChartData = {
             labels: label,
             datasets: [{

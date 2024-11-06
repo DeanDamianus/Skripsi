@@ -883,28 +883,40 @@ class SesiController extends Controller
             }
         }
 
-     
 
-        $dataDiterima = DB::table('distribusi_2024')->join('rekap_2024', 'distribusi_2024.id_rekap', '=', 'rekap_2024.id_rekap')->select('rekap_2024.periode', DB::raw('COUNT(distribusi_2024.id_rekap) as total'))->where('distribusi_2024.status', 'Diterima')->groupBy('rekap_2024.periode')->orderBy('rekap_2024.periode', 'asc')->get();
+        $dataDiterima = DB::table('distribusi_2024')
+        ->join('rekap_2024', 'distribusi_2024.id_rekap', '=', 'rekap_2024.id_rekap')
+        ->where('rekap_2024.id_musim', $musim->id)
+        ->select('rekap_2024.periode', DB::raw('COUNT(distribusi_2024.id_rekap) as total'))
+        ->where('distribusi_2024.status', 'Diterima')
+        ->groupBy('rekap_2024.periode')
+        ->orderBy('rekap_2024.periode', 'asc')
+        ->get();
 
-        $labelPeriode = $dataDiterima->pluck('periode')->toArray();
-        $totalKeranjang = $dataDiterima->pluck('total')->toArray();
+    $labelPeriode = $dataDiterima->pluck('periode')->toArray();
+    $totalKeranjang = $dataDiterima->pluck('total')->toArray();
 
+        
 
         $dataSisaKeranjang = DB::table('rekap_2024')
             ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-            ->whereNull('distribusi_2024.id_rekap') // Select only where id_rekap is NULL in distribusi_2024
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->whereNull('distribusi_2024.id_rekap')
             ->select('rekap_2024.periode', 'rekap_2024.id_rekap')
             ->orderBy('rekap_2024.periode', 'asc')
             ->get();
 
-
+        // Grouping by 'periode' and returning the count of 'id_rekap' for each periode
         $sisaKeranjangGrouped = $dataSisaKeranjang->groupBy('periode')->map(function ($items) {
-            return $items->count();
+            return $items->count(); // Count the number of items for each periode
         });
 
-        $sisaKeranjang = $sisaKeranjangGrouped->values()->toArray();
-
+        $sisaKeranjang = [];
+        foreach ($labelPeriode as $periode) {
+            // If the periode exists in sisaKeranjangGrouped, use its count; otherwise, set it to 0
+            $sisaKeranjang[] = $sisaKeranjangGrouped->get($periode, 0);
+        }
+                
 
         $diterima = DB::table('distribusi_2024')
             ->join('rekap_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
@@ -1005,7 +1017,7 @@ class SesiController extends Controller
             'sisahutangpetani' => $sisahutangpetani,
             'labelPeriode' => $labelPeriode,
             'totalKeranjang' => $totalKeranjang,
-            'sisaKeranjangGrouped' => $sisaKeranjang
+            'sisaKeranjang' => $sisaKeranjang
         ]);
     }
 
