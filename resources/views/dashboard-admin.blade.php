@@ -491,18 +491,7 @@
         var areaChartData = {
             labels: label,
             datasets: [{
-                    label: 'Diterima',
-                    backgroundColor: 'rgb(111,66,193)', // Purple background color
-                    borderColor: 'rgb(111,66,193)', // Purple border color
-                    pointRadius: false,
-                    pointColor: '#6f42c1', // Dark purple point color
-                    pointStrokeColor: 'rgb(111,66,193)', // Purple point stroke color
-                    pointHighlightFill: '#fff', // Highlight fill color (white)
-                    pointHighlightStroke: 'rgb(111,66,193)',
-                    data: totalKeranjang 
-                },
-                {
-                    label: 'Sisa',
+                label: 'Sisa',
                     backgroundColor: 'rgb(220,53,69)',
                     borderColor: 'rgb(220,53,69)',
                     pointRadius: false,
@@ -511,6 +500,17 @@
                     pointHighlightFill: '#fff',
                     pointHighlightStroke: 'rgb(220,53,69)',
                     data: sisakeranjang
+                },
+                {
+                    label: 'Diterima',
+                    backgroundColor: 'rgb(111,66,193)',
+                    borderColor: 'rgb(111,66,193)', 
+                    pointRadius: false,
+                    pointColor: '#6f42c1',
+                    pointStrokeColor: 'rgb(111,66,193)',
+                    pointHighlightFill: '#fff', 
+                    pointHighlightStroke: 'rgb(111,66,193)',
+                    data: totalKeranjang
                 },
             ]
         }
@@ -524,9 +524,23 @@
         var barChartOptions = {
             responsive: true,
             maintainAspectRatio: false,
-            datasetFill: false
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Periode'
+                    }
+                }],
+                yAxes: [{
+                    stacked: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Keranjang'
+                    }
+                }]
+            },
         }
-
         new Chart(barChartCanvas, {
             type: 'bar',
             data: barChartData,
@@ -784,10 +798,6 @@
         });
     </script>
 
-
-</body>
-
-</html>
 
 </body>
 

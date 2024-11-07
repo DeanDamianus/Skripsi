@@ -143,7 +143,7 @@
                     <!-- /.col -->
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    {{-- <div class="col-md-12">
                         <div class="card">
                             <div class="card-header border-0">
                                 <div class="d-flex justify-content-between">
@@ -158,7 +158,6 @@
                                     </p>
                                 </div>
                                 <!-- /.d-flex -->
-
                                 <div class="position-relative mb-4">
                                     <canvas id="sales-chart" height="200"></canvas>
                                 </div>
@@ -173,6 +172,28 @@
                                     </span>
                                 </div>
                             </div>
+                        </div>
+                    </div> --}}
+                    <div class="col-md-12">
+                        <div class="card card-success">
+                            <div class="card-header" style="background-color: #dda446">
+                                <h3 class="card-title">Perbandingan Netto</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <canvas id="stackedBarChart"
+                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -220,22 +241,23 @@
                     <div class="col-md-4">
                         <div class="card card-info">
                             <div class="card-header">
-                              <h3 class="card-title">Perbandingan Jual Luar</h3>
-              
-                              <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                  <i class="fas fa-minus"></i>
-                                </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                  <i class="fas fa-times"></i>
-                                </button>
-                              </div>
+                                <h3 class="card-title">Perbandingan Jual Luar</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="card-body">
-                              <canvas id="pieChartjualluar" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                <canvas id="pieChartjualluar"
+                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                             </div>
                             <!-- /.card-body -->
-                          </div>
+                        </div>
                         <!-- /.card -->
 
 
@@ -294,33 +316,92 @@
     //grade
     $(function() {
         var jualluar = {{ $jualLuar }};
-         var jualdalam = {{ $jualDalam }};
-        var pieData        = {
-        labels: [
-            'Jual Dalam',
-            'Jual Luar',
-        ],
-        datasets: [
-            {
-            data: [jualdalam,jualluar],
-            backgroundColor : [  '#00a65a','#f56954']
-            }
-        ]
+        var jualdalam = {{ $jualDalam }};
+        var pieData = {
+            labels: [
+                'Jual Dalam',
+                'Jual Luar',
+            ],
+            datasets: [{
+                data: [jualdalam, jualluar],
+                backgroundColor: ['#00a65a', '#f56954']
+            }]
         }
         var pieChartCanvas = $('#pieChartjualluar').get(0).getContext('2d')
-        var pieData        = pieData;
-        var pieOptions     = {
-        maintainAspectRatio : false,
-        responsive : true,
+        var pieData = pieData;
+        var pieOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
         }
         //Create pie or douhnut chart
         // You can switch between pie and douhnut using the method below.
         new Chart(pieChartCanvas, {
-        type: 'pie',
-        data: pieData,
-        options: pieOptions
+            type: 'pie',
+            data: pieData,
+            options: pieOptions
         });
     });
+</script>
+<script>
+    var label = @json($labelPeriode);
+    var totalNetto = @json($nettoSum);
+    var nettoBelumProses = @json($nettoBelumProses);
+
+    var areaChartData = {
+        labels: label,
+        datasets: [{
+                label: 'Diterima',
+                backgroundColor: 'rgba(40,167,69,255)',
+                borderColor: 'rgba(40,167,69,255)',
+                pointRadius: false,
+                pointColor: 'rgba(40,167,69,255)',
+                pointStrokeColor: 'rgba(40,167,69,255)',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(40,167,69,255)',
+                data: totalNetto
+            },
+            {
+                label: 'Sisa',
+                backgroundColor: 'rgb(220,53,69)',
+                borderColor: 'rgb(220,53,69)',
+                pointRadius: false,
+                pointColor: 'rgb(220,53,69)',
+                pointStrokeColor: 'rgb(220,53,69)',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgb(220,53,69)',
+                data: nettoBelumProses
+            },
+        ]
+    }
+    var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+    var stackedBarChartData = $.extend(true, {}, areaChartData)
+
+    var stackedBarChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            xAxes: [{
+                stacked: true,
+                scaleLabel: {
+                        display: true,
+                        labelString: 'Periode'
+                    }
+            }],
+            yAxes: [{
+                    stacked: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Berat'
+                    }
+                }]
+        }
+    }
+
+    new Chart(stackedBarChartCanvas, {
+        type: 'bar',
+        data: stackedBarChartData,
+        options: stackedBarChartOptions
+    })
 </script>
 <script>
     $(function() {
@@ -554,7 +635,7 @@
             ],
             datasets: [{
                 data: [gradeD, gradeC, gradeB, gradeA],
-                backgroundColor: [  '#00a65a','#f56954','#f39c12','#00c0ef',]
+                backgroundColor: ['#00a65a', '#f56954', '#f39c12', '#00c0ef', ]
             }]
         };
 
