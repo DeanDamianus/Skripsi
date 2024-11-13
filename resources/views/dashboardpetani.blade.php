@@ -198,8 +198,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="card card-success">
-                            <div class="card-header">
-                                <h3 class="card-title">Hutang</h3>
+                            <div class="card-header" style="background-color: #dda446">
+                                <h3 class="card-title">Perbandingan Hasil Distribusi Keranjang</h3>
 
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -219,7 +219,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="card card-info">
-                            <div class="card-header">
+                            <div class="card-header" style="background-color: #dda446">
                                 <h3 class="card-title">Grade</h3>
 
                                 <div class="card-tools">
@@ -240,8 +240,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="card card-info">
-                            <div class="card-header">
-                                <h3 class="card-title">Perbandingan Jual Luar</h3>
+                            <div class="card-header" style="background-color: #dda446">
+                                <h3 class="card-title">Perbandingan Jual</h3>
 
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -319,7 +319,7 @@
         var jualdalam = {{ $jualDalam }};
         var pieData = {
             labels: [
-                'Jual Dalam',
+                'Jual Gudang Garam',
                 'Jual Luar',
             ],
             datasets: [{
@@ -572,8 +572,54 @@
 </script>
 
 
-
 <script>
+    $(function() {
+        // Get the remaining hutang passed from the controller
+        var diterima = {{ $diterima  }};
+        var diproses= {{ $diproses}};
+        var ditolak = {{ $ditolak  }};
+        var belumproses= {{ $belumproses}};
+
+        var donutData = {
+            labels: [
+                'Diterima',
+                'Diproses',
+                'Ditolak',
+                'Belum Diproses'
+            ],
+            datasets: [{
+                data: [diterima, diproses, ditolak, belumproses],
+                backgroundColor: ['#00a65a', '#ffeb3b', '#dc3545', '#00c0ef'],
+            }]
+        };
+
+        var pieChartCanvas = $('#pieChart').get(0).getContext('2d');
+        var pieData = donutData;
+        var pieOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        // Get the value of the data
+                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+
+                        // Format the value as currency (Rupiah)
+                        return value.toLocaleString() + ' Keranjang';
+                    }
+                }
+            }
+        };
+
+        // Create pie chart
+        new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: pieData,
+            options: pieOptions
+        });
+    });
+</script>
+{{-- <script>
     $(function() {
         // Get the remaining hutang passed from the controller
         var remainingHutang = {{ $sisahutang ?? 0 }};
@@ -615,7 +661,7 @@
             options: pieOptions
         });
     });
-</script>
+</script> --}}
 <script>
     $(function() {
         //grade

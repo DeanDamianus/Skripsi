@@ -103,8 +103,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a a
-                                        href='{{ url('/dashboardindividual?years=' . $selectedYear) }}'class="nav-link">
+                                    <a a href='{{ url('/dashboardindividual?year=' . $selectedYear) }}'class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Individual</p>
                                     </a>
@@ -130,7 +129,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href="{{ url('/distribusi?year=' . $selectedYear) }}" class="nav-link">
+                            <a href=f class="nav-link">
                                 <i class="nav-icon fas fa-truck"></i>
                                 <p>
                                     <strong>DISTRIBUSI</strong>
@@ -192,7 +191,7 @@
                 <div class="row">
                     <div class="col-lg-3 col-6">
                         <!-- small card -->
-                        <div class="small-box bg-success">
+                        <div class="small-box bg-info">
                             <div class="inner">
                                 <h3>{{ $totalNetto }} Kg</h3>
                                 <p>Netto Keranjang diterima</p>
@@ -234,7 +233,7 @@
                             <div class="icon">
                                 <i class="fas fa-shopping-basket"></i><!-- Basket icon -->
                             </div>
-                            <a href="{{ url('/distribusi') }}" class="small-box-footer">
+                            <a href="{{ url('/distribusi?year=' . $selectedYear) }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
@@ -256,20 +255,24 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="row">
-                    <div class="col-lg-12">
+                    <section class="col-lg-4 connectedSortable">
+                        <div class="card bg-gradient-info">
+                            <div class="card-header border-0">
+                                <i class="fas fa-weight-hanging"></i>
+                                Berat Keranjang Diterima Tiap Tahun
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas class="chart" id="line-chart"
+                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="col-lg-8 ">
                         <div class="card card-success">
                             <div class="card-header" style="background-color: #dda446">
-                                <h3 class="card-title">Perbandingan Keranjang</h3>
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
+                                <h3 class="card-title">Perbandingan Distribusi Keranjang {{ $selectedYear }}</h3>
                             </div>
                             <div class="card-body">
                                 <div class="chart">
@@ -280,19 +283,10 @@
                             <!-- /.card-body -->
                         </div>
                     </div>
-                    <div class="col-lg-12">
+                    <div class="col-lg-8">
                         <div class="card card-info">
                             <div class="card-header" style="background-color: #dda446">
-                                <h3 class="card-title">Total Hasil Bersih + Hutang</h3>
-
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
+                                <h3 class="card-title">Total Hasil Bersih + Hutang {{ $selectedYear }}</h3>
                             </div>
                             <div class="card-body">
                                 <div class="chart">
@@ -300,22 +294,25 @@
                                         style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                                 </div>
                             </div>
-                            <!-- /.card-body -->
                         </div>
                     </div>
+                    <section class="col-lg-4 connectedSortable">
+                        <div class="card bg-gradient-success">
+                            <div class="card-header border-0">
+                                <i class="fas fa-coins"></i>
+                                Hasil Omset Diterima Tiap Tahun
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas class="chart" id="line-chart-bersih"
+                                    style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </section>
                     <div class="col-md-6">
                         <div class="card card-info">
                             <div class="card-header" style="background-color: #dda446">
-                                <h3 class="card-title">Grade Tembakau</h3>
-
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
+                                <h3 class="card-title">Grade Tembakau {{ $selectedYear }}</h3>
                             </div>
                             <div class="card-body">
                                 <canvas id="pieChart"
@@ -331,16 +328,7 @@
                     <div class="col-md-6">
                         <div class="card card-info">
                             <div class="card-header" style="background-color: #dda446">
-                                <h3 class="card-title">Perbandingan Jual Luar</h3>
-
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
+                                <h3 class="card-title">Perbandingan Jual Luar {{ $selectedYear }}</h3>
                             </div>
                             <div class="card-body">
                                 <canvas id="pieChartjualluar"
@@ -393,15 +381,7 @@
                     <div class="col-md-12">
                         <div class="card card-info">
                             <div class="card-header" style="background-color: #dda446">
-                                <h3 class="card-title">Status Distribusi Nota</h3>
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
+                                <h3 class="card-title">Status Distribusi Nota {{ $selectedYear }}</h3>
                             </div>
                             <div class="card-body">
                                 <canvas id="donutChart"
@@ -411,6 +391,48 @@
                         </div>
                         <!--nota A -->
                     </div>
+                    {{-- <div class="col-md-4">
+                        <!-- Info Boxes Style 2 -->
+                        <div class="info-box mb-3 bg-warning">
+                          <span class="info-box-icon"><i class="fas fa-tag"></i></span>
+            
+                          <div class="info-box-content">
+                            <span class="info-box-text">Netto Keranjang Diterima</span>
+                            <span class="info-box-number"> {{ $totalNetto }} Kg</span>
+                          </div>
+                          <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                        <div class="info-box mb-3 bg-success">
+                          <span class="info-box-icon"><i class="far fa-heart"></i></span>
+            
+                          <div class="info-box-content">
+                            <span class="info-box-text">Mentions</span>
+                            <span class="info-box-number">92,050</span>
+                          </div>
+                          <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                        <div class="info-box mb-3 bg-danger">
+                          <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
+            
+                          <div class="info-box-content">
+                            <span class="info-box-text">Downloads</span>
+                            <span class="info-box-number">114,381</span>
+                          </div>
+                          <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                        <div class="info-box mb-3 bg-info">
+                          <span class="info-box-icon"><i class="far fa-comment"></i></span>
+            
+                          <div class="info-box-content">
+                            <span class="info-box-text">Direct Messages</span>
+                            <span class="info-box-number">163,921</span>
+                          </div>
+                          <!-- /.info-box-content -->
+                        </div>
+                    </div> --}}
                 </div>
             </div>
             <!-- /.container-fluid -->
@@ -466,7 +488,7 @@
                 ],
                 datasets: [{
                     data: [jualdalam, jualluar],
-                    backgroundColor: ['#00a65a', '#f56954']
+                    backgroundColor: ['#00a65a', '#dc3545']
                 }]
             }
             var pieChartCanvas = $('#pieChartjualluar').get(0).getContext('2d')
@@ -491,7 +513,7 @@
         var areaChartData = {
             labels: label,
             datasets: [{
-                label: 'Sisa',
+                    label: 'Sisa',
                     backgroundColor: 'rgb(220,53,69)',
                     borderColor: 'rgb(220,53,69)',
                     pointRadius: false,
@@ -504,11 +526,11 @@
                 {
                     label: 'Diterima',
                     backgroundColor: 'rgb(111,66,193)',
-                    borderColor: 'rgb(111,66,193)', 
+                    borderColor: 'rgb(111,66,193)',
                     pointRadius: false,
                     pointColor: '#6f42c1',
                     pointStrokeColor: 'rgb(111,66,193)',
-                    pointHighlightFill: '#fff', 
+                    pointHighlightFill: '#fff',
                     pointHighlightStroke: 'rgb(111,66,193)',
                     data: totalKeranjang
                 },
@@ -529,7 +551,8 @@
                     stacked: true,
                     scaleLabel: {
                         display: true,
-                        labelString: 'Periode'
+                        labelString: 'Periode',
+                        fontSize: 15   
                     }
                 }],
                 yAxes: [{
@@ -660,24 +683,24 @@
             labels: labels,
             datasets: [{
                     label: 'Omset',
-                    backgroundColor: 'rgba(76, 175, 80, 0.9)', // Green background color
-                    borderColor: 'rgba(76, 175, 80, 0.8)', // Green border color
+                    backgroundColor: 'rgb(40,167,69)', // Green background color
+                    borderColor: 'rgb(40,167,69)', // Green border color
                     pointRadius: false,
-                    pointColor: '#4caf50', // Green point color
-                    pointStrokeColor: 'rgba(76, 175, 80, 1)', // Green point stroke color
+                    pointColor: '#28a745', // Green point color
+                    pointStrokeColor: 'rgb(40,167,69)', // Green point stroke color
                     pointHighlightFill: '#fff', // Highlight fill color (white)
-                    pointHighlightStroke: 'rgba(76, 175, 80, 1)', // Green point highlight stroke
+                    pointHighlightStroke: 'rgb(40,167,69)', // Green point highlight stroke
                     data: dataOmset
                 },
                 {
                     label: 'Hutang',
-                    backgroundColor: 'rgba(244, 67, 54, 0.9)', // Red background color
-                    borderColor: 'rgba(244, 67, 54, 0.8)', // Red border color
+                    backgroundColor: 'rgb(220,53,69)', // Red background color
+                    borderColor: 'rgb(220,53,69)', // Red border color
                     pointRadius: false,
-                    pointColor: '#f44336', // Red point color
-                    pointStrokeColor: 'rgba(244, 67, 54, 1)', // Red point stroke color
+                    pointColor: '#dc3545', // Red point color
+                    pointStrokeColor: 'rgb(220,53,69)', // Red point stroke color
                     pointHighlightFill: '#fff', // Highlight fill color (white)
-                    pointHighlightStroke: 'rgba(244, 67, 54, 1)', // Red point highlight stroke
+                    pointHighlightStroke: 'rgb(220,53,69)', // Red point highlight stroke
                     data: sisahutang // Use different data if necessary
                 },
             ]
@@ -691,6 +714,11 @@
             scales: {
                 xAxes: [{
                     stacked: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Petani',
+                        fontSize: 15   
+                    }
                 }],
                 yAxes: [{
                     stacked: true,
@@ -744,7 +772,7 @@
                 ],
                 datasets: [{
                     data: [gradeD, gradeC, gradeB, gradeA],
-                    backgroundColor: ['#00a65a', '#f56954', '#f39c12', '#00c0ef', ]
+                    backgroundColor: ['#00a65a', '#ffeb3b', '#dc3545', '#00c0ef'],
                 }]
             }
             var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
@@ -791,11 +819,153 @@
 
             // Create the first doughnut chart
             new Chart(ctxDonutA, {
-                type: 'doughnut',
+                type: 'pie',
                 data: donutDataA,
                 options: donutOptions
             });
         });
+    </script>
+    <script>
+        var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d')
+        var label = @json($labelmusim);
+        var nettomusim = @json($nettomusim);
+
+        var salesGraphChartData = {
+            labels: label,
+            datasets: [{
+                label: 'Netto',
+                fill: true,
+                borderWidth: 2,
+                lineTension: 0,
+                spanGaps: true,
+                borderColor: '#efefef',
+                pointRadius: 3,
+                pointHoverRadius: 7,
+                pointColor: '#efefef',
+                pointBackgroundColor: '#efefef',
+                data: nettomusim
+            }]
+        }
+
+        var salesGraphChartOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                        scaleLabel: { // Place scaleLabel directly under xAxes
+                            display: true,
+                            labelString: 'Tahun', // The label text you want to display
+                            fontColor: '#efefef',    // Color of the label text
+                            fontSize: 15            // Optional: adjust font size
+                        },
+                        ticks: {
+                            fontColor: '#efefef'
+                        },
+                        gridLines: {
+                            display: false,
+                            color: '#efefef',
+                            drawBorder: false
+                        }
+                    }],
+                yAxes: [{
+                    ticks: {
+                        stepSize: 100,
+                        fontColor: '#efefef',
+                        callback: function(value) {
+                            return value + ' kg'; // Add kg suffix to each y-axis label
+                        }
+                    },
+                    gridLines: {
+                        display: true,
+                        color: '#efefef',
+                        drawBorder: false
+
+                    }
+                }]
+            }
+        }
+
+        // This will get the first returned node in the jQuery collection.
+        // eslint-disable-next-line no-unused-vars
+        var salesGraphChart = new Chart(salesGraphChartCanvas, { // lgtm[js/unused-local-variable]
+            type: 'line',
+            data: salesGraphChartData,
+            options: salesGraphChartOptions
+        })
+    </script>
+    <script>
+        var salesGraphChartCanvas = $('#line-chart-bersih').get(0).getContext('2d')
+        var label = @json($labelOmset);
+        var omsettiapTahun = @json($omsettiapTahun);
+
+        var salesGraphChartData = {
+            labels: label,
+            datasets: [{
+                label: 'Rp. ',
+                fill: true,
+                borderWidth: 2,
+                lineTension: 0,
+                spanGaps: true,
+                borderColor: '#efefef',
+                pointRadius: 3,
+                pointHoverRadius: 7,
+                pointColor: '#efefef',
+                pointBackgroundColor: '#efefef',
+                data: omsettiapTahun
+            }]
+        }
+
+        var salesGraphChartOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                        scaleLabel: { // Place scaleLabel directly under xAxes
+                            display: true,
+                            labelString: 'Tahun', // The label text you want to display
+                            fontColor: '#efefef',    // Color of the label text
+                            fontSize: 15            // Optional: adjust font size
+                        },
+                        ticks: {
+                            fontColor: '#efefef'
+                        },
+                        gridLines: {
+                            display: false,
+                            color: '#efefef',
+                            drawBorder: false
+                        }
+                    }],
+                yAxes: [{
+                    ticks: {
+                        stepSize: 5000000,
+                        fontColor: '#efefef',
+                        callback: function(value) {
+                        return "Rp. " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                    }
+                    },
+                    gridLines: {
+                        display: true,
+                        color: '#efefef',
+                        drawBorder: false
+
+                    }
+                }]
+            }
+        }
+
+        // This will get the first returned node in the jQuery collection.
+        // eslint-disable-next-line no-unused-vars
+        var salesGraphChart = new Chart(salesGraphChartCanvas, { // lgtm[js/unused-local-variable]
+            type: 'line',
+            data: salesGraphChartData,
+            options: salesGraphChartOptions
+        })
     </script>
 
 

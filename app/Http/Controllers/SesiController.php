@@ -667,46 +667,57 @@ class SesiController extends Controller
             ->get();
 
         $labelPeriode = $dataDiterima->pluck('periode')->toArray();
-        $totalNetto = $dataDiterima->pluck('total')->toArray();
-
-        $nettolabel = DB::table('rekap_2024')
-            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-            ->where('rekap_2024.id_musim', $musim->id)
-            ->where('distribusi_2024.status', 'Diterima')
-            ->where('rekap_2024.id_petani', $userId) // Filter by userId
-            ->select('rekap_2024.periode') // Select the periode column
-            ->distinct()
-            ->orderBy('rekap_2024.periode', 'asc')
-            ->pluck('rekap_2024.periode')
-            ->toArray();
-        
 
         $nettoSum = DB::table('rekap_2024')
             ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
             ->where('rekap_2024.id_musim', $musim->id)
             ->where('distribusi_2024.status', 'Diterima')
-            ->where('rekap_2024.id_petani', $userId) // Filter by userId
-            ->select('rekap_2024.periode', DB::raw('SUM(rekap_2024.netto) as netto_sum')) // Sum netto for each periode
-            ->groupBy('rekap_2024.periode') // Group by periode
+            ->where('rekap_2024.id_petani', $userId)
+            ->select('rekap_2024.periode', DB::raw('SUM(rekap_2024.netto) as netto_sum'))
+            ->groupBy('rekap_2024.periode')
             ->orderBy('rekap_2024.periode', 'asc')
             ->get()
-            ->pluck('netto_sum', 'periode') // Retrieve as key-value pairs of periode => netto_sum
+            ->pluck('netto_sum', 'periode')
             ->toArray();
 
         $nettoBelumProses = DB::table('rekap_2024')
-            ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->leftjoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
             ->where('rekap_2024.id_musim', $musim->id)
-            ->where('rekap_2024.id_petani', $userId) // Filter by userId
-            ->whereNull('distribusi_2024.id_rekap') // Only records in rekap_2024 with no matching distribusi_2024 id_rekap
-            ->select('rekap_2024.periode', DB::raw('SUM(rekap_2024.netto) as netto_sum')) // Sum netto for each periode
-            ->groupBy('rekap_2024.periode') // Group by periode
+            ->where('rekap_2024.id_petani', $userId)
+            ->whereNull('distribusi_2024.id_rekap')
+            ->select('rekap_2024.periode', DB::raw('SUM(rekap_2024.netto) as netto_sum'))
+            ->groupBy('rekap_2024.periode')
+            ->orderBy('rekap_2024.periode', 'asc')
             ->get()
-            ->mapWithKeys(function ($item) {
-                return [$item->periode => $item->netto_sum];
-            })
+            ->pluck('netto_sum', 'periode')
             ->toArray();
-        
-            //NETTO BELUM PROSES MASIH TIDAK SESUAI PERIODE
+
+        $terima = DB::table('rekap_2024')
+            ->leftjoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->where('rekap_2024.id_petani', $userId)
+            ->where('distribusi_2024.status', 'Diterima')
+            ->count();
+        $diproses = DB::table('rekap_2024')
+            ->leftjoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->where('rekap_2024.id_petani', $userId)
+            ->where('distribusi_2024.status', 'Diproses')
+            ->count();
+        $ditolak = DB::table('rekap_2024')
+            ->leftjoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->where('rekap_2024.id_petani', $userId)
+            ->where('distribusi_2024.status', 'Ditolak')
+            ->count();
+        $belumproses = DB::table('rekap_2024')
+            ->leftjoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->where('rekap_2024.id_petani', $userId)
+            ->whereNull('distribusi_2024.id_rekap') // Only records in rekap_2024 with no matching distribusi_2024 id_rekap
+            ->count();
+
+        // dd($terima);
 
         return view('dashboardpetani', [
             'selectedYear' => $year,
@@ -744,7 +755,11 @@ class SesiController extends Controller
             'gradeD' => $gradeD,
             'labelPeriode' => $labelPeriode,
             'nettoSum' => array_values($nettoSum),
-            'nettoBelumProses' => array_values($nettoBelumProses)
+            'nettoBelumProses' => array_values($nettoBelumProses),
+            'diproses' => $diproses,
+            'diterima' => $terima,
+            'ditolak' => $ditolak,
+            'belumproses' => $belumproses,
         ]);
     }
 
@@ -834,14 +849,13 @@ class SesiController extends Controller
 
         $harganetto = DB::table('rekap_2024')
             ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
-            ->join('users', 'rekap_2024.id_petani', '=', 'users.id') // Join users to get the name
+            ->join('users', 'rekap_2024.id_petani', '=', 'users.id')
             ->where('rekap_2024.id_musim', $musim->id)
             ->whereNotNull('distribusi_2024.tgl_diterima')
-            ->select('rekap_2024.id_rekap', 'rekap_2024.harga', 'rekap_2024.netto', 'users.name') // Select the necessary fields, including users.name
+            ->select('rekap_2024.id_rekap', 'rekap_2024.harga', 'rekap_2024.netto', 'users.name') 
             ->get();
 
-        // Define arrays to store the calculated values per user
-        $userJumlahBersih = []; // Store jumlah bersih keyed by petani name
+        $userJumlahBersih = [];
 
         foreach ($harganetto as $item) {
             $netto = $item->netto;
@@ -875,7 +889,8 @@ class SesiController extends Controller
 
             $userJumlahBersih[$petaniName] += $jumlahBersih;
         }
-
+        
+  
         $dataOmset = [];
         foreach ($jumlahkotor as $data) {
             $dataOmset[$data->name] = $data->omset;
@@ -907,9 +922,10 @@ class SesiController extends Controller
         }
 
         $petani = array_keys($dataOmset);
-        $dataOmset = array_values($dataOmset);
+        $dataOmset = array_values($userJumlahBersih);
         $totalBersihPerPetani = array_values($userJumlahBersih);
         $sisahutangpetani = array_values($sisahutangPerPetani);
+        $sumtotalBersihPerPetani = array_sum($totalBersihPerPetani);
 
         // dd($sisahutangPerPetani);
 
@@ -924,6 +940,8 @@ class SesiController extends Controller
                 $totalBersihPerPetani[] = 0; //mengganti menjadi 0 jika tidak ada hasil bersih.
             }
         }
+        
+        $sumtotalBersihPerPetani  = array_sum($totalBersihPerPetani);
 
         $sisahutangpetani = $sisahutangPerPetani;
         $sisahutangpetani = [];
@@ -935,7 +953,7 @@ class SesiController extends Controller
                 $sisahutangpetani[] = 0;
             }
         }
-
+        
         $dataDiterima = DB::table('distribusi_2024')
             ->join('rekap_2024', 'distribusi_2024.id_rekap', '=', 'rekap_2024.id_rekap')
             ->where('rekap_2024.id_musim', $musim->id)
@@ -947,6 +965,8 @@ class SesiController extends Controller
 
         $labelPeriode = $dataDiterima->pluck('periode')->toArray();
         $totalKeranjang = $dataDiterima->pluck('total')->toArray();
+
+        
 
         $dataSisaKeranjang = DB::table('rekap_2024')
             ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
@@ -1036,8 +1056,37 @@ class SesiController extends Controller
             ->where('rekap_2024.id_musim', $musim->id)
             ->get();
 
+        $musimNetto = DB::table('rekap_2024')
+        ->join('musim', 'rekap_2024.id_musim', '=', 'musim.id')
+        ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+        ->where('distribusi_2024.status', 'Diterima')->select('musim.id', 'musim.tahun', DB::raw('SUM(rekap_2024.netto) as total_netto'))->groupBy('musim.id', 'musim.tahun')->get();
+
+        $labelmusim = $musimNetto->pluck('tahun')->toArray();
+        $nettomusim = $musimNetto->pluck('total_netto')->toArray();
+        
+        
+        $omsetTahun = DB::table('rekap_2024')
+            ->join('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->join('musim', 'rekap_2024.id_musim', '=', 'musim.id')
+            ->where('distribusi_2024.status','Diterima')
+            ->select(
+                'rekap_2024.id_musim','musim.tahun',
+                DB::raw('SUM(rekap_2024.netto * rekap_2024.harga) as total_omset')
+            )
+            ->groupBy('rekap_2024.id_musim','musim.tahun')
+            ->get();
+
+        $labelOmset = $omsetTahun->pluck('tahun')->toArray();
+        $omsettiapTahun = $omsetTahun->pluck('total_omset')->toArray();
+      
+        
+            
+
         return view('dashboard-admin', [
+            'omsettiapTahun'  => $omsettiapTahun,
+            'labelOmset' => $labelOmset,
             'data' => $data,
+            'nettomusim' => $nettomusim,
             'diterima' => $diterima,
             'jualLuar' => $jualLuar,
             'jualDalam' => $jualDalam,
@@ -1067,6 +1116,9 @@ class SesiController extends Controller
             'labelPeriode' => $labelPeriode,
             'totalKeranjang' => $totalKeranjang,
             'sisaKeranjang' => $sisaKeranjang,
+            'sumtotalBersihPerPetani' => $sumtotalBersihPerPetani,
+            'labelmusim' => $labelmusim,
+
         ]);
     }
 
@@ -1265,7 +1317,7 @@ class SesiController extends Controller
         return view('input_petani', [
             'data' => $data,
             'username' => $username,
-            'selectedYear' => $year,
+            'year' => $year,
             'userId' => $userId,
             'idMusim' => $idMusim,
         ]);

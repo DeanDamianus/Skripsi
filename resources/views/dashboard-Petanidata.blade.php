@@ -29,7 +29,7 @@
                 </li>
             </ul>
 
-            <ul class="navbar-nav ml-auto">
+            <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
                 <li class="nav-item d-none d-sm-inline-block">
                     <div class="dropdown">
                         <button class="nav-link" type="button" data-toggle="dropdown" style="border: black;">
