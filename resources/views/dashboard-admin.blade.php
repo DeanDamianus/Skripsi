@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
 
+
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -97,13 +98,14 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href='{{ url('/owner?tahun=' . $selectedYear) }}' class="nav-link active">
+                                    <a href='{{ url(' /owner?tahun=' . $selectedYear) }}' class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Global</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a a href='{{ url('/dashboardindividual?year=' . $selectedYear) }}'class="nav-link">
+                                    <a a href='{{ url('/dashboardindividual?year=' . $selectedYear) }}'
+                                        class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Individual</p>
                                     </a>
@@ -260,7 +262,7 @@
                         <div class="card bg-gradient-info">
                             <div class="card-header border-0">
                                 <i class="fas fa-weight-hanging"></i>
-                                Berat Keranjang Diterima Tiap Tahun
+                                Berat Netto Keranjang Diterima Tiap Tahun
                                 </h3>
                             </div>
                             <div class="card-body">
@@ -286,7 +288,7 @@
                     <div class="col-lg-8">
                         <div class="card card-info">
                             <div class="card-header" style="background-color: #dda446">
-                                <h3 class="card-title">Total Hasil Bersih + Hutang {{ $selectedYear }}</h3>
+                                <h3 class="card-title">Total Bersih + Hutang {{ $selectedYear }}</h3>
                             </div>
                             <div class="card-body">
                                 <div class="chart">
@@ -300,7 +302,7 @@
                         <div class="card bg-gradient-success">
                             <div class="card-header border-0">
                                 <i class="fas fa-coins"></i>
-                                Hasil Omset Diterima Tiap Tahun
+                                Omset Diterima Tiap Tahun
                                 </h3>
                             </div>
                             <div class="card-body">
@@ -352,8 +354,8 @@
                             <div class="card-body">
                                 <div class="d-flex">
                                     <p class="d-flex flex-column">
-                                        <span
-                                            class="text-bold text-lg">{{ 'Rp. ' . number_format($hargaditerima, 0, ',', '.') }}</span>
+                                        <span class="text-bold text-lg">{{ 'Rp. ' . number_format($hargaditerima, 0,
+                                            ',', '.') }}</span>
                                     </p>
                                 </div>
                                 <!-- /.d-flex -->
@@ -381,7 +383,7 @@
                     <div class="col-md-12">
                         <div class="card card-info">
                             <div class="card-header" style="background-color: #dda446">
-                                <h3 class="card-title">Status Distribusi Nota {{ $selectedYear }}</h3>
+                                <h3 class="card-title">Status Distribusi {{ $selectedYear }}</h3>
                             </div>
                             <div class="card-body">
                                 <canvas id="donutChart"
@@ -394,43 +396,43 @@
                     {{-- <div class="col-md-4">
                         <!-- Info Boxes Style 2 -->
                         <div class="info-box mb-3 bg-warning">
-                          <span class="info-box-icon"><i class="fas fa-tag"></i></span>
-            
-                          <div class="info-box-content">
-                            <span class="info-box-text">Netto Keranjang Diterima</span>
-                            <span class="info-box-number"> {{ $totalNetto }} Kg</span>
-                          </div>
-                          <!-- /.info-box-content -->
+                            <span class="info-box-icon"><i class="fas fa-tag"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Netto Keranjang Diterima</span>
+                                <span class="info-box-number"> {{ $totalNetto }} Kg</span>
+                            </div>
+                            <!-- /.info-box-content -->
                         </div>
                         <!-- /.info-box -->
                         <div class="info-box mb-3 bg-success">
-                          <span class="info-box-icon"><i class="far fa-heart"></i></span>
-            
-                          <div class="info-box-content">
-                            <span class="info-box-text">Mentions</span>
-                            <span class="info-box-number">92,050</span>
-                          </div>
-                          <!-- /.info-box-content -->
+                            <span class="info-box-icon"><i class="far fa-heart"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Mentions</span>
+                                <span class="info-box-number">92,050</span>
+                            </div>
+                            <!-- /.info-box-content -->
                         </div>
                         <!-- /.info-box -->
                         <div class="info-box mb-3 bg-danger">
-                          <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
-            
-                          <div class="info-box-content">
-                            <span class="info-box-text">Downloads</span>
-                            <span class="info-box-number">114,381</span>
-                          </div>
-                          <!-- /.info-box-content -->
+                            <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Downloads</span>
+                                <span class="info-box-number">114,381</span>
+                            </div>
+                            <!-- /.info-box-content -->
                         </div>
                         <!-- /.info-box -->
                         <div class="info-box mb-3 bg-info">
-                          <span class="info-box-icon"><i class="far fa-comment"></i></span>
-            
-                          <div class="info-box-content">
-                            <span class="info-box-text">Direct Messages</span>
-                            <span class="info-box-number">163,921</span>
-                          </div>
-                          <!-- /.info-box-content -->
+                            <span class="info-box-icon"><i class="far fa-comment"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Direct Messages</span>
+                                <span class="info-box-number">163,921</span>
+                            </div>
+                            <!-- /.info-box-content -->
                         </div>
                     </div> --}}
                 </div>
@@ -476,36 +478,60 @@
     <script src="plugins/chart.js/Chart.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="dist/js/pages/dashboard2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+
     <script>
-        //grade
         $(function() {
             var jualluar = {{ $jualLuar }};
             var jualdalam = {{ $jualDalam }};
             var pieData = {
                 labels: [
-                    'Jual GG',
+                    'Jual Gudang Garam',
                     'Jual Luar',
                 ],
                 datasets: [{
                     data: [jualdalam, jualluar],
                     backgroundColor: ['#00a65a', '#dc3545']
                 }]
-            }
-            var pieChartCanvas = $('#pieChartjualluar').get(0).getContext('2d')
-            var pieData = pieData;
+            };
+
+            var pieChartCanvas = $('#pieChartjualluar').get(0).getContext('2d');
             var pieOptions = {
                 maintainAspectRatio: false,
-                responsive: true,
-            }
-            //Create pie or douhnut chart
-            // You can switch between pie and douhnut using the method below.
+                responsive: false,
+                plugins: {
+                    datalabels: {
+                        color: '#000',
+                        formatter: (value, context) => {
+                            let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            if (value === 0) {
+                                return null; // Do not display label if value is 0
+                            }
+                            let percentage = ((value / total) * 100).toFixed(1); // Calculate percentage
+                            return `${percentage}%)`; // Show percentage and value
+                        },
+                        font: {
+                            weight: 'bold',
+                            size: 12, // Slightly increase size for better readability
+                            family: 'Arial, sans-serif', // Use a more readable font
+                        },
+                        align: 'center', // Center the labels inside the slices
+                    }
+                },
+            };
+
             new Chart(pieChartCanvas, {
                 type: 'pie',
                 data: pieData,
-                options: pieOptions
+                options: pieOptions,
+                plugins: [ChartDataLabels], // Register the datalabels plugin
             });
         });
     </script>
+
+
     <script>
         var label = @json($labelPeriode);
         var totalKeranjang = @json($totalKeranjang);
@@ -552,7 +578,7 @@
                     scaleLabel: {
                         display: true,
                         labelString: 'Periode',
-                        fontSize: 15   
+                        fontSize: 15
                     }
                 }],
                 yAxes: [{
@@ -570,119 +596,16 @@
             options: barChartOptions
         })
     </script>
-    {{-- <script>
-        $(function() {
-
-            var ticksStyle = {
-                fontColor: '#495057',
-                fontStyle: 'bold'
-            }
-
-            var mode = 'index'
-            var intersect = true
-            //data periode untuk total jumla harga
-            var periode1 = {{ $periode1 }}
-            var periode1b = {{ $periode1b }};
-            var periode2a = {{ $periode2a }};
-            var periode2b = {{ $periode2b }};
-            var periode3a = {{ $periode3a }};
-            var periode3b = {{ $periode3b }};
-            var periode4a = {{ $periode4a }};
-            var periode4b = {{ $periode4b }};
-            var periode5a = {{ $periode5a }};
-            var periode5b = {{ $periode5b }};
-            var periode6a = {{ $periode6a }};
-            var periode6b = {{ $periode6b }};
-            var periode7a = {{ $periode7a }};
-            var periode7b = {{ $periode7b }};
-            var periode8a = {{ $periode8a }};
-            var periode8b = {{ $periode8b }};
-            var periode9a = {{ $periode9a }};
-            var periode9b = {{ $periode9b }};
-            var periode10a = {{ $periode10a }};
-            var periode10b = {{ $periode10b }};
-            var periode11a = {{ $periode11a }};
-            var periode11b = {{ $periode11b }};
-            var periode12a = {{ $periode12a }};
-            var periode12b = {{ $periode12b }};
 
 
-
-            var $salesChart = $('#sales-charts')
-            // eslint-disable-next-line no-unused-vars
-            var salesChart = new Chart($salesChart, {
-                type: 'bar',
-                data: {
-                    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-                    datasets: [{
-                            backgroundColor: '#007bff',
-                            borderColor: '#007bff',
-                            data: [periode1, periode2a, periode3a, periode4a, periode5a, periode6a,
-                                periode7a, periode8a, periode9a, periode10a, periode11a, periode12a
-                            ]
-                        },
-                        {
-                            backgroundColor: '#ced4da',
-                            borderColor: '#ced4da',
-                            data: [periode1b, periode2b, periode3b, periode4b, periode5b, periode6b,
-                                periode7b, periode8b, periode9b, periode10b, periode11b, periode12b
-                            ]
-
-                        }
-                    ]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    tooltips: {
-                        mode: mode,
-                        intersect: intersect
-                    },
-                    hover: {
-                        mode: mode,
-                        intersect: intersect
-                    },
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        yAxes: [{
-                            // display: false,
-                            gridLines: {
-                                display: true,
-                                lineWidth: '2px',
-                                color: 'rgba(0, 0, 0, .2)',
-                                zeroLineColor: 'transparent'
-                            },
-                            ticks: $.extend({
-                                beginAtZero: true,
-                                callback: function(value) {
-                                    return 'Rp. ' + value.toLocaleString('id-ID', {
-                                        minimumFractionDigits: 0,
-                                        maximumFractionDigits: 0
-                                    });
-                                }
-                            }, ticksStyle)
-                        }],
-                        xAxes: [{
-                            display: true,
-                            gridLines: {
-                                display: true
-                            },
-                            ticks: ticksStyle
-                        }]
-                    }
-                }
-            })
-        })
-    </script> --}}
     <script>
         var labels = @json($petani);
-        var dataOmset = @json($dataomset);
+        var databersih = @json($databersih);
         var sisahutang = @json($sisahutangpetani);
         var barChartData = {
             labels: labels,
             datasets: [{
-                    label: 'Omset',
+                    label: 'Hasil Bersih',
                     backgroundColor: 'rgb(40,167,69)', // Green background color
                     borderColor: 'rgb(40,167,69)', // Green border color
                     pointRadius: false,
@@ -690,7 +613,7 @@
                     pointStrokeColor: 'rgb(40,167,69)', // Green point stroke color
                     pointHighlightFill: '#fff', // Highlight fill color (white)
                     pointHighlightStroke: 'rgb(40,167,69)', // Green point highlight stroke
-                    data: dataOmset
+                    data: databersih
                 },
                 {
                     label: 'Hutang',
@@ -717,7 +640,7 @@
                     scaleLabel: {
                         display: true,
                         labelString: 'Petani',
-                        fontSize: 15   
+                        fontSize: 15
                     }
                 }],
                 yAxes: [{
@@ -757,39 +680,55 @@
     </script>
 
     <script>
-        //grade
         $(function() {
             var gradeA = {{ $gradeA }};
             var gradeB = {{ $gradeB }};
             var gradeC = {{ $gradeC }};
             var gradeD = {{ $gradeD }};
             var pieData = {
-                labels: [
-                    'D',
-                    'C',
-                    'B',
-                    'A',
-                ],
+                labels: ['D', 'C', 'B', 'A'],
                 datasets: [{
                     data: [gradeD, gradeC, gradeB, gradeA],
                     backgroundColor: ['#00a65a', '#ffeb3b', '#dc3545', '#00c0ef'],
                 }]
-            }
-            var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-            var pieData = pieData;
+            };
+
+            var pieChartCanvas = $('#pieChart').get(0).getContext('2d');
             var pieOptions = {
                 maintainAspectRatio: false,
                 responsive: true,
-            }
-            //Create pie or douhnut chart
-            // You can switch between pie and douhnut using the method below.
+                plugins: {
+                    datalabels: {
+                        color: '#000',
+                        formatter: (value, context) => {
+                            let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            if (value === 0) {
+                                return null; // Do not display label if value is 0
+                            }
+                            let percentage = ((value / total) * 100).toFixed(1); // Calculate percentage
+                            return `${percentage}%)`; // Show percentage and value
+                        },
+                        font: {
+                            weight: 'bold',
+                            size: 12, // Slightly increase size for better readability
+                            family: 'Arial, sans-serif', // Use a more readable font
+                        },
+                        align: 'center', // Center the labels inside the slices
+                    }
+
+
+                }
+            };
+
             new Chart(pieChartCanvas, {
                 type: 'pie',
                 data: pieData,
-                options: pieOptions
+                options: pieOptions,
+                plugins: [ChartDataLabels], // Activate the datalabels plugin
             });
         });
     </script>
+
 
 
     <script>
@@ -813,18 +752,40 @@
             };
 
             var donutOptions = {
-                maintainAspectRatio: false,
-                responsive: true,
-            };
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                datalabels: {
+                    color: '#000', // Font color for readability
+                    formatter: (value, context) => {
+                        let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        let percentage = ((value / total) * 100).toFixed(1); // Calculate percentage
+                        if (percentage === "0.0") {
+                            return null; // Don't display the label if percentage is 0
+                        }
+                        return `${percentage}%`; // Show percentage if it's not zero
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 14, // Adjust size based on preference
+                        family: 'Arial, sans-serif',
+                    },
+                    align: 'center', // Center the labels inside the slices
+                    offset: 0, // Adjust if labels are too close to the slices
+                }
+            }
+        };
 
             // Create the first doughnut chart
             new Chart(ctxDonutA, {
-                type: 'pie',
+                type: 'pie', // Use 'pie' for donut chart as well
                 data: donutDataA,
-                options: donutOptions
+                options: donutOptions,
+                plugins: [ChartDataLabels], // Activate the datalabels plugin
             });
         });
     </script>
+
     <script>
         var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d')
         var label = @json($labelmusim);
@@ -855,21 +816,21 @@
             },
             scales: {
                 xAxes: [{
-                        scaleLabel: { // Place scaleLabel directly under xAxes
-                            display: true,
-                            labelString: 'Tahun', // The label text you want to display
-                            fontColor: '#efefef',    // Color of the label text
-                            fontSize: 15            // Optional: adjust font size
-                        },
-                        ticks: {
-                            fontColor: '#efefef'
-                        },
-                        gridLines: {
-                            display: false,
-                            color: '#efefef',
-                            drawBorder: false
-                        }
-                    }],
+                    scaleLabel: { // Place scaleLabel directly under xAxes
+                        display: true,
+                        labelString: 'Tahun', // The label text you want to display
+                        fontColor: '#efefef', // Color of the label text
+                        fontSize: 15 // Optional: adjust font size
+                    },
+                    ticks: {
+                        fontColor: '#efefef'
+                    },
+                    gridLines: {
+                        display: false,
+                        color: '#efefef',
+                        drawBorder: false
+                    }
+                }],
                 yAxes: [{
                     ticks: {
                         stepSize: 100,
@@ -926,28 +887,28 @@
             },
             scales: {
                 xAxes: [{
-                        scaleLabel: { // Place scaleLabel directly under xAxes
-                            display: true,
-                            labelString: 'Tahun', // The label text you want to display
-                            fontColor: '#efefef',    // Color of the label text
-                            fontSize: 15            // Optional: adjust font size
-                        },
-                        ticks: {
-                            fontColor: '#efefef'
-                        },
-                        gridLines: {
-                            display: false,
-                            color: '#efefef',
-                            drawBorder: false
-                        }
-                    }],
+                    scaleLabel: { // Place scaleLabel directly under xAxes
+                        display: true,
+                        labelString: 'Tahun', // The label text you want to display
+                        fontColor: '#efefef', // Color of the label text
+                        fontSize: 15 // Optional: adjust font size
+                    },
+                    ticks: {
+                        fontColor: '#efefef'
+                    },
+                    gridLines: {
+                        display: false,
+                        color: '#efefef',
+                        drawBorder: false
+                    }
+                }],
                 yAxes: [{
                     ticks: {
                         stepSize: 5000000,
                         fontColor: '#efefef',
                         callback: function(value) {
-                        return "Rp. " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                    }
+                            return "Rp. " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        }
                     },
                     gridLines: {
                         display: true,
@@ -967,6 +928,7 @@
             options: salesGraphChartOptions
         })
     </script>
+
 
 
 </body>

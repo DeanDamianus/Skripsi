@@ -922,7 +922,7 @@ class SesiController extends Controller
         }
 
         $petani = array_keys($dataOmset);
-        $dataOmset = array_values($userJumlahBersih);
+        $dataBersih = array_values($userJumlahBersih);
         $totalBersihPerPetani = array_values($userJumlahBersih);
         $sisahutangpetani = array_values($sisahutangPerPetani);
         $sumtotalBersihPerPetani = array_sum($totalBersihPerPetani);
@@ -1095,7 +1095,7 @@ class SesiController extends Controller
             'gradeB' => $gradeB,
             'gradeC' => $gradeC,
             'gradeD' => $gradeD,
-            'dataomset' => $dataOmset,
+            'databersih' => $dataBersih,
             'hargaditerima' => $totalHargaditerima,
             'belumproses' => $belumproses,
             'ditolak' => $ditolak,
