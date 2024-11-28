@@ -131,7 +131,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-close">
-                            <a href=f class="nav-link">
+                            <a href="{{ url('/distribusi?year=' . $selectedYear) }}" class="nav-link">
                                 <i class="nav-icon fas fa-truck"></i>
                                 <p>
                                     <strong>DISTRIBUSI</strong>
@@ -201,8 +201,7 @@
                             <div class="icon">
                                 <i class="fas fa-weight-hanging"></i>
                             </div>
-                            <a href="{{ url('/input?year=' . $selectedYear) }}" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
+                            <a class="small-box-footer">
                             </a>
                         </div>
                     </div>
@@ -219,8 +218,7 @@
                             <div class="icon">
                                 <i class="fas fa-coins"></i> <!-- Coin icon -->
                             </div>
-                            <a href="{{ url('/input?year=' . $selectedYear) }}" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
+                            <a class="small-box-footer">
                             </a>
                         </div>
                     </div>
@@ -230,13 +228,12 @@
                         <div class="small-box bg-purple">
                             <div class="inner">
                                 <h3>{{ $rekapcount }}<sup style="font-size: 20px"> Keranjang</sup></h3>
-                                <p>Keranjang diterima</p>
+                                <p>Keranjang Terjual</p>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-shopping-basket"></i><!-- Basket icon -->
                             </div>
-                            <a href="{{ url('/distribusi?year=' . $selectedYear) }}" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
+                            <a class="small-box-footer">
                             </a>
                         </div>
                     </div>
@@ -251,8 +248,7 @@
                             <div class="icon">
                                 <i class="fas fa-box-open"></i>
                             </div>
-                            <a href="{{ url('/distribusi?year=' . $selectedYear) }}" class="small-box-footer">
-                                More info <i class="fas fa-arrow-circle-right"></i>
+                            <a class="small-box-footer">
                             </a>
                         </div>
                     </div>
@@ -330,7 +326,7 @@
                     <div class="col-md-6">
                         <div class="card card-info">
                             <div class="card-header" style="background-color: #dda446">
-                                <h3 class="card-title">Perbandingan Jual Luar {{ $selectedYear }}</h3>
+                                <h3 class="card-title">Tipe Penjualan {{ $selectedYear }}</h3>
                             </div>
                             <div class="card-body">
                                 <canvas id="pieChartjualluar"
@@ -383,7 +379,7 @@
                     <div class="col-md-12">
                         <div class="card card-info">
                             <div class="card-header" style="background-color: #dda446">
-                                <h3 class="card-title">Status Distribusi {{ $selectedYear }}</h3>
+                                <h3 class="card-title">Status Distribusi Pengiriman Keranjang {{ $selectedYear }}</h3>
                             </div>
                             <div class="card-body">
                                 <canvas id="donutChart"
@@ -393,48 +389,6 @@
                         </div>
                         <!--nota A -->
                     </div>
-                    {{-- <div class="col-md-4">
-                        <!-- Info Boxes Style 2 -->
-                        <div class="info-box mb-3 bg-warning">
-                            <span class="info-box-icon"><i class="fas fa-tag"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Netto Keranjang Diterima</span>
-                                <span class="info-box-number"> {{ $totalNetto }} Kg</span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                        <div class="info-box mb-3 bg-success">
-                            <span class="info-box-icon"><i class="far fa-heart"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Mentions</span>
-                                <span class="info-box-number">92,050</span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                        <div class="info-box mb-3 bg-danger">
-                            <span class="info-box-icon"><i class="fas fa-cloud-download-alt"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Downloads</span>
-                                <span class="info-box-number">114,381</span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                        <div class="info-box mb-3 bg-info">
-                            <span class="info-box-icon"><i class="far fa-comment"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Direct Messages</span>
-                                <span class="info-box-number">163,921</span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                    </div> --}}
                 </div>
             </div>
             <!-- /.container-fluid -->
@@ -461,25 +415,13 @@
     </div>
     <!-- ./wrapper -->
     <!-- REQUIRED SCRIPTS -->
-
-    <!-- jQuery -->
-    <script src="plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap -->
-    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE -->
-    <script src="dist/js/adminlte.js"></script>
-    <!-- FLOT CHARTS -->
-    <script src="plugins/flot/jquery.flot.js"></script>
-    <!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
-    <script src="plugins/flot/plugins/jquery.flot.resize.js"></script>
-    <!-- FLOT PIE PLUGIN - also used to draw donut charts -->
-    <script src="plugins/flot/plugins/jquery.flot.pie.js"></script>
-    <!-- OPTIONAL SCRIPTS -->
-    <script src="plugins/chart.js/Chart.min.js"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="dist/js/pages/dashboard2.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="plugins/jquery/jquery.min.js"></script>
+    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="dist/js/adminlte.js"></script>
+
+
 
 
     <script>
@@ -536,65 +478,61 @@
         var label = @json($labelPeriode);
         var totalKeranjang = @json($totalKeranjang);
         var sisakeranjang = @json($sisaKeranjang);
+
         var areaChartData = {
             labels: label,
             datasets: [{
+                    label: 'Terjual',
+                    backgroundColor: 'rgb(111,66,193)',
+                    borderColor: 'rgb(111,66,193)',
+                    data: totalKeranjang,
+                    stack: 'stack0', // Define stack group// Define stack group
+                },
+                {
                     label: 'Sisa',
                     backgroundColor: 'rgb(220,53,69)',
                     borderColor: 'rgb(220,53,69)',
-                    pointRadius: false,
-                    pointColor: 'rgb(220,53,69)',
-                    pointStrokeColor: 'rgb(220,53,69)',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgb(220,53,69)',
-                    data: sisakeranjang
-                },
-                {
-                    label: 'Diterima',
-                    backgroundColor: 'rgb(111,66,193)',
-                    borderColor: 'rgb(111,66,193)',
-                    pointRadius: false,
-                    pointColor: '#6f42c1',
-                    pointStrokeColor: 'rgb(111,66,193)',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgb(111,66,193)',
-                    data: totalKeranjang
+                    data: sisakeranjang,
+                    stack: 'stack0', // Define stack group
                 },
             ]
-        }
-        var barChartCanvas = $('#barChartkeranjang').get(0).getContext('2d')
-        var barChartData = $.extend(true, {}, areaChartData)
-        var temp0 = areaChartData.datasets[0]
-        var temp1 = areaChartData.datasets[1]
-        barChartData.datasets[0] = temp1
-        barChartData.datasets[1] = temp0
+        };
 
+        var barChartCanvas = $('#barChartkeranjang').get(0).getContext('2d');
+        var barChartData = $.extend(true, {}, areaChartData);
+
+        // Bar chart options to make it stacked
         var barChartOptions = {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                xAxes: [{
-                    stacked: true,
+                x: {
+                    stacked: true, // Make x-axis stacked
                     scaleLabel: {
                         display: true,
                         labelString: 'Periode',
                         fontSize: 15
                     }
-                }],
-                yAxes: [{
-                    stacked: true,
+                },
+                y: {
+                    stacked: true, // Make y-axis stacked
                     scaleLabel: {
                         display: true,
-                        labelString: 'Keranjang'
+                        labelString: 'Keranjang',
+                    },
+                    ticks: {
+                        beginAtZero: true,
                     }
-                }]
+                }
             },
-        }
+        };
+
+        // Initialize the stacked bar chart
         new Chart(barChartCanvas, {
             type: 'bar',
             data: barChartData,
             options: barChartOptions
-        })
+        });
     </script>
 
 
@@ -602,56 +540,49 @@
         var labels = @json($petani);
         var databersih = @json($databersih);
         var sisahutang = @json($sisahutangpetani);
+
         var barChartData = {
             labels: labels,
             datasets: [{
                     label: 'Hasil Bersih',
-                    backgroundColor: 'rgb(40,167,69)', // Green background color
-                    borderColor: 'rgb(40,167,69)', // Green border color
-                    pointRadius: false,
-                    pointColor: '#28a745', // Green point color
-                    pointStrokeColor: 'rgb(40,167,69)', // Green point stroke color
-                    pointHighlightFill: '#fff', // Highlight fill color (white)
-                    pointHighlightStroke: 'rgb(40,167,69)', // Green point highlight stroke
-                    data: databersih
+                    backgroundColor: 'rgb(40,167,69)',
+                    borderColor: 'rgb(40,167,69)',
+                    data: databersih,
+                    stack: 'stack0',
                 },
                 {
                     label: 'Hutang',
-                    backgroundColor: 'rgb(220,53,69)', // Red background color
-                    borderColor: 'rgb(220,53,69)', // Red border color
-                    pointRadius: false,
-                    pointColor: '#dc3545', // Red point color
-                    pointStrokeColor: 'rgb(220,53,69)', // Red point stroke color
-                    pointHighlightFill: '#fff', // Highlight fill color (white)
-                    pointHighlightStroke: 'rgb(220,53,69)', // Red point highlight stroke
-                    data: sisahutang // Use different data if necessary
+                    backgroundColor: 'rgb(220,53,69)',
+                    borderColor: 'rgb(220,53,69)',
+                    data: sisahutang,
+                    stack: 'stack0',
                 },
             ]
-        }
-        var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
-        var stackedBarChartData = $.extend(true, {}, barChartData)
+        };
+
+        var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d');
 
         var stackedBarChartOptions = {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                xAxes: [{
-                    stacked: true,
+                x: {
+                    stacked: true, // Stacked x-axis
                     scaleLabel: {
                         display: true,
                         labelString: 'Petani',
                         fontSize: 15
                     }
-                }],
-                yAxes: [{
-                    stacked: true,
+                },
+                y: {
+                    stacked: true, // Stacked y-axis
                     ticks: {
                         callback: function(value) {
-                            // Convert the value to Rupiah format
+                            // Format the value as Rupiah
                             return 'Rp ' + value.toLocaleString('id-ID');
                         }
                     }
-                }]
+                }
             },
             tooltips: {
                 callbacks: {
@@ -664,20 +595,21 @@
                         label += new Intl.NumberFormat('id-ID', {
                             style: 'currency',
                             currency: 'IDR'
-                        }).format(tooltipItem.yLabel);
+                        }).format(tooltipItem.raw); // Use tooltipItem.raw instead of tooltipItem.yLabel
                         return label;
                     }
                 }
             }
         };
 
-
+        // Create the stacked bar chart
         new Chart(stackedBarChartCanvas, {
             type: 'bar',
-            data: stackedBarChartData,
+            data: barChartData,
             options: stackedBarChartOptions
         });
     </script>
+
 
     <script>
         $(function() {
@@ -689,7 +621,7 @@
                 labels: ['D', 'C', 'B', 'A'],
                 datasets: [{
                     data: [gradeD, gradeC, gradeB, gradeA],
-                    backgroundColor: ['#00a65a', '#ffeb3b', '#dc3545', '#00c0ef'],
+                    backgroundColor: ['#28A745', '#17A2B8', '#FFC107', '#DC3545']
                 }]
             };
 
@@ -752,29 +684,28 @@
             };
 
             var donutOptions = {
-            maintainAspectRatio: false,
-            responsive: true,
-            plugins: {
-                datalabels: {
-                    color: '#000', // Font color for readability
-                    formatter: (value, context) => {
-                        let total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        let percentage = ((value / total) * 100).toFixed(1); // Calculate percentage
-                        if (percentage === "0.0") {
-                            return null; // Don't display the label if percentage is 0
-                        }
-                        return `${percentage}%`; // Show percentage if it's not zero
-                    },
-                    font: {
-                        weight: 'bold',
-                        size: 14, // Adjust size based on preference
-                        family: 'Arial, sans-serif',
-                    },
-                    align: 'center', // Center the labels inside the slices
-                    offset: 0, // Adjust if labels are too close to the slices
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                    datalabels: {
+                        color: '#000', // Warna font untuk kemudahan baca
+                        formatter: (value) => {
+                            if (value === 0) {
+                                return null; // Tidak menampilkan label jika nilai 0
+                            }
+                            return value; // Menampilkan total value
+                        },
+                        font: {
+                            weight: 'bold',
+                            size: 14, // Ukuran font
+                            family: 'Arial, sans-serif',
+                        },
+                        align: 'center', // Label ditempatkan di tengah slice
+                        offset: 0, // Penyesuaian jika label terlalu dekat dengan slice
+                    }
                 }
-            }
-        };
+            };
+
 
             // Create the first doughnut chart
             new Chart(ctxDonutA, {
@@ -787,146 +718,167 @@
     </script>
 
     <script>
-        var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d')
+        var salesGraphChartCanvas = document.getElementById('line-chart').getContext('2d');
         var label = @json($labelmusim);
         var nettomusim = @json($nettomusim);
 
         var salesGraphChartData = {
             labels: label,
             datasets: [{
-                label: 'Netto',
+                label: '', // Empty label to hide it
                 fill: true,
                 borderWidth: 2,
-                lineTension: 0,
+                lineTension: 0.3,
                 spanGaps: true,
-                borderColor: '#efefef',
+                borderColor: '#ffffff',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
                 pointRadius: 3,
                 pointHoverRadius: 7,
-                pointColor: '#efefef',
-                pointBackgroundColor: '#efefef',
+                pointBackgroundColor: '#ffffff',
                 data: nettomusim
             }]
-        }
+        };
 
         var salesGraphChartOptions = {
             maintainAspectRatio: false,
             responsive: true,
-            legend: {
-                display: false
+            plugins: {
+                legend: {
+                    display: false // Hide the legend
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            // Only show the value without any label
+                            return context.parsed.y + ' kg';
+                        }
+                    }
+                }
             },
             scales: {
-                xAxes: [{
-                    scaleLabel: { // Place scaleLabel directly under xAxes
+                x: {
+                    title: {
                         display: true,
-                        labelString: 'Tahun', // The label text you want to display
-                        fontColor: '#efefef', // Color of the label text
-                        fontSize: 15 // Optional: adjust font size
-                    },
-                    ticks: {
-                        fontColor: '#efefef'
-                    },
-                    gridLines: {
-                        display: false,
-                        color: '#efefef',
-                        drawBorder: false
-                    }
-                }],
-                yAxes: [{
-                    ticks: {
-                        stepSize: 100,
-                        fontColor: '#efefef',
-                        callback: function(value) {
-                            return value + ' kg'; // Add kg suffix to each y-axis label
+                        text: 'Tahun',
+                        color: '#ffffff', // White label
+                        font: {
+                            size: 15
                         }
                     },
-                    gridLines: {
-                        display: true,
-                        color: '#efefef',
-                        drawBorder: false
-
+                    ticks: {
+                        color: '#ffffff' // White ticks
+                    },
+                    grid: {
+                        display: false
                     }
-                }]
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Netto (kg)',
+                        color: '#ffffff'
+                    },
+                    ticks: {
+                        stepSize: 100,
+                        color: '#ffffff', // White ticks
+                        callback: function(value) {
+                            return value + ' kg'; // Add "kg" to labels
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.2)', // Faint white gridlines
+                        drawBorder: false
+                    }
+                }
             }
-        }
+        };
 
-        // This will get the first returned node in the jQuery collection.
-        // eslint-disable-next-line no-unused-vars
-        var salesGraphChart = new Chart(salesGraphChartCanvas, { // lgtm[js/unused-local-variable]
+        new Chart(salesGraphChartCanvas, {
             type: 'line',
             data: salesGraphChartData,
             options: salesGraphChartOptions
-        })
+        });
     </script>
+
+
     <script>
-        var salesGraphChartCanvas = $('#line-chart-bersih').get(0).getContext('2d')
+        var salesGraphChartCanvas = document.getElementById('line-chart-bersih').getContext('2d');
         var label = @json($labelOmset);
         var omsettiapTahun = @json($omsettiapTahun);
 
         var salesGraphChartData = {
             labels: label,
             datasets: [{
-                label: 'Rp. ',
+                label: 'Omset',
                 fill: true,
                 borderWidth: 2,
-                lineTension: 0,
+                lineTension: 0.3, // Smooth curve
                 spanGaps: true,
-                borderColor: '#efefef',
+                borderColor: '#efefef', // Light gray line
+                backgroundColor: 'rgba(239, 239, 239, 0.2)', // Transparent gray fill
                 pointRadius: 3,
                 pointHoverRadius: 7,
-                pointColor: '#efefef',
-                pointBackgroundColor: '#efefef',
+                pointBackgroundColor: '#efefef', // Gray points
                 data: omsettiapTahun
             }]
-        }
+        };
 
         var salesGraphChartOptions = {
             maintainAspectRatio: false,
             responsive: true,
-            legend: {
-                display: false
+            plugins: {
+                legend: {
+                    display: false // Hide legend
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            // Format the tooltip to display in Rupiah with commas
+                            return 'Rp. ' + context.raw.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        }
+                    }
+                }
             },
             scales: {
-                xAxes: [{
-                    scaleLabel: { // Place scaleLabel directly under xAxes
+                x: {
+                    title: {
                         display: true,
-                        labelString: 'Tahun', // The label text you want to display
-                        fontColor: '#efefef', // Color of the label text
-                        fontSize: 15 // Optional: adjust font size
+                        text: 'Tahun',
+                        color: '#efefef', // Light gray axis label
+                        font: {
+                            size: 15
+                        }
                     },
                     ticks: {
-                        fontColor: '#efefef'
+                        color: '#efefef' // Light gray ticks
                     },
-                    gridLines: {
-                        display: false,
-                        color: '#efefef',
-                        drawBorder: false
+                    grid: {
+                        display: false // Hide grid lines for x-axis
                     }
-                }],
-                yAxes: [{
+                },
+                y: {
                     ticks: {
-                        stepSize: 5000000,
-                        fontColor: '#efefef',
+                        stepSize: 5000000, // Step interval for y-axis
+                        color: '#efefef', // Light gray ticks
                         callback: function(value) {
+                            // Format y-axis labels in Rupiah format
                             return "Rp. " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                         }
                     },
-                    gridLines: {
-                        display: true,
-                        color: '#efefef',
+                    grid: {
+                        color: 'rgba(239, 239, 239, 0.2)', // Faint grid lines
                         drawBorder: false
-
                     }
-                }]
+                }
             }
-        }
+        };
 
-        // This will get the first returned node in the jQuery collection.
-        // eslint-disable-next-line no-unused-vars
-        var salesGraphChart = new Chart(salesGraphChartCanvas, { // lgtm[js/unused-local-variable]
+        // Initialize the chart
+        new Chart(salesGraphChartCanvas, {
             type: 'line',
             data: salesGraphChartData,
             options: salesGraphChartOptions
-        })
+        });
     </script>
 
 

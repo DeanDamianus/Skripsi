@@ -87,12 +87,12 @@
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-12">
                         <div class="info-box">
-                            <span class="info-box-icon bg-info"><i class="fa fa-coins"></i></span>
+                            <span class="info-box-icon bg-info"><i class="fas fa-weight-hanging"></i></span>
 
                             <div class="info-box-content">
-                                <span class="info-box-text">Omset Petani</span>
+                                <span class="info-box-text">Total Netto</span>
                                 <span
-                                    class="info-box-number">{{ 'Rp. ' . number_format($totalbersih, 0, ',', '.') }}</span>
+                                    class="info-box-number">{{ $totalnetto. ' Kg'}}</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
@@ -101,45 +101,45 @@
                     <!-- /.col -->
                     <div class="col-md-3 col-sm-6 col-12">
                         <div class="info-box">
-                            <span class="info-box-icon bg-danger"><i class="fas fa-hand-holding-usd"></i></span>
-
+                            <span class="info-box-icon bg-success"><i class="fas fa-coins"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Sisa Hutang</span>
+                                <span class="info-box-text">Omset</span>
                                 <span
-                                    class="info-box-number">{{ 'Rp. ' . number_format($sisahutang, 0, ',', '.') }}</span>
+                                    class="info-box-number">{{ 'Rp. ' . number_format($sumJumlahKotor, 0, ',', '.') }}</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
                         <!-- /.info-box -->
                     </div>
                     <!-- /.col -->
-                    <div class="col-md-3 col-sm-6 col-12">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-success"><i class="fas fa-dollar-sign"></i></span>
-
-                            <div class="info-box-content">
-                                <span class="info-box-text">Hasil Bersih - Hutang</span>
-                                <span
-                                    class="info-box-number">{{ 'Rp. ' . number_format($totalbersih - $sisahutang, 0, ',', '.') }}</span>
-                            </div>
-                            <!-- /.info-box-content -->
-                        </div>
-                        <!-- /.info-box -->
-                    </div>
-                    <!-- /.col -->
+                    
                     <div class="col-md-3 col-sm-6 col-12">
                         <div class="info-box">
                             <span class="info-box-icon bg-purple">
                                 <i class="fas fa-shopping-basket"></i>
                             </span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Total Keranjang</span>
+                                <span class="info-box-text">Keranjang Terjual</span>
                                 <span class="info-box-number">{{ $rekap . ' keranjang' }}</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
                         <!-- /.info-box -->
                     </div>
+                    <!-- /.col -->
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-danger"><i class="fas fa-box-open"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Keranjang Sisa</span>
+                                <span
+                                    class="info-box-number">{{ ($dataSisaKeranjang) . ' Keranjang' }}</span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>  
                     <!-- /.col -->
                 </div>
                 <div class="row">
@@ -174,7 +174,7 @@
                             </div>
                         </div>
                     </div> --}}
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="card card-success">
                             <div class="card-header" style="background-color: #dda446">
                                 <h3 class="card-title">Perbandingan Netto</h3>
@@ -195,11 +195,33 @@
                             </div>
                             <!-- /.card-body -->
                         </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-success">
+                            <div class="card-header" style="background-color: #dda446">
+                                <h3 class="card-title">Rasio Hasil Bersih dan Hutang</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <canvas id="barChartRasio"
+                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <div class="card card-success">
                             <div class="card-header" style="background-color: #dda446">
-                                <h3 class="card-title">Perbandingan Hasil Distribusi Keranjang</h3>
+                                <h3 class="card-title">Status Distribusi Pengiriman Keranjang</h3>
 
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -232,7 +254,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <canvas id="pieCharthutang"
+                                <canvas id="pieChartgrade"
                                     style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                             </div>
                             <!-- /.card-body -->
@@ -241,7 +263,7 @@
                     <div class="col-md-4">
                         <div class="card card-info">
                             <div class="card-header" style="background-color: #dda446">
-                                <h3 class="card-title">Perbandingan Jual</h3>
+                                <h3 class="card-title">Tipe Penjualan</h3>
 
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -263,30 +285,6 @@
 
                         <!-- /.card -->
                     </div>
-                    {{-- <div class="col-md-4">
-                        <div class="card card-success">
-                            <div class="card-header">
-                                <h3 class="card-title">Total Netto <strong>{{ $totalnetto }}</strong> Kg</h3>
-
-                                <div class="card-tools">
-                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart">
-                                    <canvas id="barChart"
-                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                                </div>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
-
-                    </div> --}}
 
                 </div>
                 <!-- /.row -->
@@ -311,395 +309,520 @@
     <!-- AdminLTE App -->
     <script src="../../dist/js/adminlte.min.js"></script>
     <script src="../../plugins/chart.js/Chart.min.js"></script>
-</body>
-<script>
-    //grade
-    $(function() {
-        var jualluar = {{ $jualLuar }};
-        var jualdalam = {{ $jualDalam }};
-        var pieData = {
-            labels: [
-                'Jual Gudang Garam',
-                'Jual Luar',
-            ],
-            datasets: [{
-                data: [jualdalam, jualluar],
-                backgroundColor: ['#00a65a', '#f56954']
-            }]
-        }
-        var pieChartCanvas = $('#pieChartjualluar').get(0).getContext('2d')
-        var pieData = pieData;
-        var pieOptions = {
-            maintainAspectRatio: false,
-            responsive: true,
-        }
-        //Create pie or douhnut chart
-        // You can switch between pie and douhnut using the method below.
-        new Chart(pieChartCanvas, {
-            type: 'pie',
-            data: pieData,
-            options: pieOptions
-        });
-    });
-</script>
-<script>
-    var label = @json($labelPeriode);
-    var totalNetto = @json($nettoSum);
-    var nettoBelumProses = @json($nettoBelumProses);
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
-    var areaChartData = {
-        labels: label,
-        datasets: [{
-                label: 'Diterima',
-                backgroundColor: 'rgba(40,167,69,255)',
-                borderColor: 'rgba(40,167,69,255)',
-                pointRadius: false,
-                pointColor: 'rgba(40,167,69,255)',
-                pointStrokeColor: 'rgba(40,167,69,255)',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgba(40,167,69,255)',
-                data: totalNetto
-            },
-            {
-                label: 'Sisa',
-                backgroundColor: 'rgb(220,53,69)',
-                borderColor: 'rgb(220,53,69)',
-                pointRadius: false,
-                pointColor: 'rgb(220,53,69)',
-                pointStrokeColor: 'rgb(220,53,69)',
-                pointHighlightFill: '#fff',
-                pointHighlightStroke: 'rgb(220,53,69)',
-                data: nettoBelumProses
-            },
-        ]
-    }
-    var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
-    var stackedBarChartData = $.extend(true, {}, areaChartData)
-
-    var stackedBarChartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            xAxes: [{
-                stacked: true,
-                scaleLabel: {
-                        display: true,
-                        labelString: 'Periode'
-                    }
-            }],
-            yAxes: [{
-                    stacked: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Berat'
-                    }
-                }]
-        }
-    }
-
-    new Chart(stackedBarChartCanvas, {
-        type: 'bar',
-        data: stackedBarChartData,
-        options: stackedBarChartOptions
-    })
-</script>
-<script>
-    $(function() {
-        var netto_d_a = {{ $netto_d_a }};
-        var netto_d_b = {{ $netto_d_b }};
-        var netto_c_a = {{ $netto_c_a }};
-        var netto_c_b = {{ $netto_c_b }};
-        var netto_b_a = {{ $netto_b_a }};
-        var netto_b_b = {{ $netto_b_b }};
-        var netto_a_a = {{ $netto_a_a }};
-        var netto_a_b = {{ $netto_a_b }};
-
-        var ticksStyle = {
-            fontColor: '#495057',
-            fontStyle: 'bold'
-        }
-
-        var mode = 'index'
-        var intersect = true
-
-        var $salesChart = $('#sales-chart')
-        // eslint-disable-next-line no-unused-vars
-        var salesChart = new Chart($salesChart, {
-            type: 'bar',
-            data: {
-                labels: ['D', 'C', 'B', 'A'],
+    <script>
+        $(function() {
+            var username = @json($username); 
+            var sisahutang = {{ $sisahutang }};
+            var totalbersih = {{ $totalbersih }};
+            var barChartCanvas = $('#barChartRasio').get(0).getContext('2d');
+            
+            var areaChartData = {
+                labels: [username],
                 datasets: [{
-                        backgroundColor: '#007bff',
-                        borderColor: '#007bff',
+                        label: 'Hutang',
+                        backgroundColor: 'rgba(220,53,69,1)',
+                        borderColor: 'rgba(220,53,69,1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(220,53,69,1)',
+                        pointStrokeColor: 'rgba(220,53,69,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,53,69,1)',
+                        data: [sisahutang]
+                    },
+                    {
+                        label: 'Hasil Bersih',
+                        backgroundColor: 'rgba(40,167,69,1)',
+                        borderColor: 'rgba(40,167,69,1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(40,167,69,1)',
+                        pointStrokeColor: 'rgba(40,167,69,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(40,167,69,1)',
+                        data: [totalbersih]
+                    },
+                ]
+            }
+    
+            var barChartData = $.extend(true, {}, areaChartData);
+            var temp0 = areaChartData.datasets[0];
+            var temp1 = areaChartData.datasets[1];
+            barChartData.datasets[0] = temp1;
+            barChartData.datasets[1] = temp0;
+    
+            var barChartOptions = {
+                responsive: true,
+                maintainAspectRatio: true,
+                datasetFill: true,
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        stacked: true
+                    }
+                }
+            }
+    
+            new Chart(barChartCanvas, {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
+            });
+        });
+    </script>
+    
+
+    <script>
+        $(function() {
+            var jualluar = {{ $jualLuar }};
+            var jualdalam = {{ $jualDalam }};
+
+            // Data for the pie chart
+            var pieData = {
+                labels: [
+                    'Jual Gudang Garam',
+                    'Jual Luar',
+                ],
+                datasets: [{
+                    data: [jualdalam, jualluar],
+                    backgroundColor: ['#00a65a', '#f56954']
+                }]
+            };
+            var pieOptions = {
+                maintainAspectRatio: false,
+                responsive: false,
+                plugins: {
+                    datalabels: {
+                        color: '#000',
+                        formatter: (value, context) => {
+                            let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            if (value === 0) {
+                                return null; // Do not display label if value is 0
+                            }
+                            let percentage = ((value / total) * 100).toFixed(1); // Calculate percentage
+                            return `${percentage}%)`; // Show percentage and value
+                        },
+                        font: {
+                            weight: 'bold',
+                            size: 12, // Slightly increase size for better readability
+                            family: 'Arial, sans-serif', // Use a more readable font
+                        },
+                        align: 'center', // Center the labels inside the slices
+                    }
+                },
+            };
+            // Create the chart
+            var pieChartCanvas = $('#pieChartjualluar').get(0).getContext('2d');
+            new Chart(pieChartCanvas, {
+                type: 'pie',
+                data: pieData,
+                options: pieOptions,
+                plugins: [ChartDataLabels]
+            });
+        });
+    </script>
+
+    <script>
+        $(function() {
+            // Data variables passed from the backend
+            var label = @json($labelPeriode);
+            var totalNetto = @json($nettoSum);
+            var nettoBelumProses = @json($nettoBelumProses);
+
+            // Chart data configuration
+            var stackedBarChartData = {
+                labels: label,
+                datasets: [{
+                        label: 'Diterima',
+                        backgroundColor: 'rgba(40,167,69,1)', // Green
+                        borderColor: 'rgba(40,167,69,1)',
+                        borderWidth: 1,
+                        data: totalNetto,
+                    },
+                    {
+                        label: 'Belum Dikirim',
+                        backgroundColor: 'rgba(220,53,69,1)', // Red
+                        borderColor: 'rgba(220,53,69,1)',
+                        borderWidth: 1,
+                        data: nettoBelumProses,
+                    },
+                ],
+            };
+
+            // Chart options for a stacked bar chart
+            var stackedBarChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Periode', // X-axis title
+                        },
+                    },
+                    y: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Berat (Kg)', // Y-axis title
+                        },
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function(value) {
+                                return value + ' Kg'; // Format tick values
+                            },
+                        },
+                    },
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw} Kg`;
+                            },
+                        },
+                    },
+                },
+            };
+
+            // Get the canvas element
+            var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d');
+
+            // Create the stacked bar chart
+            new Chart(stackedBarChartCanvas, {
+                type: 'bar',
+                data: stackedBarChartData,
+                options: stackedBarChartOptions,
+            });
+        });
+    </script>
+
+    <script>
+        $(function() {
+            var netto_d_a = {{ $netto_d_a }};
+            var netto_d_b = {{ $netto_d_b }};
+            var netto_c_a = {{ $netto_c_a }};
+            var netto_c_b = {{ $netto_c_b }};
+            var netto_b_a = {{ $netto_b_a }};
+            var netto_b_b = {{ $netto_b_b }};
+            var netto_a_a = {{ $netto_a_a }};
+            var netto_a_b = {{ $netto_a_b }};
+
+            var ticksStyle = {
+                fontColor: '#495057',
+                fontStyle: 'bold'
+            }
+
+            var mode = 'index'
+            var intersect = true
+
+            var $salesChart = $('#sales-chart')
+            // eslint-disable-next-line no-unused-vars
+            var salesChart = new Chart($salesChart, {
+                type: 'bar',
+                data: {
+                    labels: ['D', 'C', 'B', 'A'],
+                    datasets: [{
+                            backgroundColor: '#007bff',
+                            borderColor: '#007bff',
+                            data: [netto_d_a, netto_c_a, netto_b_a, netto_a_a]
+                        },
+                        {
+                            backgroundColor: '#ced4da',
+                            borderColor: '#ced4da',
+                            data: [netto_d_b, netto_c_b, netto_b_b, netto_a_b]
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    hover: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: true,
+                                lineWidth: '4px',
+                                color: 'rgba(0, 0, 0, .2)',
+                                zeroLineColor: 'transparent'
+                            },
+                            ticks: $.extend({
+
+                                beginAtZero: true,
+
+                                // Include a dollar sign in the ticks
+                                callback: function(value) {
+                                    return value + ' Kg'; // Add 'Kg' to each tick value
+                                }
+
+                            }, ticksStyle)
+                        }],
+                        xAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: true
+                            },
+                            ticks: ticksStyle
+                        }]
+                    }
+                }
+            })
+        })
+    </script>
+    <script>
+        $(function() {
+            var netto_d_a = {{ $netto_d_a }};
+            var netto_d_b = {{ $netto_d_b }};
+            var netto_c_a = {{ $netto_c_a }};
+            var netto_c_b = {{ $netto_c_b }};
+            var netto_b_a = {{ $netto_b_a }};
+            var netto_b_b = {{ $netto_b_b }};
+            var netto_a_a = {{ $netto_a_a }};
+            var netto_a_b = {{ $netto_a_b }};
+
+            var data = {
+                labels: ['Grade D', 'Grade C', 'Grade B', 'Grade A'], // Updated labels for clarity
+                datasets: [{
+                        label: 'Nota A',
+                        backgroundColor: 'rgba(60,141,188,0.9)', // Keep a distinct color
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
                         data: [netto_d_a, netto_c_a, netto_b_a, netto_a_a]
                     },
                     {
-                        backgroundColor: '#ced4da',
-                        borderColor: '#ced4da',
+                        label: 'Nota B',
+                        backgroundColor: 'rgba(210, 214, 222, 1)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
                         data: [netto_d_b, netto_c_b, netto_b_b, netto_a_b]
                     }
                 ]
-            },
-            options: {
+            };
+
+            var barChartCanvas = $('#barChart').get(0).getContext('2d');
+            var barChartData = $.extend(true, {}, data);
+
+            var barChartOptions = {
+                responsive: true,
                 maintainAspectRatio: false,
-                tooltips: {
-                    mode: mode,
-                    intersect: intersect
-                },
-                hover: {
-                    mode: mode,
-                    intersect: intersect
-                },
-                legend: {
-                    display: false
-                },
                 scales: {
-                    yAxes: [{
-                        display: true,
-                        gridLines: {
+                    x: {
+                        title: {
                             display: true,
-                            lineWidth: '4px',
-                            color: 'rgba(0, 0, 0, .2)',
-                            zeroLineColor: 'transparent'
-                        },
-                        ticks: $.extend({
-
-                            beginAtZero: true,
-
-                            // Include a dollar sign in the ticks
-                            callback: function(value) {
-                                return value + ' Kg'; // Add 'Kg' to each tick value
-                            }
-
-                        }, ticksStyle)
-                    }],
-                    xAxes: [{
-                        display: true,
-                        gridLines: {
-                            display: true
-                        },
-                        ticks: ticksStyle
-                    }]
-                }
-            }
-        })
-    })
-</script>
-<script>
-    $(function() {
-        var netto_d_a = {{ $netto_d_a }};
-        var netto_d_b = {{ $netto_d_b }};
-        var netto_c_a = {{ $netto_c_a }};
-        var netto_c_b = {{ $netto_c_b }};
-        var netto_b_a = {{ $netto_b_a }};
-        var netto_b_b = {{ $netto_b_b }};
-        var netto_a_a = {{ $netto_a_a }};
-        var netto_a_b = {{ $netto_a_b }};
-
-        var data = {
-            labels: ['Grade D', 'Grade C', 'Grade B', 'Grade A'], // Updated labels for clarity
-            datasets: [{
-                    label: 'Nota A',
-                    backgroundColor: 'rgba(60,141,188,0.9)', // Keep a distinct color
-                    borderColor: 'rgba(60,141,188,0.8)',
-                    pointRadius: false,
-                    pointColor: '#3b8bba',
-                    pointStrokeColor: 'rgba(60,141,188,1)',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data: [netto_d_a, netto_c_a, netto_b_a, netto_a_a]
-                },
-                {
-                    label: 'Nota B',
-                    backgroundColor: 'rgba(210, 214, 222, 1)',
-                    borderColor: 'rgba(210, 214, 222, 1)',
-                    pointRadius: false,
-                    pointColor: 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor: '#c1c7d1',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data: [netto_d_b, netto_c_b, netto_b_b, netto_a_b]
-                }
-            ]
-        };
-
-        var barChartCanvas = $('#barChart').get(0).getContext('2d');
-        var barChartData = $.extend(true, {}, data);
-
-        var barChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Grade' // Add X-axis title
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Kg' // Add Y-axis title
+                            text: 'Grade' // Add X-axis title
+                        }
                     },
-                    ticks: {
-                        callback: function(value) {
-                            return value + ' Kg'; // Add 'Kg' to the Y-axis values
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Kg' // Add Y-axis title
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value + ' Kg'; // Add 'Kg' to the Y-axis values
+                            }
                         }
                     }
-                }
-            },
-            plugins: {
-                tooltip: {
-                    enabled: true, // Enable tooltips (default is true, but for clarity)
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.dataset.label + ': ' + tooltipItem.raw +
-                                ' Kg'; // Custom tooltip text
+                },
+                plugins: {
+                    tooltip: {
+                        enabled: true, // Enable tooltips (default is true, but for clarity)
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw +
+                                    ' Kg'; // Custom tooltip text
+                            }
                         }
                     }
-                }
-            },
-            datasetFill: false
-        };
+                },
+                datasetFill: false
+            };
 
-        new Chart(barChartCanvas, {
-            type: 'bar',
-            data: barChartData,
-            options: barChartOptions
+            new Chart(barChartCanvas, {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
+            });
         });
-    });
-</script>
-
-
-<script>
-    $(function() {
-        // Get the remaining hutang passed from the controller
-        var diterima = {{ $diterima  }};
-        var diproses= {{ $diproses}};
-        var ditolak = {{ $ditolak  }};
-        var belumproses= {{ $belumproses}};
-
-        var donutData = {
-            labels: [
-                'Diterima',
-                'Diproses',
-                'Ditolak',
-                'Belum Diproses'
-            ],
-            datasets: [{
-                data: [diterima, diproses, ditolak, belumproses],
-                backgroundColor: ['#00a65a', '#ffeb3b', '#dc3545', '#00c0ef'],
-            }]
-        };
-
-        var pieChartCanvas = $('#pieChart').get(0).getContext('2d');
-        var pieData = donutData;
-        var pieOptions = {
-            maintainAspectRatio: false,
-            responsive: true,
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        // Get the value of the data
-                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-
-                        // Format the value as currency (Rupiah)
-                        return value.toLocaleString() + ' Keranjang';
+    </script>
+    <script>
+        $(function() {
+            var diterima = {{ $diterima }};
+            var diproses = {{ $diproses }};
+            var ditolak = {{ $ditolak }};
+            var belumproses = {{ $belumproses }};
+            var pieData = {
+                labels: [
+                    'Diterima',
+                    'Diproses',
+                    'Ditolak',
+                    'Belum Diproses'
+                ],
+                datasets: [{
+                    data: [diterima, diproses, ditolak, belumproses],
+                    backgroundColor: ['#00a65a', '#ffeb3b', '#dc3545', '#00c0ef'],
+                }]
+            };
+            var pieOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                    datalabels: {
+                        color: '#000', // Warna font untuk kemudahan baca
+                        formatter: (value) => {
+                            if (value === 0) {
+                                return null; // Tidak menampilkan label jika nilai 0
+                            }
+                            return value; // Menampilkan total value
+                        },
+                        font: {
+                            weight: 'bold',
+                            size: 14, // Ukuran font
+                            family: 'Arial, sans-serif',
+                        },
+                        align: 'center', // Label ditempatkan di tengah slice
+                        offset: 0, // Penyesuaian jika label terlalu dekat dengan slice
                     }
                 }
-            }
-        };
+            };
 
-        // Create pie chart
-        new Chart(pieChartCanvas, {
-            type: 'pie',
-            data: pieData,
-            options: pieOptions
+            // Create the chart
+            var pieChartCanvas = $('#pieChart').get(0).getContext('2d');
+            new Chart(pieChartCanvas, {
+                type: 'pie',
+                data: pieData,
+                options: pieOptions,
+                plugins: [ChartDataLabels]
+            });
         });
-    });
-</script>
-{{-- <script>
-    $(function() {
-        // Get the remaining hutang passed from the controller
-        var remainingHutang = {{ $sisahutang ?? 0 }};
-        var jumlahbersih = {{ $totalbersih ?? 0 }};
-
-        var donutData = {
-            labels: [
-                'Hutang',
-                'Omset',
-            ],
-            datasets: [{
-                data: [remainingHutang, jumlahbersih],
-                backgroundColor: ['#dc3545', '#17a2b8'],
-            }]
-        };
-
-        var pieChartCanvas = $('#pieChart').get(0).getContext('2d');
-        var pieData = donutData;
-        var pieOptions = {
-            maintainAspectRatio: false,
-            responsive: true,
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        // Get the value of the data
-                        var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-
-                        // Format the value as currency (Rupiah)
-                        return 'Rp. ' + value.toLocaleString('id-ID');
+    </script>
+    <script>
+        $(function() {
+            var remainingHutang = {{ $remainingHutang ?? 0 }};
+            var jumlahbersih = {{ $totalbersih ?? 0 }};
+            var gradeA = {{ $gradeA }};
+            var gradeB = {{ $gradeB }};
+            var gradeC = {{ $gradeC }};
+            var gradeD = {{ $gradeD }};
+            var pieData = {
+                labels: [
+                    'D',
+                    'C',
+                    'B',
+                    'A',
+                ],
+                datasets: [{
+                    data: [gradeD, gradeC, gradeB, gradeA],
+                    backgroundColor: ['#28A745', '#17A2B8','#FFC107' ,'#DC3545']
+                }]
+            };
+            var pieOptions = {
+                maintainAspectRatio: false,
+                responsive: false,
+                plugins: {
+                    datalabels: {
+                        color: '#000',
+                        formatter: (value, context) => {
+                            let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            if (value === 0) {
+                                return null; // Do not display label if value is 0
+                            }
+                            let percentage = ((value / total) * 100).toFixed(1); // Calculate percentage
+                            return `${percentage}%)`; // Show percentage and value
+                        },
+                        font: {
+                            weight: 'bold',
+                            size: 12, // Slightly increase size for better readability
+                            family: 'Arial, sans-serif', // Use a more readable font
+                        },
+                        align: 'center', // Center the labels inside the slices
                     }
-                }
-            }
-        };
-
-        // Create pie chart
-        new Chart(pieChartCanvas, {
-            type: 'pie',
-            data: pieData,
-            options: pieOptions
+                },
+            };
+            // Create the chart
+            var pieChartCanvas = $('#pieChartgrade').get(0).getContext('2d');
+            new Chart(pieChartCanvas, {
+                type: 'pie',
+                data: pieData,
+                options: pieOptions,
+                plugins: [ChartDataLabels]
+            });
         });
-    });
-</script> --}}
-<script>
-    $(function() {
-        //grade
-        // Get the remaining hutang passed from the controller
-        var remainingHutang = {{ $remainingHutang ?? 0 }};
-        var jumlahbersih = {{ $totalbersih ?? 0 }};
-        var gradeA = {{ $gradeA }};
-        var gradeB = {{ $gradeB }};
-        var gradeC = {{ $gradeC }};
-        var gradeD = {{ $gradeD }};
-        var donutData = {
-            labels: [
-                'D',
-                'C',
-                'B',
-                'A',
-            ],
-            datasets: [{
-                data: [gradeD, gradeC, gradeB, gradeA],
-                backgroundColor: ['#00a65a', '#f56954', '#f39c12', '#00c0ef', ]
-            }]
-        };
-
-        var pieChartCanvas = $('#pieCharthutang').get(0).getContext('2d');
-        var pieData = donutData;
-        var pieOptions = {
-            maintainAspectRatio: false,
-            responsive: true,
-        };
-
-        // Create pie chart
-        new Chart(pieChartCanvas, {
-            type: 'pie',
-            data: pieData,
-            options: pieOptions
+    </script>
+    <script>
+        $(function() {
+            var diterima = {{ $diterima }};
+            var diproses = {{ $diproses }};
+            var ditolak = {{ $ditolak }};
+            var belumproses = {{ $belumproses }};
+            var pieData = {
+                labels: [
+                    'Diterima',
+                    'Diproses',
+                    'Ditolak',
+                    'Belum Diproses'
+                ],
+                datasets: [{
+                    data: [diterima, diproses, ditolak, belumproses],
+                    backgroundColor: ['#00a65a', '#ffeb3b', '#dc3545', '#00c0ef'],
+                }]
+            };
+            var pieOptions = {
+                maintainAspectRatio: false,
+                responsive: false,
+                plugins: {
+                    datalabels: {
+                        color: '#000',
+                        formatter: (value, context) => {
+                            let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            if (value === 0) {
+                                return null; // Do not display label if value is 0
+                            }
+                            let percentage = ((value / total) * 100).toFixed(1); // Calculate percentage
+                            return `${percentage}%)`; // Show percentage and value
+                        },
+                        font: {
+                            weight: 'bold',
+                            size: 12, // Slightly increase size for better readability
+                            family: 'Arial, sans-serif', // Use a more readable font
+                        },
+                        align: 'center', // Center the labels inside the slices
+                    }
+                },
+            };
+            // Create the chart
+            var pieChartCanvas = $('#pieChart').get(0).getContext('2d');
+            new Chart(pieChartCanvas, {
+                type: 'pie',
+                data: pieData,
+                options: pieOptions,
+                plugins: [ChartDataLabels]
+            });
         });
-    });
-</script>
-
+    </script>
+</body>
 
 </html>

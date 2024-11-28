@@ -455,7 +455,8 @@ class SesiController extends Controller
         $musim = DB::table('musim')->where('tahun', $year)->first();
         $musimList = DB::table('musim')->get();
 
-        $data = DB::table('users')->where('role', 'petani')->get();
+        $data = DB::table('users')->where('role', 'petani')
+        ->orderBy('name', 'asc') ->get();
 
         $rekap = DB::table('rekap_2024')->where('id_petani', $userId)->get();
 
@@ -499,6 +500,15 @@ class SesiController extends Controller
         $netto_a_a = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%A%')->where('periode', 'LIKE', '%A%')->where('id_musim', $idMusim)->sum('netto');
 
         $netto_a_b = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%A%')->where('periode', 'LIKE', '%B%')->where('id_musim', $idMusim)->sum('netto');
+
+        $dataSisaKeranjang = DB::table('rekap_2024')
+            ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
+            ->where('id_petani', $userId)
+            ->where('rekap_2024.id_musim', $musim->id)
+            ->whereNull('distribusi_2024.id_rekap')
+            ->select('rekap_2024.periode', 'rekap_2024.id_rekap')
+            ->orderBy('rekap_2024.periode', 'asc')
+            ->count();
 
         //mengambil tiap grade
         $gradeA = DB::table('rekap_2024')->where('id_petani', $userId)->where('grade', 'LIKE', '%A%')->where('id_musim', $idMusim)->count();
@@ -561,6 +571,7 @@ class SesiController extends Controller
         $komisiValues = []; // Array to store komisi values
         $jumlahBersihValues = []; // Array to store jumlah bersih values
 
+
         foreach ($nettoValues as $index => $netto) {
             $harga = $hargaValues[$index]; // Assuming both arrays have the same length
 
@@ -604,6 +615,7 @@ class SesiController extends Controller
         $sumKj = array_sum($kjValues);
         $sumJumlahKotor = array_sum($jumlahKotorValues);
         $sumJumlahBersih = array_sum($jumlahBersihValues);
+
 
         // Get the list of musim
         $musimList = DB::table('musim')->get();
@@ -679,7 +691,7 @@ class SesiController extends Controller
             ->get()
             ->pluck('netto_sum', 'periode')
             ->toArray();
-
+      
         $nettoBelumProses = DB::table('rekap_2024')
             ->leftjoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
             ->where('rekap_2024.id_musim', $musim->id)
@@ -724,6 +736,7 @@ class SesiController extends Controller
             'jualLuar' => $jualLuar,
             'jualDalam' => $jualDalam,
             'netto_d_a' => $netto_d_a,
+            'dataSisaKeranjang' =>$dataSisaKeranjang,
             'sisahutang' => $sisahutang,
             'netto_d_b' => $netto_d_b,
             'netto_c_a' => $netto_c_a,
@@ -758,6 +771,7 @@ class SesiController extends Controller
             'nettoBelumProses' => array_values($nettoBelumProses),
             'diproses' => $diproses,
             'diterima' => $terima,
+            'sumJumlahKotor' => $sumJumlahKotor,
             'ditolak' => $ditolak,
             'belumproses' => $belumproses,
         ]);
@@ -966,7 +980,6 @@ class SesiController extends Controller
         $labelPeriode = $dataDiterima->pluck('periode')->toArray();
         $totalKeranjang = $dataDiterima->pluck('total')->toArray();
 
-        
 
         $dataSisaKeranjang = DB::table('rekap_2024')
             ->leftJoin('distribusi_2024', 'rekap_2024.id_rekap', '=', 'distribusi_2024.id_rekap')
